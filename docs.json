@@ -37,10 +37,12 @@
           {
             "group": "Referências",
             "pages": [
-              "referencias/tribunais",
+              "referencias/assuntos",
+              "referencias/classes-processuais",
               "referencias/ramos-direito",
+              "referencias/segmentos",
               "referencias/status-processuais",
-              "referencias/segmentos"
+              "referencias/tribunais"
             ]
           }
         ]
