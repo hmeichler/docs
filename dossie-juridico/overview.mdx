@@ -1,0 +1,68 @@
+---
+title: Dossiê Jurídico
+description: "Descubra todos os processos judiciais relacionados a uma pessoa física, jurídica ou advogado."
+---
+
+# 📂 Dossiê Jurídico
+
+O Dossiê Jurídico da Predictus é a porta de entrada para acessar o **histórico judicial completo** de uma pessoa ou empresa.  
+
+Esse módulo concentra os principais endpoints de consulta judicial, permitindo buscas por:
+
+- CPF ou CNPJ de uma parte
+- Nome completo ou parcial
+- Número do processo (NPU/CNJ)
+- Dados do advogado (nome, CPF ou OAB)
+
+Com base nesses inputs, a Predictus retorna **dados estruturados** sobre os processos encontrados, como:
+
+- Capa processual
+- Polo das partes (ativo/passivo)
+- Status padronizado (`StatusPredictus`)
+- Ramo do Direito
+- Movimentações e decisões (quando disponíveis)
+
+---
+
+## 🧠 Quando usar o Dossiê Jurídico?
+
+Use este produto quando você quiser:
+
+- Validar o histórico judicial de um candidato, fornecedor, cliente ou parceiro
+- Automatizar due diligence jurídica
+- Analisar riscos judiciais associados a um CPF/CNPJ
+- Mapear carteiras processuais de uma pessoa ou empresa
+- Conectar sua operação à maior base judicial do Brasil via API
+
+---
+
+## 🔍 Tipos de consulta disponíveis
+
+<CardGroup cols={2}>
+  <Card title="Buscar por CPF/CNPJ" icon="id-card">
+    Consulte todos os processos em que uma parte (pessoa ou empresa) esteja envolvida.
+  </Card>
+  <Card title="Buscar por Nome ou Razão Social" icon="user">
+    Ideal quando o documento não está disponível. Use nome completo ou parcial.
+  </Card>
+  <Card title="Buscar por Número do Processo" icon="hashtag">
+    Retorna todos os dados de um processo específico, incluindo autos e movimentações.
+  </Card>
+  <Card title="Buscar por Advogado" icon="gavel">
+    Encontre processos em que um advogado (por nome, CPF ou OAB) atua como representante.
+  </Card>
+</CardGroup>
+
+---
+
+## 🧾 Exemplo prático + JSON Schema
+
+Se quiser visualizar um processo completo com todos os campos possíveis (inclusive os que nem sempre vêm preenchidos), acesse:
+
+👉 [📂 Estrutura de Dados do Processo](./estrutura-dados)
+
+---
+
+## 🚀 Prossiga
+
+Escolha um tipo de busca na barra lateral ou vá direto para: [Buscar por CPF da Parte](./buscar-por-cpf)
