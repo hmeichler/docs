@@ -33,6 +33,15 @@
               "dossie-juridico/recursos/buscar-por-cpf",
               "dossie-juridico/recursos/buscar-por-cnpj"
             ]
+          },
+          {
+            "group": "Referências",
+            "pages": [
+              "referencias/tribunais",
+              "referencias/ramos-direito",
+              "referencias/status-processuais",
+              "referencias/segmentos"
+            ]
           }
         ]
       },
