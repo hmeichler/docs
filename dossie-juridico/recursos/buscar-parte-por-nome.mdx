@@ -19,6 +19,92 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorNom
 
 ---
 
+## 🧾 Corpo da requisição (exemplo completo)
+
+```json
+{
+  "nome": "UM NOME",
+  "polo": "ATIVO",
+  "grausProcesso": [1],
+  "limiteResultados": 10000,
+  "tribunais": ["TJ-SC", "TRT-9"],
+  "palavrasChave": ["ATRASO"],
+  "valorCausa": {
+    "maiorQue": 1000,
+    "menorQue": 100000
+  },
+  "dataDistribuicao": {
+    "maiorQue": "1970-01-01",
+    "menorQue": "2025-02-03"
+  },
+  "classesProcessuais": [
+    "CUMPRIMENTO DE SENTENCA",
+    "PROCEDIMENTO DO JUIZADO ESPECIAL CIVEL",
+    "ACAO TRABALHISTA - RITO ORDINARIO"
+  ],
+  "assuntosCNJ": [
+    "INDENIZACAO POR DANO MORAL",
+    "ATRASO DE VOO",
+    "ADICIONAL DE HORAS EXTRAS"
+  ],
+  "statusProcessuais": [
+    "EM TRAMITACAO",
+    "ARQUIVAMENTO DEFINITIVO",
+    "EM GRAU DE RECURSO"
+  ],
+  "ramosDoDireito": [
+    "DIREITO DO TRABALHO",
+    "DIREITO DO CONSUMIDOR",
+    "DIREITO CIVIL"
+  ],
+  "segmentos": [
+    "JUSTICA ESTADUAL",
+    "JUSTICA DO TRABALHO"
+  ],
+  "camposRetorno": {
+    "incluir": [
+      "urlProcesso",
+      "numeroProcessoUnico",
+      "numeroProcessoAntigo",
+      "statusObservacao",
+      "grauProcesso",
+      "juiz",
+      "relator",
+      "revisores",
+      "area",
+      "sistema",
+      "segmento",
+      "tribunalOrigem",
+      "tribunal",
+      "uf",
+      "orgaoJulgador",
+      "unidadeOrigem",
+      "classeProcessual",
+      "assuntosCNJ",
+      "dataDistribuicao",
+      "dataAutuacao",
+      "partes",
+      "advogadosSemParte",
+      "processosRelacionados",
+      "valorCausa",
+      "valorExecucao",
+      "eTutelaAntecipada",
+      "temInjuncao",
+      "eJusticaGratuita",
+      "ePrioritario",
+      "eSegredoJustica",
+      "eProcessoDigital",
+      "temAcordao",
+      "acordao",
+      "temSentenca",
+      "sentenca",
+      "dataProcessamento",
+      "statusPredictus"
+    ]
+  }
+}
+```
+
 ## 📚 Campos importantes
 
 - `nome` (string) — único campo obrigatório  
