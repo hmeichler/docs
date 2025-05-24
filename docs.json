@@ -60,18 +60,13 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
+          "anchor": "Site da Predictus",
+          "href": "https://www.predictus.inf.br",
+          "icon": "globe-alt"
         },
         {
           "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
+          "href": "https://predictus.inf.br/blog/",
           "icon": "newspaper"
         }
       ]
