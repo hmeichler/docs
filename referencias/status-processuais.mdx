@@ -1,5 +1,23 @@
 ---
-title: 'New file'
-description: 'Description of your new file.'
+title: Status Processuais
+description: "Valores válidos para o filtro de status dos processos judiciais na Predictus."
 ---
 
+## 🧾 Status Processuais aceitos
+
+O campo `statusProcessuais` filtra os processos com base em seu status atual.  
+Abaixo estão todos os valores válidos que podem ser usados no filtro:
+
+```json
+[
+  "ARQUIVAMENTO DEFINITIVO",
+  "EM TRAMITACAO",
+  "ARQUIVAMENTO",
+  "SUSPENSO",
+  "EM GRAU DE RECURSO",
+  "ARQUIVAMENTO PROVISORIO",
+  "ARQUIVADO ADMINISTRATIVAMENTE"
+]
+```
+
+> Os termos devem ser passados **exatamente como listados acima** (em caixa alta e com acentuação correta, se houver).
