@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Predictus API",
   "colors": {
-    "primary": "#0B3A4E",
-    "light": "#3EC6E0",
-    "dark": "#072A3F"
+    "primary": "#00A87E", 
+    "light": "#6FE3C1",     
+    "dark": "#00735B"       
   },
   "favicon": "/favicon.svg",
   "navigation": {
