@@ -1,0 +1,90 @@
+---
+title: Buscar por Nome ou Razão Social
+description: "Consulte todos os processos judiciais relacionados a uma pessoa física ou empresa, com base no nome."
+---
+
+# 🔎 Buscar por Nome ou Razão Social (Parte)
+
+Este endpoint permite consultar todos os processos em que um determinado nome esteja envolvido como parte **ativa**, **passiva** ou **outros**.
+
+Você pode aplicar filtros por grau, tribunal, classe, assunto, valor da causa, status, ramo do direito e mais.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorNomeParte
+```
+
+---
+
+## 📚 Campos importantes
+
+- `nome` (string) — único campo obrigatório  
+  - Pode ser nome completo ou parcial  
+- `semDocumento` (boolean) — opcional  
+  - Quando `true`, retorna apenas processos em que a parte **não possui CPF ou CNPJ identificado**
+- `polo` — `ATIVO` ou `PASSIVO`
+- `grausProcesso` — lista de inteiros entre 1 e 4:  
+  - `1` → 1º Grau (ex: vara cível)  
+  - `2` → 2º Grau (tribunais estaduais/regionais)  
+  - `3` → Tribunais Superiores (STJ, TST etc.)  
+  - `4` → Supremo Tribunal Federal (STF)
+- `palavrasChave` — lista de termos buscados em **assuntos** e **movimentações** do processo  
+  - Máximo de 100 termos  
+  - Lógica de busca: **OR entre os termos**
+- `tribunais` — lista de siglas válidas (ex: `TJ-SP`, `TRT-9`, `STF`)  
+  - Ver [lista completa de tribunais](../../referencias/tribunais)
+- `valorCausa`, `dataDistribuicao` — permitem filtragem por faixa (menorQue/maiorQue)
+- `classesProcessuais`, `assuntosCNJ` — até 65.000 valores cada  
+- `statusProcessuais` — veja [valores válidos](../../referencias/status-processuais)
+- `ramosDoDireito` — veja [valores válidos](../../referencias/ramos-direito)
+- `segmentos` — deve conter apenas valores válidos (ex: `JUSTICA DO TRABALHO`, `STF`)  
+  - Veja [lista completa de segmentos](../../referencias/segmentos)
+- `limiteResultados` — mínimo: 1 / máximo: 10.000 (padrão: 10.000)
+
+---
+
+## 📌 Como funcionam os filtros
+
+A API aplica os filtros com **lógica combinada (AND entre filtros diferentes, OR dentro de listas)**:
+
+| Situação                         | Comportamento                                             |
+|----------------------------------|------------------------------------------------------------|
+| Vários filtros usados            | Todos devem ser satisfeitos (lógica **AND**)              |
+| Lista de valores (ex: tribunais) | Basta bater **um dos valores** da lista (lógica **OR**)   |
+| Campos únicos (ex: nome)         | Necessário corresponder parcialmente ou exatamente         |
+| Faixas (valor ou data)           | O valor do processo deve estar **dentro do intervalo**    |
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado                                      |
+|--------|--------------------------------------------------|
+| `200`  | Sucesso — processos encontrados                  |
+| `204`  | Nenhum processo encontrado para o nome informado |
+| `400`  | Erro de validação no payload                     |
+| `401`  | Token inválido ou expirado                       |
+
+---
+
+## 🛡️ Validações aplicadas
+
+- Nome:
+  - Não pode ser nulo ou vazio
+- Polo:
+  - `ATIVO` ou `PASSIVO`
+- Lista de `statusProcessuais`, `ramosDoDireito`, `segmentos`, `tribunais`:
+  - Todos os valores devem estar na lista de permitidos
+- Campos com listas extensas (`classesProcessuais`, `assuntosCNJ`):
+  - Máximo de 65.000 itens
+- `palavrasChave`: máximo de 100 termos
+- `limiteResultados`: entre 1 e 10.000
+
+---
+
+## 🧾 Retorno
+
+Retorna uma lista de objetos do tipo [`processo`](./estrutura-dados), com dados estruturados e padronizados pela Predictus.

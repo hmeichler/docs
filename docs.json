@@ -30,8 +30,10 @@
           {
             "group": "Dossiê Jurídico - Recursos",
             "pages": [
-              "dossie-juridico/recursos/buscar-por-cpf",
-              "dossie-juridico/recursos/buscar-por-cnpj"
+              "dossie-juridico/recursos/buscar-parte-por-cpf",
+              "dossie-juridico/recursos/buscar-parte-por-cnpj",
+              "dossie-juridico/recursos/buscar-parte-por-nome",
+              "dossie-juridico/recursos/buscar-parte-por-nome-exato"
             ]
           },
           {
