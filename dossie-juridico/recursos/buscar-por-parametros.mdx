@@ -124,6 +124,9 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorPar
     "PROCEDENCIA",
     "PROCEDENCIA EM PARTE"
   ],
+  "naoNumerosProcessoUnico": [
+    "50091485920228240090"
+  ],
   "juizes": [
     "JOSE ALDO"
   ],
@@ -194,6 +197,7 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorPar
 - `ufs` — siglas de estado (ex: "SP", "RJ", "SC")
 - `limiteResultados` — mínimo: 1 / máximo: 10.000 (padrão: 10.000)
 - `camposRetorno` — escolha os campos desejados no retorno
+- `naoNumerosProcessoUnico` - excluir processos específicos no retorno
 
 ---
 
@@ -203,7 +207,7 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorPar
 |----------------------------------|-----------------------------------------------|
 | Filtros diferentes               | Lógica **AND** entre eles                     |
 | Listas internas (ex: classes)    | Lógica **OR** dentro do array                 |
-| `naoPartes`, `naoAdvogados`      | Excluem registros com as condições indicadas  |
+| `naoPartes`, `naoAdvogados`, `naoNumerosProcessoUnico`     | Excluem registros com as condições indicadas  |
 | Faixas (`data`, `valor`)         | Deve estar dentro do intervalo fornecido      |
 
 ---
