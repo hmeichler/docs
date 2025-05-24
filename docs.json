@@ -33,7 +33,11 @@
               "dossie-juridico/recursos/buscar-parte-por-cpf",
               "dossie-juridico/recursos/buscar-parte-por-cnpj",
               "dossie-juridico/recursos/buscar-parte-por-nome",
-              "dossie-juridico/recursos/buscar-parte-por-nome-exato"
+              "dossie-juridico/recursos/buscar-parte-por-nome-exato",
+              "dossie-juridico/recursos/buscar-advogado-por-cpf",
+              "dossie-juridico/recursos/buscar-advogado-por-oab",
+              "dossie-juridico/recursos/buscar-advogado-por-nome",
+              "dossie-juridico/recursos/buscar-advogado-por-nome-exato"
             ]
           },
           {
