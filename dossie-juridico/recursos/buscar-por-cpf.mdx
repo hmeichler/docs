@@ -109,21 +109,27 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorCPF
 
 ## 📚 Campos importantes
 
-- `cpf` (string) — único campo obrigatório
+- `cpf` (string) — único campo obrigatório  
+  - Deve conter exatamente 11 dígitos numéricos  
+  - Deve ser um CPF válido conforme validação do algoritmo
 - `polo` — `ATIVO` ou `PASSIVO`
-- `grausProcesso` — lista de graus processuais. Valores possíveis:
-  - `1` → 1º Grau (ex: vara cível, vara do trabalho)
-  - `2` → 2º Grau (ex: tribunais de justiça ou regionais)
-  - `3` → Tribunais Superiores (STJ, TST, STM, TSE)
+- `grausProcesso` — lista de inteiros entre 1 e 4:  
+  - `1` → 1º Grau (ex: vara cível)  
+  - `2` → 2º Grau (tribunais estaduais/regionais)  
+  - `3` → Tribunais Superiores (STJ, TST etc.)  
   - `4` → Supremo Tribunal Federal (STF)
-- `palavrasChave` — lista de termos buscados nos **assuntos** e **movimentações** do processo.  
-  > Os termos são combinados com lógica **OR**. Se qualquer um for encontrado, o processo será retornado.
-- `tribunais` — veja [lista completa de tribunais](../referencias/tribunais)
-- `valorCausa`, `dataDistribuicao` — permitem filtragem por faixa numérica ou temporal
-- `classesProcessuais` — veja [lista de classes](../referencias/classes-processuais)
-- `assuntosCNJ` — veja [lista de assuntos CNJ](../referencias/assuntos)
-- `statusProcessuais` — veja [status possíveis](../referencias/status-processuais)
-- `ramosDoDireito` — veja [ramos do direito](../referencias/ramos-direito)
+- `palavrasChave` — lista de termos buscados em **assuntos** e **movimentações** do processo  
+  - Máximo de 100 termos  
+  - Lógica de busca: **OR entre os termos**
+- `tribunais` — lista de siglas válidas (ex: `TJ-SP`, `TRT-9`, `STF`)  
+  - Ver [lista completa de tribunais](../referencias/tribunais)
+- `valorCausa`, `dataDistribuicao` — permitem filtragem por faixa (menorQue/maiorQue)
+- `classesProcessuais`, `assuntosCNJ` — até 65.000 valores cada  
+- `statusProcessuais` — veja [valores válidos](../referencias/status-processuais)
+- `ramosDoDireito` — veja [valores válidos](../referencias/ramos-direito)
+- `segmentos` — deve conter apenas valores válidos (ex: `JUSTICA DO TRABALHO`, `STF`)  
+  - Veja [lista completa de segmentos](../referencias/segmentos)
+- `limiteResultados` — mínimo: 1 / máximo: 10.000 (padrão: 10.000)
 
 ---
 
@@ -140,45 +146,31 @@ A API aplica os filtros com **lógica combinada (AND entre filtros diferentes, O
 
 ---
 
-### 🧠 Exemplos práticos
+## 🧾 Códigos de resposta
 
-**Exemplo 1 — Consulta com `ramosDoDireito` e `classesProcessuais`:**
-
-```json
-{
-  "cpf": "08108732905",
-  "ramosDoDireito": ["DIREITO DO TRABALHO", "DIREITO CIVIL"],
-  "classesProcessuais": ["CUMPRIMENTO DE SENTENCA"]
-}
-```
-
-🔍 Resultado:
-- Todos os processos **do CPF informado**
-- **E** que tenham **classe = CUMPRIMENTO DE SENTENCA**
-- **E** cujo **ramo do direito** seja **TRABALHO ou CIVIL**
+| Código | Significado                             |
+|--------|------------------------------------------|
+| `200`  | Sucesso — processos encontrados          |
+| `204`  | Nenhum processo encontrado para o CPF    |
+| `400`  | Erro de validação no payload             |
+| `401`  | Token inválido ou expirado               |
 
 ---
 
-**Exemplo 2 — Consulta com `valorCausa` e `statusProcessuais`:**
+## 🛡️ Validações aplicadas
 
-```json
-{
-  "cpf": "08108732905",
-  "valorCausa": { "maiorQue": 5000 },
-  "statusProcessuais": ["EM TRAMITACAO", "ARQUIVAMENTO DEFINITIVO"]
-}
-```
-
-🔍 Resultado:
-- Todos os processos do CPF
-- Com valor da causa maior que 5.000
-- E cujo status seja **um dos listados**
-
----
-
-> **Resumo:**
-> - **Entre filtros diferentes → E (AND)**  
-> - **Dentro de listas → OU (OR)**
+- CPF:
+  - Não nulo
+  - 11 dígitos numéricos
+  - Validação de CPF formal
+- Polo:
+  - `ATIVO` ou `PASSIVO`
+- Lista de `statusProcessuais`, `ramosDoDireito`, `segmentos`, `tribunais`:
+  - Todos os valores devem estar na lista de permitidos
+- Campos com listas extensas (`classesProcessuais`, `assuntosCNJ`):
+  - Máximo de 65.000 itens
+- `palavrasChave`: máximo de 100 termos
+- `limiteResultados`: entre 1 e 10.000
 
 ---
 
