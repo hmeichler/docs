@@ -28,7 +28,6 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorNom
   "grausProcesso": [1],
   "limiteResultados": 10000,
   "tribunais": ["TJ-SC", "TRT-9"],
-  "palavrasChave": ["ATRASO"],
   "valorCausa": {
     "maiorQue": 1000,
     "menorQue": 100000
@@ -117,9 +116,6 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorNom
   - `2` → 2º Grau (tribunais estaduais/regionais)  
   - `3` → Tribunais Superiores (STJ, TST etc.)  
   - `4` → Supremo Tribunal Federal (STF)
-- `palavrasChave` — lista de termos buscados em **assuntos** e **movimentações** do processo  
-  - Máximo de 100 termos  
-  - Lógica de busca: **OR entre os termos**
 - `tribunais` — lista de siglas válidas (ex: `TJ-SP`, `TRT-9`, `STF`)  
   - Ver [lista completa de tribunais](../../referencias/tribunais)
 - `valorCausa`, `dataDistribuicao` — permitem filtragem por faixa (menorQue/maiorQue)
@@ -166,7 +162,6 @@ A API aplica os filtros com **lógica combinada (AND entre filtros diferentes, O
   - Todos os valores devem estar na lista de permitidos
 - Campos com listas extensas (`classesProcessuais`, `assuntosCNJ`):
   - Máximo de 65.000 itens
-- `palavrasChave`: máximo de 100 termos
 - `limiteResultados`: entre 1 e 10.000
 
 ---
