@@ -1,18 +1,19 @@
 ---
 title: Introdução
-description: "Descubra todos os processos judiciais relacionados a uma pessoa física, jurídica ou advogado."
+description: "Descubra todos os processos judiciais relacionados a uma pessoa física, jurídica, advogado ou por critérios customizados."
 ---
 
 # 📂 Dossiê Jurídico
 
-O Dossiê Jurídico da Predictus é a porta de entrada para acessar o **histórico judicial completo** de uma pessoa ou empresa.  
+O Dossiê Jurídico da Predictus é a porta de entrada para acessar o **histórico judicial completo** de uma pessoa, empresa ou conjunto de processos com características específicas.
 
-Esse módulo concentra os principais endpoints de consulta judicial, permitindo buscas por:
+Este módulo concentra os principais endpoints de consulta judicial, permitindo buscas por:
 
 - CPF ou CNPJ de uma parte
 - Nome completo ou parcial
 - Número do processo (NPU/CNJ)
 - Dados do advogado (nome, CPF ou OAB)
+- **Critérios processuais personalizados** (valor da causa, assuntos, status, juiz, julgador etc.)
 
 Com base nesses inputs, a Predictus retorna **dados estruturados** sobre os processos encontrados, como:
 
@@ -32,6 +33,7 @@ Use este produto quando você quiser:
 - Automatizar due diligence jurídica
 - Analisar riscos judiciais associados a um CPF/CNPJ
 - Mapear carteiras processuais de uma pessoa ou empresa
+- **Explorar e segmentar processos por critérios objetivos**, como valor, assunto, status ou tribunal
 - Conectar sua operação à maior base judicial do Brasil via API
 
 ---
@@ -46,10 +48,13 @@ Use este produto quando você quiser:
     Ideal quando o documento não está disponível. Use nome completo ou parcial.
   </Card>
   <Card title="Buscar por Número do Processo" icon="hashtag">
-    Retorna todos os dados de um processo específico, incluindo autos e movimentações.
+    Retorna todos os dados de um processo específico, incluindo anexos e movimentações.
   </Card>
   <Card title="Buscar por Advogado" icon="gavel">
     Encontre processos em que um advogado (por nome, CPF ou OAB) atua como representante.
+  </Card>
+  <Card title="Busca Customizada" icon="filter">
+    Descubra processos a partir de critérios como valor da causa, assunto, status, juiz, julgador, tribunal, OAB e mais.
   </Card>
 </CardGroup>
 
