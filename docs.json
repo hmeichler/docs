@@ -78,21 +78,21 @@
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:suporte@predictus.inf.br"
+        "label": "Suporte",
+        "href": "https://predictus.atlassian.net/servicedesk/customer/portals"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Acessar Plataforma",
-      "href": "https://app.predictus.inf.br"
+      "label": "Acessar a Plataforma",
+      "href": "https://app.predictus.com.br"
     }
   },
   "footer": {
     "socials": {
       "x": "https://x.com/predictus_br",
-      "github": "https://github.com/predictus",
-      "linkedin": "https://linkedin.com/company/predictus"
+      "instagram": "http://instagram.com/predictusbr",
+      "linkedin": "https://linkedin.com/company/predictusbr"
     }
   }
 }
