@@ -1,6 +1,6 @@
 ---
 title: Introdução
-description: "Conheça a API da Predictus — dados judiciais acessíveis, estruturados e acionáveis"
+description: "Predictus: o Google de Processos Judiciais. Encontre, entenda e antecipe riscos com dados confiáveis."
 ---
 
 <img
@@ -14,31 +14,41 @@ description: "Conheça a API da Predictus — dados judiciais acessíveis, estru
   alt="Hero Dark"
 />
 
-## 👋 O que é a Predictus?
+## 🔍 Predictus: o Google de Processos Judiciais
 
-A **Predictus** é uma plataforma de inteligência jurídica que transforma milhões de dados públicos em insights de valor.  
-Nossa API permite que empresas tomem decisões mais seguras em **análise de crédito, contratação, compliance** e muito mais.
+A Predictus é uma plataforma de inteligência jurídica com a maior base de processos judiciais do Brasil.  
+Nos posicionamos como o **“Google de Processos”** porque tornamos possível **descobrir qualquer ação judicial de forma simples e estruturada**, mesmo sem conhecimento jurídico.
 
-> 🚀 Dados judiciais atualizados, estruturados e fáceis de integrar.
+> 🎯 Ajudamos empresas a tomar decisões melhores com base no histórico judicial de pessoas e empresas.
+
+---
+
+## 🧠 O que fazemos
+
+- Capturamos dados diretamente de todos os tribunais do país;
+- Estruturamos informações despadronizadas em um formato limpo, coeso e fácil de integrar;
+- Entregamos via API e Plataforma Web, com resposta rápida, confiável e cobertura nacional.
+
+> São mais de **600 milhões de processos** já coletados — e crescendo.
 
 ---
 
 ## ⚙️ Visão Geral da API
 
-Com nossa API você pode:
+A API Predictus permite:
 
 <CardGroup cols={2}>
   <Card title="Consulta de Histórico Judicial" icon="magnifying-glass">
-    Encontre todos os processos relacionados a um CPF ou CNPJ — com estrutura padronizada.
+    Encontre todos os processos relacionados a um CPF, CNPJ, nome ou OAB — organizados por polo, ramo do direito e status.
   </Card>
   <Card title="Jurimetria em Tempo Real" icon="chart-line">
-    Gere estatísticas com base em milhares de processos semelhantes. Compare prazos, valores e desfechos.
+    Gere estatísticas com base em milhares de processos similares: probabilidades, valores médios, tempo até julgamento.
   </Card>
-  <Card title="Busca por Número do Processo" icon="file-lines">
-    Consulte diretamente um NPU e receba os dados completos, com movimentações e partes.
+  <Card title="Busca Detalhada por Processo" icon="file-lines">
+    Consulte qualquer NPU (número de processo) e receba movimentações, sentenças, decisões e anexos públicos.
   </Card>
-  <Card title="Integração Simples" icon="plug">
-    API RESTful com autenticação via token, suporte a filtros avançados e exemplos prontos em cURL e Python.
+  <Card title="Resultados Estruturados" icon="table-cells-large">
+    Dados padronizados com status próprio (StatusPredictus), polo das partes, ramo do direito e julgamento interpretado.
   </Card>
 </CardGroup>
 
@@ -46,16 +56,74 @@ Com nossa API você pode:
 
 ## 🎯 Casos de Uso Reais
 
-- ✅ **Análise de Crédito**: Reduza inadimplência conhecendo o histórico judicial de clientes e empresas.
-- 🛡️ **Compliance & Due Diligence**: Evite riscos ocultos ao contratar fornecedores ou colaboradores.
-- ⚖️ **Advocacia Inteligente**: Use jurimetria para saber onde vale a pena ajuizar, e o que esperar do resultado.
-- 🤖 **RPA e Automação**: Crie rotinas de varredura e análise contínua em larga escala.
+A API é utilizada por empresas que precisam tomar decisões críticas com base no histórico judicial.
+
+<CardGroup cols={2}>
+
+  <Card title="Análise de Crédito e PLD/Compliance" icon="building-columns">
+    Evite inadimplência, fraude e exposição a riscos regulatórios analisando o perfil judicial do cliente.
+  </Card>
+
+  <Card title="Recuperação de Ativos e NPLs" icon="coins">
+    Avalie riscos e oportunidades em carteiras inadimplidas com dados de ações cíveis, trabalhistas, execuções e sentenças.
+  </Card>
+
+  <Card title="Garantidoras e Imobiliárias" icon="house-chimney">
+    Filtre inquilinos com histórico limpo e evite ações de despejo e inadimplência judicial recorrente.
+  </Card>
+
+  <Card title="Recursos Humanos e Background Check" icon="user-tie">
+    Consulte candidatos e colaboradores antes da contratação — automatize compliance com idoneidade judicial.
+  </Card>
+
+  <Card title="Legaltechs e Softwares Jurídicos" icon="laptop-code">
+    Enriqueça seu sistema com dados de alta qualidade, prontos para automatizar análises e visualizações.
+  </Card>
+
+  <Card title="Compliance e Due Diligence" icon="shield-halved">
+    Investigue sócios, fornecedores e parceiros com rastreabilidade judicial e agregação de CPF/CNPJ.
+  </Card>
+
+  <Card title="Gerenciamento de Risco e Logística" icon="truck">
+    Avalie histórico criminal e cível de motoristas e transportadores antes de liberar seguro ou carga.
+  </Card>
+
+  <Card title="Escritórios e Consultorias Jurídicas" icon="scale-balanced">
+    Visualize carteiras processuais por parte, advogado ou classe. Acompanhe todos os processos do seu cliente.
+  </Card>
+
+</CardGroup>
+
+---
+
+## 🧩 Tipos de Pesquisa
+
+A API Predictus aceita múltiplos tipos de input:
+
+- **CPF/CNPJ**
+- **Nome/Razão Social**
+- **Número do Processo (CNJ)**
+- **Nome, CPF ou OAB do advogado**
+- **Filtros customizados por classe, assunto, valor, tribunal e data**
+- **Temas especiais (ex: Recuperação Judicial do dia)**
 
 ---
 
 ## 📘 Glossário Rápido
 
-| Termo           | Significado                                                                 |
-|-----------------|------------------------------------------------------------------------------|
-| **NPU**         | Número único do processo (formato CNJ: `0000000-00.0000.0.00.0000`)          |
-| **Polo Ativo**  | Parte autora do processo (
+| Termo             | Significado                                                                 |
+|-------------------|------------------------------------------------------------------------------|
+| **NPU**           | Número único do processo (formato CNJ)                                       |
+| **Polo Ativo**    | Parte autora (quem entrou com a ação)                                        |
+| **Polo Passivo**  | Parte ré (quem está sendo processado)                                       |
+| **StatusPredictus** | Status interpretado com base nas movimentações: tramitação, recurso, arquivado, etc. |
+| **Ramo do Direito** | Classificação padronizada (ex: cível, trabalhista, penal...)               |
+| **Valor de Execução** | Valor final da condenação ou sentença monetária                          |
+
+---
+
+## 🚀 Comece Agora
+
+Acesse [Autenticação](../essentials/authentication) para gerar seu token e iniciar sua integração com a maior base judicial do Brasil.
+
+> Dúvidas? Fale com nosso time: **contato@predictus.inf.br**
