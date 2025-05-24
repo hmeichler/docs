@@ -23,9 +23,9 @@
           {
             "group": "Dossiê Jurídico",
             "pages": [
-              "dossie-juridico/overview",
-              "dossie-juridico/buscar-por-cpf",
-              "dossie-juridico/estrutura-dados"
+              "dossie-juridico/overview",              
+              "dossie-juridico/estrutura-dados",
+              "dossie-juridico/recursos/buscar-por-cpf"
             ]
           }
         ]
