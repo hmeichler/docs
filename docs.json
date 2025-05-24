@@ -23,8 +23,13 @@
           {
             "group": "Dossiê Jurídico",
             "pages": [
-              "dossie-juridico/overview",              
-              "dossie-juridico/estrutura-dados",
+              "dossie-juridico/overview",
+              "dossie-juridico/estrutura-dados"
+            ]
+          },
+          {
+            "group": "Dossiê Jurídico - Recursos",
+            "pages": [
               "dossie-juridico/recursos/buscar-por-cpf"
             ]
           }
