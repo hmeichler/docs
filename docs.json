@@ -90,7 +90,7 @@
     "primary": {
       "type": "button",
       "label": "Acessar a Plataforma",
-      "href": "https://app.predictus.com.br"
+      "href": "https://platform.predictus.com.br/onboarding"
     }
   },
   "footer": {
