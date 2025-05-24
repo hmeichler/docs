@@ -28,6 +28,7 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorCPF
   "grausProcesso": [1],
   "limiteResultados": 10000,
   "tribunais": ["TJ-SC", "TRT-9"],
+  "palavrasChave": ["ATRASO"],
   "valorCausa": {
     "maiorQue": 1000,
     "menorQue": 100000
@@ -108,11 +109,17 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorCPF
 
 ## 📚 Campos importantes
 
-- `cpf` (string) — obrigatório
+- `cpf` (string) — único campo obrigatório
 - `polo` — `ATIVO` ou `PASSIVO`
-- `grausProcesso` — lista de `1` (1º grau), `2` (2º grau)
+- `grausProcesso` — lista de graus processuais. Valores possíveis:
+  - `1` → 1º Grau (ex: vara cível, vara do trabalho)
+  - `2` → 2º Grau (ex: tribunais de justiça ou regionais)
+  - `3` → Tribunais Superiores (STJ, TST, STM, TSE)
+  - `4` → Supremo Tribunal Federal (STF)
+- `palavrasChave` — lista de termos buscados nos **assuntos** e **movimentações** do processo.  
+  > Os termos são combinados com lógica **OR**. Se qualquer um for encontrado, o processo será retornado.
 - `tribunais` — veja [lista completa de tribunais](../referencias/tribunais)
-- `valorCausa`, `dataDistribuicao` — permitem filtragem por faixa
+- `valorCausa`, `dataDistribuicao` — permitem filtragem por faixa numérica ou temporal
 - `classesProcessuais` — veja [lista de classes](../referencias/classes-processuais)
 - `assuntosCNJ` — veja [lista de assuntos CNJ](../referencias/assuntos)
 - `statusProcessuais` — veja [status possíveis](../referencias/status-processuais)
@@ -178,5 +185,3 @@ A API aplica os filtros com **lógica combinada (AND entre filtros diferentes, O
 ## 🧾 Retorno
 
 Retorna uma lista de objetos do tipo [`processo`](./estrutura-dados), com dados estruturados e padronizados pela Predictus.
-
----
