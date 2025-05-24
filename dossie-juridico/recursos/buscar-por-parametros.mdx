@@ -1,0 +1,85 @@
+---
+title: Busca Customizada
+description: "Consulte processos judiciais com base em critérios diversos como assunto, valor, classe, juiz, relator, polo, julgamentos e muito mais."
+---
+
+# 🧪 Busca Customizada (Parâmetros Avançados)
+
+Este endpoint permite montar consultas altamente refinadas para encontrar processos judiciais com base em **características específicas**, como:
+
+- Partes e advogados envolvidos (ou explicitamente não envolvidos)
+- Valor da causa, datas, status, classe, assuntos
+- Órgãos julgadores, julgamentos, juízes, relatores e mais
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorParametros
+```
+
+---
+
+## 🧾 Corpo da requisição (exemplo completo)
+
+> O payload é extenso e flexível. Veja abaixo um exemplo completo com múltiplos filtros aplicados:
+
+```json
+// JSON completo do payload fornecido será mantido aqui
+```
+
+---
+
+## 📚 Campos importantes
+
+- `partes` e `naoPartes` — lista de objetos com `cpf`, `cnpj`, `nome`, `polo`  
+  Permite incluir ou excluir partes específicas na consulta
+- `advogados` e `naoAdvogados` — filtros por OAB, CPF ou nome  
+- `classesProcessuais`, `assuntosCNJ`, `statusProcessuais`, `ramosDoDireito`, `segmentos` — todos os filtros padronizados Predictus
+- `orgaosJulgadores`, `unidadesOrigem`, `tribunais` — filtros estruturais do processo
+- `valorCausa`, `dataDistribuicao`, `dataArquivamento`, `dataTransitoJulgado` — permitem busca por faixa
+- `palavrasChave` — aplica busca textual em assuntos e movimentações
+- `julgamentos` — resultado da sentença (ex: "IMPROCEDENTE", "PROCEDENTE EM PARTE")
+- `juizes`, `relatores` — busca por quem proferiu ou relatou decisões
+- `ufs` — siglas de estado (ex: "SP", "RJ", "SC")
+- `limiteResultados` — mínimo: 1 / máximo: 10.000 (padrão: 10.000)
+- `camposRetorno` — escolha os campos desejados no retorno
+
+---
+
+## 📌 Como funcionam os filtros
+
+| Situação                         | Comportamento                                  |
+|----------------------------------|-----------------------------------------------|
+| Filtros diferentes               | Lógica **AND** entre eles                     |
+| Listas internas (ex: classes)    | Lógica **OR** dentro do array                 |
+| `naoPartes`, `naoAdvogados`      | Excluem registros com as condições indicadas  |
+| Faixas (`data`, `valor`)         | Deve estar dentro do intervalo fornecido      |
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado                            |
+|--------|-----------------------------------------|
+| `200`  | Sucesso — processos encontrados         |
+| `204`  | Nenhum processo encontrado              |
+| `400`  | Erro de validação no payload            |
+| `401`  | Token inválido ou expirado              |
+
+---
+
+## 💡 Quando usar
+
+- Estudo de jurisprudência
+- Análise de padrões de decisão
+- Filtragem de massa com múltiplas variáveis
+- Diagnóstico jurídico por perfil de risco ou estratégia
+
+---
+
+## 🧾 Retorno
+
+Retorna uma lista de objetos do tipo [`processo`](../estrutura-dados), com todos os campos solicitados em `camposRetorno`.
+
