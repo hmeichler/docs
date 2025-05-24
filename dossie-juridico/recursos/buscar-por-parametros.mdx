@@ -26,7 +26,156 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorPar
 > O payload é extenso e flexível. Veja abaixo um exemplo completo com múltiplos filtros aplicados:
 
 ```json
-// JSON completo do payload fornecido será mantido aqui
+{
+  "limiteResultados": 100,
+  "partes": [
+    {
+      "nome": "08108732905",
+      "cnpj": "00000000000191",
+      "cpf": "08108732905",
+      "polo": "ATIVO"
+    }
+  ],
+  "naoPartes": [
+    {
+      "cnpj": "00000000000191",
+      "polo": "PASSIVO"
+    }
+  ],
+  "advogados": [
+    {
+      "nome": "08108732905",
+      "oab": {
+        "numero": "12345",
+        "uf": "SC"
+      },
+      "cpf": "08108732905",
+      "polo": "ATIVO"
+    }
+  ],
+  "naoAdvogados": [
+    {
+      "oab": {
+        "numero": "12345",
+        "uf": "SC"
+      },
+      "polo": "PASSIVO"
+    }
+  ],
+  "orgaosJulgadores": [
+    "JUIZADO ESPECIAL",
+    "VARA"
+  ],
+  "unidadesOrigem": [
+    "JUIZADO ESPECIAL",
+    "VARA"
+  ],
+  "tribunais": [
+    "TRT-9",
+    "TJ-SC"
+  ],
+  "valorCausa": {
+    "maiorQue": 1000,
+    "menorQue": 100000
+  },
+  "dataDistribuicao": {
+    "maiorQue": "1970-01-01",
+    "menorQue": "2025-02-03"
+  },
+  "dataArquivamento": {
+    "maiorQue": "1970-01-01",
+    "menorQue": "2025-02-03"
+  },
+  "dataTransitoJulgado": {
+    "maiorQue": "1970-01-01",
+    "menorQue": "2025-02-03"
+  },
+  "classesProcessuais": [
+    "CUMPRIMENTO DE SENTENCA",
+    "PROCEDIMENTO DO JUIZADO ESPECIAL CIVEL"
+  ],
+  "naoClassesProcessuais": [
+    "ACAO TRABALHISTA - RITO ORDINARIO"
+  ],
+  "naoAssuntosCNJ": [
+    "ADICIONAL DE HORAS EXTRAS"
+  ],
+  "assuntosCNJ": [
+    "INDENIZACAO",
+    "ATRASO DE VOO",
+    "ADICIONAL DE HORAS EXTRAS",
+    "DIREITO"
+  ],
+  "statusProcessuais": [
+    "EM TRAMITACAO",
+    "ARQUIVAMENTO DEFINITIVO",
+    "EM GRAU DE RECURSO"
+  ],
+  "ramosDoDireito": [
+    "DIREITO DO TRABALHO",
+    "DIREITO DO CONSUMIDOR",
+    "DIREITO CIVIL"
+  ],
+  "segmentos": [
+    "JUSTICA ESTADUAL",
+    "JUSTICA DO TRABALHO"
+  ],
+  "julgamentos": [
+    "PROCEDENCIA",
+    "PROCEDENCIA EM PARTE"
+  ],
+  "juizes": [
+    "JOSE ALDO"
+  ],
+  "relatores": [
+    "JOSE ALDO"
+  ],
+  "ufs": [
+    "SC",
+    "PR"
+  ],
+  "camposRetorno": {
+    "incluir": [
+      "urlProcesso",
+      "numeroProcessoUnico",
+      "numeroProcessoAntigo",
+      "statusObservacao",
+      "grauProcesso",
+      "juiz",
+      "relator",
+      "revisores",
+      "area",
+      "sistema",
+      "segmento",
+      "tribunalOrigem",
+      "tribunal",
+      "uf",
+      "orgaoJulgador",
+      "unidadeOrigem",
+      "classeProcessual",
+      "assuntosCNJ",
+      "dataDistribuicao",
+      "dataAutuacao",
+      "partes",
+      "advogadosSemParte",
+      "processosRelacionados",
+      "valorCausa",
+      "valorExecucao",
+      "eTutelaAntecipada",
+      "temInjuncao",
+      "eJusticaGratuita",
+      "ePrioritario",
+      "eSegredoJustica",
+      "eProcessoDigital",
+      "temAcordao",
+      "acordao",
+      "temSentenca",
+      "sentenca",
+      "dataProcessamento",
+      "statusPredictus"
+    ]
+  }
+}
 ```
 
 ---
@@ -39,7 +188,6 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorPar
 - `classesProcessuais`, `assuntosCNJ`, `statusProcessuais`, `ramosDoDireito`, `segmentos` — todos os filtros padronizados Predictus
 - `orgaosJulgadores`, `unidadesOrigem`, `tribunais` — filtros estruturais do processo
 - `valorCausa`, `dataDistribuicao`, `dataArquivamento`, `dataTransitoJulgado` — permitem busca por faixa
-- `palavrasChave` — aplica busca textual em assuntos e movimentações
 - `julgamentos` — resultado da sentença (ex: "IMPROCEDENTE", "PROCEDENTE EM PARTE")
 - `juizes`, `relatores` — busca por quem proferiu ou relatou decisões
 - `ufs` — siglas de estado (ex: "SP", "RJ", "SC")
