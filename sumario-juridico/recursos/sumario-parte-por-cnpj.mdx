@@ -67,8 +67,23 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/sumarioPorCN
 
 ## 📚 Campos importantes
 
-- `cnpj` (string) — campo obrigatório  
-- Demais campos seguem as mesmas regras de [Buscar por CNPJ](./buscar-parte-por-cnpj)
+- `cnpj` (string) — único campo obrigatório  
+  - Deve conter exatamente 14 dígitos numéricos  
+  - Deve ser um CNPJ válido conforme validação do algoritmo
+- `polo` — `ATIVO` ou `PASSIVO`
+- `grausProcesso` — lista de inteiros entre 1 e 4:  
+  - `1` → 1º Grau (ex: vara cível)  
+  - `2` → 2º Grau (tribunais estaduais/regionais)  
+  - `3` → Tribunais Superiores (STJ, TST etc.)  
+  - `4` → Supremo Tribunal Federal (STF)
+- `tribunais` — lista de siglas válidas (ex: `TJ-SP`, `TRT-9`, `STF`)  
+  - Ver [lista completa de tribunais](../../referencias/tribunais)
+- `valorCausa`, `dataDistribuicao` — permitem filtragem por faixa (menorQue/maiorQue)
+- `classesProcessuais`, `assuntosCNJ` — até 65.000 valores cada  
+- `statusProcessuais` — veja [valores válidos](../../referencias/status-processuais)
+- `ramosDoDireito` — veja [valores válidos](../../referencias/ramos-direito)
+- `segmentos` — deve conter apenas valores válidos (ex: `JUSTICA DO TRABALHO`, `STF`) 
+  - Veja [lista completa de segmentos](../../referencias/segmentos)
 
 ---
 
