@@ -89,7 +89,7 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/sumarioPorCP
 
 ## 📌 Como funcionam os filtros
 
-A lógica dos filtros é a mesma do Dossiê Jurídico:
+A API aplica os filtros com **lógica combinada (AND entre filtros diferentes, OR dentro de listas)**:
 
 | Situação                         | Comportamento                                             |
 |----------------------------------|------------------------------------------------------------|
@@ -99,6 +99,7 @@ A lógica dos filtros é a mesma do Dossiê Jurídico:
 | Faixas (valor ou data)           | O valor do processo deve estar **dentro do intervalo**    |
 
 ---
+
 
 ## 🧾 Estrutura do retorno
 

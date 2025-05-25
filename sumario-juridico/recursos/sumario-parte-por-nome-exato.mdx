@@ -1,20 +1,20 @@
 ---
-title: Sumário por CNPJ
-description: "Visualize estatísticas agregadas dos processos relacionados a um CNPJ."
+title: Sumário por CPF
+description: "Visualize estatísticas agregadas dos processos relacionados a um CPF."
 ---
 
-# 📊 Sumário Jurídico por CNPJ
+# 📊 Sumário Jurídico por CPF
 
-Este endpoint retorna uma visão **agregada** dos processos judiciais em que o CNPJ informado esteja envolvido, como parte **ativa**, **passiva** ou **outros**.
+Este endpoint retorna uma visão **agregada** dos processos judiciais em que o CPF informado esteja envolvido, como parte **ativa**, **passiva** ou **outros**.
 
-Você pode aplicar os mesmos filtros utilizados na consulta do Dossiê Jurídico por CNPJ.
+Você pode aplicar os mesmos filtros utilizados na consulta do Dossiê Jurídico por CPF.
 
 ---
 
 ## 🔗 Endpoint
 
 ```
-POST https://api.predictus.inf.br/predictus-api/processos/judiciais/sumarioPorCNPJParte
+POST https://api.predictus.inf.br/predictus-api/processos/judiciais/sumarioPorCPFParte
 ```
 
 ---
@@ -23,7 +23,7 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/sumarioPorCN
 
 ```json
 {
-  "cnpj": "0000000000000199",
+  "cpf": "08108732905",
   "polo": "ATIVO",
   "grausProcesso": [1],
   "limiteResultados": 10000,
@@ -67,9 +67,10 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/sumarioPorCN
 
 ## 📚 Campos importantes
 
-- `cnpj` (string) — único campo obrigatório  
-  - Deve conter exatamente 14 dígitos numéricos  
-  - Deve ser um CNPJ válido conforme validação do algoritmo
+- `nome` (string) — único campo obrigatório  
+  - Deve ser nome completo
+- `semDocumento` (boolean) — opcional  
+  - Quando `true`, retorna apenas processos em que a parte **não possui CPF ou CNPJ identificado**
 - `polo` — `ATIVO` ou `PASSIVO`
 - `grausProcesso` — lista de inteiros entre 1 e 4:  
   - `1` → 1º Grau (ex: vara cível)  
@@ -82,8 +83,9 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/sumarioPorCN
 - `classesProcessuais`, `assuntosCNJ` — até 65.000 valores cada  
 - `statusProcessuais` — veja [valores válidos](../../referencias/status-processuais)
 - `ramosDoDireito` — veja [valores válidos](../../referencias/ramos-direito)
-- `segmentos` — deve conter apenas valores válidos (ex: `JUSTICA DO TRABALHO`, `STF`) 
+- `segmentos` — deve conter apenas valores válidos (ex: `JUSTICA DO TRABALHO`, `STF`)  
   - Veja [lista completa de segmentos](../../referencias/segmentos)
+- `limiteResultados` — mínimo: 1 / máximo: 10.000 (padrão: 10.000)
 
 ---
 
@@ -95,11 +97,10 @@ A API aplica os filtros com **lógica combinada (AND entre filtros diferentes, O
 |----------------------------------|------------------------------------------------------------|
 | Vários filtros usados            | Todos devem ser satisfeitos (lógica **AND**)              |
 | Lista de valores (ex: tribunais) | Basta bater **um dos valores** da lista (lógica **OR**)   |
-| Campos únicos (ex: CPF)          | Precisa ser exatamente igual                              |
+| Campos únicos (ex: nome)         | Necessário corresponder parcialmente ou exatamente         |
 | Faixas (valor ou data)           | O valor do processo deve estar **dentro do intervalo**    |
 
 ---
-
 
 ## 🧾 Estrutura do retorno
 
@@ -155,10 +156,10 @@ A API aplica os filtros com **lógica combinada (AND entre filtros diferentes, O
 
 ## 🛡️ Validações aplicadas
 
-- CNPJ:
+- CPF:
   - Não nulo
-  - 14 dígitos numéricos
-  - Validação de CNPJ formal
+  - 11 dígitos numéricos
+  - Validação de CPF formal
 - Polo:
   - `ATIVO` ou `PASSIVO`
 - Lista de `statusProcessuais`, `ramosDoDireito`, `segmentos`, `tribunais`:
