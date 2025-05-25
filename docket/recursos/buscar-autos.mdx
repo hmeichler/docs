@@ -12,7 +12,7 @@ Este endpoint inicia o processo de extração de autos judiciais sigilosos de um
 ## 🔗 Endpoint
 
 ```
-POST https://api.predictus.inf.br/predictus-api/autos/v2/buscarPorNumero
+POST https://api.predictus.inf.br/predictus-api/processos/judiciais/autos/buscarPorNumeroCNJ
 ```
 
 ---
@@ -23,7 +23,7 @@ POST https://api.predictus.inf.br/predictus-api/autos/v2/buscarPorNumero
 {
   "numeroProcessoUnico": "50379103520218130702",
   "sistema": "EPROC-TRF2",
-  "login": "advogado@example.com",
+  "usuario": "advogado@example.com",
   "senha": "senhaSegura",
   "mfaToken": "GI2GGYZQGY3GMZRSG44TQOJTGUYWIZJV"
 }
@@ -33,9 +33,9 @@ POST https://api.predictus.inf.br/predictus-api/autos/v2/buscarPorNumero
 
 ## 📚 Campos obrigatórios
 
-- `numeroProcesso` — número do processo no formato CNJ (sem traços/pontos)
+- `numeroProcessoUnico` — número do processo no formato CNJ (sem traços/pontos)
 - `sistema` — sistema judicial (ex: ESAJ, PJE, PROJUDI, EPROC)
-- `login` e `senha` — credenciais do advogado com acesso ao processo
+- `usuario` e `senha` — credenciais do advogado com acesso ao processo
 - `otp` — token de dois fatores (quando exigido)
 
 ---
