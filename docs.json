@@ -43,6 +43,26 @@
             ]
           },
           {
+            "group": "Sumário Jurídico",
+            "pages": [
+              "sumario-juridico/overview",
+              "sumario-juridico/estrutura-dados"
+            ]
+          },
+          {
+            "group": "Sumário Jurídico - Recursos",
+            "pages": [
+              "sumario-juridico/recursos/buscar-parte-por-cpf",
+              "sumario-juridico/recursos/buscar-parte-por-cnpj",
+              "sumario-juridico/recursos/buscar-parte-por-nome",
+              "sumario-juridico/recursos/buscar-parte-por-nome-exato",
+              "sumario-juridico/recursos/buscar-advogado-por-cpf",
+              "sumario-juridico/recursos/buscar-advogado-por-oab",
+              "sumario-juridico/recursos/buscar-advogado-por-nome",
+              "sumario-juridico/recursos/buscar-advogado-por-nome-exato"
+            ]
+          },
+          {
             "group": "Referências",
             "pages": [
               "referencias/assuntos",
