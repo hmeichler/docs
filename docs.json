@@ -61,6 +61,20 @@
               "sumario-juridico/recursos/sumario-advogado-por-nome-exato"
             ]
           },
+                    {
+            "group": "Dossiê Recuperação Judicial",
+            "pages": [
+              "dossie-rj/overview",
+              "dossie-rj/estrutura-dados"
+            ]
+          },
+          {
+            "group": "Dossiê Recuperação Judicial - Recursos",
+            "pages": [
+              "dossie-rj/recursos/buscar-rj-por-data",
+              "dossie-rj/recursos/buscar-rj-por-cnpj"
+            ]
+          },
           {
             "group": "Referências",
             "pages": [
