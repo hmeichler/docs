@@ -1,0 +1,167 @@
+---
+title: Sumário Advogado por Nome
+description: "Visualize estatísticas agregadas dos processos relacionados a um Nome."
+---
+
+# 📊 Sumário Jurídico por Nome (Advogado)
+
+Este endpoint retorna uma visão **agregada** dos processos judiciais em que um nome informado esteja envolvido, como advogado **ativo**, **passivo** ou **outros**.
+
+Você pode aplicar filtros por grau, tribunal, classe, assunto, valor da causa, status, ramo do direito e mais.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.inf.br/predictus-api/processos/judiciais/sumarioPorNomeAdvogado
+```
+
+---
+
+## 🧾 Corpo da requisição (exemplo completo)
+
+```json
+{
+  "nome": "UM NOME",
+  "polo": "ATIVO",
+  "grausProcesso": [1],
+  "limiteResultados": 10000,
+  "tribunais": ["TJ-SC", "TRT-9"],
+  "valorCausa": {
+    "maiorQue": 1000,
+    "menorQue": 100000
+  },
+  "dataDistribuicao": {
+    "maiorQue": "1970-01-01",
+    "menorQue": "2025-02-03"
+  },
+  "classesProcessuais": [
+    "CUMPRIMENTO DE SENTENCA",
+    "PROCEDIMENTO DO JUIZADO ESPECIAL CIVEL",
+    "ACAO TRABALHISTA - RITO ORDINARIO"
+  ],
+  "assuntosCNJ": [
+    "INDENIZACAO POR DANO MORAL",
+    "ATRASO DE VOO",
+    "ADICIONAL DE HORAS EXTRAS"
+  ],
+  "statusProcessuais": [
+    "EM TRAMITACAO",
+    "ARQUIVAMENTO DEFINITIVO",
+    "EM GRAU DE RECURSO"
+  ],
+  "ramosDoDireito": [
+    "DIREITO DO TRABALHO",
+    "DIREITO DO CONSUMIDOR",
+    "DIREITO CIVIL"
+  ],
+  "segmentos": [
+    "JUSTICA ESTADUAL",
+    "JUSTICA DO TRABALHO"
+  ]
+}
+```
+
+---
+
+## 📚 Campos importantes
+
+- `nome` (string) — único campo obrigatório  
+  - Deve ser nome completo
+- `semDocumento` (boolean) — opcional  
+  - Quando `true`, retorna apenas processos em que a parte **não possui CPF ou CNPJ identificado**
+- `polo` — `ATIVO` ou `PASSIVO`
+- `grausProcesso` — lista de inteiros entre 1 e 4:  
+  - `1` → 1º Grau (ex: vara cível)  
+  - `2` → 2º Grau (tribunais estaduais/regionais)  
+  - `3` → Tribunais Superiores (STJ, TST etc.)  
+  - `4` → Supremo Tribunal Federal (STF)
+- `tribunais` — lista de siglas válidas (ex: `TJ-SP`, `TRT-9`, `STF`)  
+  - Ver [lista completa de tribunais](../../referencias/tribunais)
+- `valorCausa`, `dataDistribuicao` — permitem filtragem por faixa (menorQue/maiorQue)
+- `classesProcessuais`, `assuntosCNJ` — até 65.000 valores cada  
+- `statusProcessuais` — veja [valores válidos](../../referencias/status-processuais)
+- `ramosDoDireito` — veja [valores válidos](../../referencias/ramos-direito)
+- `segmentos` — deve conter apenas valores válidos (ex: `JUSTICA DO TRABALHO`, `STF`) 
+  - Veja [lista completa de segmentos](../../referencias/segmentos)
+
+---
+
+## 📌 Como funcionam os filtros
+
+A API aplica os filtros com **lógica combinada (AND entre filtros diferentes, OR dentro de listas)**:
+
+| Situação                         | Comportamento                                             |
+|----------------------------------|------------------------------------------------------------|
+| Vários filtros usados            | Todos devem ser satisfeitos (lógica **AND**)              |
+| Lista de valores (ex: tribunais) | Basta bater **um dos valores** da lista (lógica **OR**)   |
+| Campos únicos (ex: nome)         | Necessário corresponder parcialmente ou exatamente         |
+| Faixas (valor ou data)           | O valor do processo deve estar **dentro do intervalo**    |
+
+---
+
+## 🧾 Estrutura do retorno
+
+```json
+{
+  "segmentos": {
+    "JUSTICA DO TRABALHO": 1,
+    "JUSTICA ESTADUAL": 2
+  },
+  "tribunais": {
+    "TRT-9": 1,
+    "TJ-SC": 2
+  },
+  "distribuicaoPorAno": {
+    "2008": 1,
+    "2022": 2
+  },
+  "ramoDireito": {
+    "ativos": {
+      "DIREITO DO CONSUMIDOR": {
+        "totalProcessos": 1,
+        "totalValorCausa": 10066.04
+      },
+      "DIREITO CIVIL": {
+        "totalProcessos": 1,
+        "totalValorCausa": 6190.31
+      }
+    },
+    "passivos": {},
+    "outros": {
+      "DIREITO DO TRABALHO": {
+        "totalProcessos": 1,
+        "totalValorCausa": 24000
+      }
+    }
+  },
+  "totalProcessos": 3
+}
+```
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado                              |
+|--------|-------------------------------------------|
+| `200`  | Sucesso — dados agregados retornados      |
+| `204`  | Nenhum processo encontrado                |
+| `400`  | Erro de validação no payload              |
+| `401`  | Token inválido ou expirado                |
+
+---
+
+## 🛡️ Validações aplicadas
+
+- Nome:
+  - Não pode ser nulo ou vazio
+- Polo:
+  - `ATIVO` ou `PASSIVO`
+- Lista de `statusProcessuais`, `ramosDoDireito`, `segmentos`, `tribunais`:
+  - Todos os valores devem estar na lista de permitidos
+- Campos com listas extensas (`classesProcessuais`, `assuntosCNJ`):
+  - Máximo de 65.000 itens
+
+---
