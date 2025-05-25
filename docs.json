@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Predictus API",
   "colors": {
-    "primary": "#00A87E", 
-    "light": "#6FE3C1",     
-    "dark": "#00735B"       
+    "primary": "#00A87E",
+    "light": "#6FE3C1",
+    "dark": "#00735B"
   },
   "favicon": "/favicon.png",
   "navigation": {
@@ -61,7 +61,7 @@
               "sumario-juridico/recursos/sumario-advogado-por-nome-exato"
             ]
           },
-                    {
+          {
             "group": "Dossiê Recuperação Judicial",
             "pages": [
               "dossie-rj/overview",
@@ -73,6 +73,18 @@
             "pages": [
               "dossie-rj/recursos/buscar-rj-por-data",
               "dossie-rj/recursos/buscar-rj-por-cnpj"
+            ]
+          },
+          {
+            "group": "Jurimetria",
+            "pages": [
+              "jurimetria/overview"
+            ]
+          },
+          {
+            "group": "Jurimetria - Recursos",
+            "pages": [
+              "jurimetria/recursos/buscar-por-parametros"
             ]
           },
           {
