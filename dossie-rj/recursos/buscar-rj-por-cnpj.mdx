@@ -1,0 +1,63 @@
+---
+title: Buscar Recuperação Judicial por CNPJ
+description: "Consulte todos os processos de recuperação judicial relacionados a um CNPJ."
+---
+
+# 🏢 Buscar RJ por CNPJ
+
+Este endpoint permite consultar **todos os processos de recuperação judicial** em que um determinado CNPJ esteja envolvido como parte.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.inf.br/predictus-api/processos/judiciais/recuperacao-judicial/por-cnpj
+```
+
+---
+
+## 🧾 Corpo da requisição (exemplo completo)
+
+```json
+{
+  "cnpj": "00000000000199",
+  "polo": "ATIVO"
+}
+```
+
+---
+
+## 📚 Campos obrigatórios
+
+- `cnpj` (string) — obrigatório  
+  - Deve conter exatamente 14 dígitos numéricos  
+  - Validação de CNPJ formal aplicada
+- `polo` (string) — opcional  
+  - Pode ser `ATIVO`, `PASSIVO` ou omitido para trazer todos os polos
+
+---
+
+## 📌 Como funciona a busca
+
+- Traz todos os processos **de recuperação judicial** vinculados ao CNPJ informado
+- Caso o campo `polo` seja informado, retorna apenas os processos em que a empresa figura nesse polo
+- Sem filtros adicionais de tribunal, data ou valores
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado                                  |
+|--------|-----------------------------------------------|
+| `200`  | Sucesso — processos encontrados               |
+| `204`  | Nenhum processo de RJ encontrado para o CNPJ  |
+| `400`  | Erro de validação no payload (ex: CNPJ inválido) |
+| `401`  | Token inválido ou expirado                    |
+
+---
+
+## 🧾 Retorno
+
+Retorna uma lista de objetos do tipo [`processo`](./estrutura-dados), contendo dados estruturados e com foco em **ações de recuperação judicial**.
+
