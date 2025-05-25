@@ -1,0 +1,65 @@
+---
+title: Introdução
+description: "Obtenha estatísticas avançadas sobre decisões judiciais com base em filtros objetivos como tribunal, classe processual, assunto e órgão julgador."
+---
+
+# 📊 Jurimetria Processual
+
+A Jurimetria da Predictus permite entender o **comportamento dos tribunais brasileiros** com base em dados históricos de milhares de processos reais.
+
+Você informa os critérios processuais (tribunal, assunto, vara, etc.) e a Predictus retorna **indicadores estatísticos detalhados**, que ajudam a:
+
+- Planejar a melhor estratégia de atuação judicial
+- Antecipar decisões com base em padrões históricos
+- Avaliar risco, tempo médio e valores de condenação
+- Apoiar análises preditivas e precificação de ações judiciais
+
+---
+
+## 🧠 Quando usar a Jurimetria?
+
+Utilize esse recurso para:
+
+- **Advogados**: definir teses com base em jurisprudência empírica
+- **Departamentos Jurídicos**: avaliar risco antes de ingressar com ação
+- **Litigantes em massa**: entender comportamento de varas e tribunais
+- **Fintechs e seguradoras**: precificar produtos com base em padrões de julgamento
+
+---
+
+## 🎯 Exemplos de filtros disponíveis
+
+Você pode segmentar a análise por:
+
+- Tribunal (`tribunal`)
+- Órgão julgador (`orgaoJulgador`)
+- Unidade de origem (`unidadeOrigem`)
+- Classe processual (`classeProcessual`)
+- Assuntos CNJ (`assuntosCNJ`)
+- Grau do processo (`grauProcesso`)
+
+Esses campos devem ser combinados para obter um retrato fiel do comportamento judicial em determinado contexto.
+
+---
+
+## 📈 O que retorna?
+
+A resposta inclui:
+
+- `totalProcessos`: quantidade total de processos analisados
+- `mediaValorCausa`, `mediaValorExecucao`
+- `mediaDiasAteJulgamento`, `mediaDiasAteTransitoEmJulgado`, `mediaDiasAteArquivamento`
+- **Distribuição por tipo de julgamento** (ex: procedência, improcedência, extinção, etc.), com:
+  - Probabilidade (%)
+  - Quantidade de processos
+  - Amostra de NPUs
+  - Médias de valores e prazos
+- **Top 10 advogados ofensores**
+- **Top 10 partes passivas**
+- **Distribuição histórica por ano**, com as mesmas métricas
+
+---
+
+## 🚀 Prossiga
+
+Para utilizar a Jurimetria via API, acesse: [Buscar por Parâmetros](./buscar-por-parametros)
