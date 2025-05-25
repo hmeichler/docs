@@ -1,0 +1,80 @@
+---
+title: Introdução
+description: "Visualize rapidamente o perfil judicial de uma pessoa ou empresa por meio de estatísticas agregadas sobre seus processos."
+---
+
+# 📊 Sumário Jurídico
+
+O **Sumário Jurídico** oferece uma visão consolidada dos processos judiciais relacionados a uma parte (pessoa física, jurídica ou advogado) ou a critérios personalizados de busca.
+
+Ao invés de retornar todos os processos individualmente, este módulo fornece **estatísticas agregadas**, ideais para uso em dashboards, relatórios ou para análises rápidas de risco e exposição judicial.
+
+---
+
+## 🧠 Quando usar o Sumário Jurídico?
+
+Utilize o Sumário Jurídico quando você quiser:
+
+- Obter um **panorama quantitativo** dos processos de uma parte ou perfil
+- Apoiar decisões estratégicas com **visões executivas**
+- Construir painéis e indicadores jurídicos
+- Evitar custos com o processamento completo de processos
+
+---
+
+## 🔍 O que retorna?
+
+Com base nos filtros aplicados, o Sumário Jurídico responde com:
+
+- Distribuição de processos por **segmento** e **tribunal**
+- Distribuição por **ano de distribuição**
+- Volume de processos e valor da causa por **ramo do direito**
+- Total de processos encontrados
+
+---
+
+## 🔁 Tipos de entrada aceitos
+
+Você pode usar os **mesmos filtros** disponíveis no Dossiê Jurídico:
+
+<CardGroup cols={2}>
+  <Card title="Por CPF/CNPJ" icon="id-card">
+    Consulte estatísticas agregadas de processos de uma pessoa ou empresa.
+  </Card>
+  <Card title="Por Nome ou Nome Exato" icon="user">
+    Ideal para quando você não tem o documento da pessoa.
+  </Card>
+  <Card title="Por OAB" icon="user">
+    Ideal para quando você não tem o documento da parte.
+  </Card>
+</CardGroup>
+
+---
+
+## 📦 Resultado simplificado
+
+```json
+{
+  "totalProcessos": 3,
+  "segmentos": { "JUSTICA ESTADUAL": 2 },
+  "tribunais": { "TJ-SC": 2 },
+  "distribuicaoPorAno": { "2022": 2 },
+  "ramoDireito": {
+    "ativos": {
+      "DIREITO DO CONSUMIDOR": {
+        "totalProcessos": 1,
+        "totalValorCausa": 10000.0
+      }
+    }
+  }
+}
+```
+
+---
+
+## 🚀 Prossiga
+
+Você pode agora acessar o endpoint de consulta:  
+👉 [📂 Sumário Jurídico por Parâmetros](./buscar-por-parametros)
+
+Ou utilize um dos filtros específicos pela barra lateral.
