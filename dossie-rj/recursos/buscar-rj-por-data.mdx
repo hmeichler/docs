@@ -1,0 +1,62 @@
+---
+title: Buscar Recuperação Judicial por Data
+description: "Descubra todos os processos de recuperação judicial distribuídos em uma data específica."
+---
+
+# 📅 Buscar RJ por Data de Distribuição
+
+Este endpoint permite descobrir **todos os processos de recuperação judicial distribuídos em uma data específica**.
+
+Essa funcionalidade é especialmente útil para empresas que desejam fazer **monitoramento diário ou semanal de novas RJs**, e está disponível apenas para clientes com licenciamento específico para essa funcionalidade.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.inf.br/predictus-api/processos/judiciais/recuperacaoJudicial/buscarPorData
+```
+
+---
+
+## 🧾 Corpo da requisição (exemplo)
+
+```json
+{
+  "dataDistribuicao": "2024-05-23"
+}
+```
+
+---
+
+## 📚 Campos obrigatórios
+
+- `dataDistribuicao` (string — `yyyy-MM-dd`)
+  - Campo obrigatório
+  - Deve ser uma data no **passado ou presente**
+  - Não pode ser inferior a 30 dias atrás do dia atual
+
+---
+
+## 🛡️ Regras de licenciamento
+
+Este endpoint está **restrito a clientes licenciados** com acesso à base de RJs recentes.  
+É ideal para uso em estratégias de **discovery de novos eventos jurídicos** e **monitoramento diário de risco**.
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado                                 |
+|--------|----------------------------------------------|
+| `200`  | Sucesso — processos de RJ encontrados        |
+| `204`  | Nenhum processo de RJ encontrado na data     |
+| `400`  | Erro de validação no payload (ex: data futura ou muito antiga) |
+| `401`  | Token inválido ou expirado                   |
+
+---
+
+## 🧾 Retorno
+
+Retorna uma lista de objetos do tipo [`processo`](./estrutura-dados), contendo somente processos **com classe e assunto de recuperação judicial** distribuídos na data informada.
+
