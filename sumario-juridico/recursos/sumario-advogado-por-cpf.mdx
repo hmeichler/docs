@@ -1,11 +1,11 @@
 ---
-title: Sumário Parte por Nome
-description: "Visualize estatísticas agregadas dos processos relacionados a um Nome."
+title: Sumário Advogado por CPF
+description: "Visualize estatísticas agregadas dos processos relacionados a um CPF."
 ---
 
-# 📊 Sumário Jurídico por Nome (Parte)
+# 📊 Sumário Jurídico por CPF (Advogado)
 
-Este endpoint retorna uma visão **agregada** dos processos judiciais em que um nome informado esteja envolvido, como parte **ativa**, **passiva** ou **outros**.
+Este endpoint retorna uma visão **agregada** dos processos judiciais em que o CPF informado esteja envolvido, como advogado **ativo**, **passivo** ou **outros**.
 
 Você pode aplicar filtros por grau, tribunal, classe, assunto, valor da causa, status, ramo do direito e mais.
 
@@ -14,7 +14,7 @@ Você pode aplicar filtros por grau, tribunal, classe, assunto, valor da causa, 
 ## 🔗 Endpoint
 
 ```
-POST https://api.predictus.inf.br/predictus-api/processos/judiciais/sumarioPorNomeParte
+POST https://api.predictus.inf.br/predictus-api/processos/judiciais/sumarioPorCPFAdvogado
 ```
 
 ---
@@ -23,7 +23,7 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/sumarioPorNo
 
 ```json
 {
-  "nome": "UM NOME",
+  "cpf": "08108732905",
   "polo": "ATIVO",
   "grausProcesso": [1],
   "limiteResultados": 10000,
@@ -67,10 +67,9 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/sumarioPorNo
 
 ## 📚 Campos importantes
 
-- `nome` (string) — único campo obrigatório  
-  - Deve ser nome completo
-- `semDocumento` (boolean) — opcional  
-  - Quando `true`, retorna apenas processos em que a parte **não possui CPF ou CNPJ identificado**
+- `cpf` (string) — único campo obrigatório  
+  - Deve conter exatamente 11 dígitos numéricos  
+  - Deve ser um CPF válido conforme validação do algoritmo
 - `polo` — `ATIVO` ou `PASSIVO`
 - `grausProcesso` — lista de inteiros entre 1 e 4:  
   - `1` → 1º Grau (ex: vara cível)  
@@ -96,10 +95,11 @@ A API aplica os filtros com **lógica combinada (AND entre filtros diferentes, O
 |----------------------------------|------------------------------------------------------------|
 | Vários filtros usados            | Todos devem ser satisfeitos (lógica **AND**)              |
 | Lista de valores (ex: tribunais) | Basta bater **um dos valores** da lista (lógica **OR**)   |
-| Campos únicos (ex: nome)         | Necessário corresponder parcialmente ou exatamente         |
+| Campos únicos (ex: CPF)          | Precisa ser exatamente igual                              |
 | Faixas (valor ou data)           | O valor do processo deve estar **dentro do intervalo**    |
 
 ---
+
 
 ## 🧾 Estrutura do retorno
 
@@ -155,8 +155,10 @@ A API aplica os filtros com **lógica combinada (AND entre filtros diferentes, O
 
 ## 🛡️ Validações aplicadas
 
-- Nome:
-  - Não pode ser nulo ou vazio
+- CPF:
+  - Não nulo
+  - 11 dígitos numéricos
+  - Validação de CPF formal
 - Polo:
   - `ATIVO` ou `PASSIVO`
 - Lista de `statusProcessuais`, `ramosDoDireito`, `segmentos`, `tribunais`:
