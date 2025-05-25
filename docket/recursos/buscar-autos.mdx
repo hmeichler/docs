@@ -1,0 +1,64 @@
+---
+title: Buscar por Número CNJ
+description: "Inicie a recuperação de autos processuais com base no número do processo e credenciais do advogado."
+---
+
+# 🔐 Buscar por Número CNJ
+
+Este endpoint inicia o processo de extração de autos judiciais sigilosos de um processo, acessando diretamente o sistema do tribunal correspondente.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.inf.br/predictus-api/autos/v2/buscarPorNumero
+```
+
+---
+
+## 🧾 Corpo da requisição (exemplo)
+
+```json
+{
+  "numeroProcessoUnico": "50379103520218130702",
+  "sistema": "EPROC-TRF2",
+  "login": "advogado@example.com",
+  "senha": "senhaSegura",
+  "mfaToken": "GI2GGYZQGY3GMZRSG44TQOJTGUYWIZJV"
+}
+```
+
+---
+
+## 📚 Campos obrigatórios
+
+- `numeroProcesso` — número do processo no formato CNJ (sem traços/pontos)
+- `sistema` — sistema judicial (ex: ESAJ, PJE, PROJUDI, EPROC)
+- `login` e `senha` — credenciais do advogado com acesso ao processo
+- `otp` — token de dois fatores (quando exigido)
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado                                 |
+|--------|----------------------------------------------|
+| `200`  | Solicitação iniciada com sucesso             |
+| `400`  | Payload inválido                             |
+| `401`  | Credenciais incorretas ou OTP inválido       |
+| `429`  | Limite de tentativas excedido (aguarde)      |
+| `500`  | Erro interno ou indisponibilidade do sistema |
+
+---
+
+## 📄 Observações
+
+- Após a chamada, será retornado um `id` único da solicitação.
+- Aguarde alguns segundos e utilize esse `id` para consultar os resultados dos autos com o endpoint de status.
+
+---
+
+## 🚀 Prossiga
+
+Acompanhe o status e baixe os documentos com: [📦 Buscar Resultado](./buscar-resultado)

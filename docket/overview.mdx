@@ -1,0 +1,126 @@
+---
+title: Introdução
+description: "Recupere automaticamente documentos sigilosos dos processos judiciais utilizando login de advogado e autenticação em dois fatores."
+---
+
+# 📂 Dossiê Jurídico – Autos Processuais
+
+A consulta de autos da Predictus permite o acesso automático aos **documentos sigilosos do processo** (como petições iniciais, procurações, contestações, laudos, recursos etc.) através de login em nome do advogado da causa.
+
+Essa operação é feita com **autenticação direta nos portais oficiais dos tribunais** (ESAJ, PJe, Projudi, EPROC), respeitando os mecanismos de segurança vigentes — como autenticação de dois fatores (2FA/OTP) quando exigido.
+
+---
+
+## 🧠 Quando usar essa funcionalidade?
+
+- Obtenção de **documentos não públicos** do processo (não disponíveis em consultas abertas)
+- Coleta de **peças processuais específicas** como procurações, defesas, sentenças assinadas
+- Uso em robôs de automação ou análise interna
+- Extração segura e rastreável, sem violar segredo de justiça
+
+---
+
+## 🔐 Requisitos obrigatórios
+
+- Login e senha do advogado cadastrado no processo
+- Token de dois fatores (quando exigido pelo tribunal)
+- Número único do processo (NPU/CNJ)
+
+---
+
+## ⚙️ Fluxo de consulta
+
+1. **Inicie a requisição** de busca de autos com as credenciais e o número do processo
+2. A Predictus tentará login no sistema correspondente (ESAJ, PJe, EPROC, etc.)
+3. Será gerado um `id` de solicitação — aguarde o processamento
+4. **Busque o resultado** com esse `id` para obter os documentos (normalmente disponíveis em poucos segundos)
+
+---
+
+## 📚 Sistemas suportados
+
+A lista abaixo é **exemplificativa** e representa os principais sistemas compatíveis.  
+A Predictus também possui robôs funcionais para sistemas exclusivos de alguns tribunais, como:
+
+- **Tucujuris** (TJ-AP)
+- **Portal do Advogado** (TJ-SE)
+- **Sistema próprio do TJ-RJ**
+
+Outros sistemas regionais e específicos também podem ser suportados — entre em contato para confirmar.
+
+| Sistema | Tribunais | 2FA Necessário |
+|--------|-----------|----------------|
+| ESAJ   | TJ-SP, TJ-AC, TJ-AL, TJ-AM, TJ-CE, TJ-MS | ✅ (SP, MS) |
+| PROJUDI | TJ-BA, TJ-GO, TJ-PR, TJ-RR, TJ-AM | ✅ (PR, RR) |
+| PJe    | TJ-MG, TJ-RJ, TJ-DFT, TRF1, TRF3, TRF5... | ✅ (em alguns casos) |
+| EPROC  | TRFs, JFs e alguns TJs (ex: TJ-SC, TJ-RS) | ✅ |
+| JUSBR  | Todos os demais (fallback alternativo) | ❌ |
+
+---
+
+## 🔄 Status possíveis na resposta
+
+| Status | Significado |
+|--------|-------------|
+| `PROCESSING` | Ainda em andamento |
+| `OK`         | Documentos recuperados com sucesso |
+| `BAD CREDENTIALS` | Login/senha/token incorretos |
+| `SPECIAL ERROR` | Processo com segredo de justiça |
+| `WRONG CAPTCHA` / `UNKNOWN ERROR` | Erro técnico no tribunal |
+
+> Os links para download ficam disponíveis por até **24 horas**.
+
+---
+
+## 📥 Exemplo de resposta com sucesso
+
+```json
+{
+  "data": [
+    {
+      "numeroProcessoUnico": "50379103520218130702",
+      "sistema": "PJE-TJMG",
+      "grauProcesso": 1,
+      "tribunal": "TJ-MG",
+      "classeProcessual": {
+        "nome": "[CIVEL] CUMPRIMENTO DE SENTENCA",
+        "codigoCNJ": "12078"
+      },
+      "movimentos": [
+        {
+          "nomeOriginal": [
+            "JUNTADA DE PETICAO DE MANIFESTACAO DA ADVOCACIA PUBLICA"
+          ],
+          "anexo": [
+            {
+              "titulo": "MANIFESTACAO DA ADVOCACIA PUBLICA",
+              "extensao": "PDF",
+              "nomeArquivo": "manifestacao.pdf",
+              "caminho": "https://link-assinado-temporario"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "message": "OK",
+  "status": 200
+}
+```
+
+---
+
+## 📄 Atenção
+
+- A Predictus **não armazena senhas ou tokens** enviados — são usados apenas durante a consulta.
+- Para portais que exigem 2FA, você deverá configurar previamente uma credencial com autenticação por OTP.
+- O número do processo deve estar corretamente formatado no padrão CNJ.
+
+---
+
+## 🚀 Prossiga
+
+Acesse os endpoints abaixo para consultar:
+
+- [🔐 Buscar por Número CNJ](./recursos/buscar-autos)
+- [📦 Buscar Resultado (Download dos Autos)](./recursos/buscar-resultado)

@@ -88,6 +88,19 @@
             ]
           },
           {
+            "group": "Autos Processuais",
+            "pages": [
+              "docket/overview"
+            ]
+          },
+          {
+            "group": "Autos Processuais - Recursos",
+            "pages": [
+              "docket/recursos/buscar-autos",
+              "docket/recursos/buscar-resultado"
+            ]
+          },
+          {
             "group": "Referências",
             "pages": [
               "referencias/assuntos",

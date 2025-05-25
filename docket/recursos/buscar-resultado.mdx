@@ -1,0 +1,89 @@
+---
+title: Buscar Resultado
+description: "Acompanhe o status da requisição de autos processuais e recupere os documentos."
+---
+
+# 📦 Buscar Resultado dos Autos
+
+Este endpoint retorna o status atual da solicitação iniciada com `buscarPorNumero`.  
+Quando finalizado com sucesso, disponibiliza os links para download dos documentos.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.inf.br/predictus-api/processos/judiciais/autos/buscarResultado
+```
+
+---
+
+## 🧾 Corpo da requisição (exemplo)
+
+```json
+{
+  "id": "892d7822-ea43-4209-90f9-a66f8b983f7b",
+  "sistema": "ESAJ-TJSP"
+}
+```
+
+---
+
+## 📥 Exemplo de resposta com sucesso
+
+```json
+{
+  "data": [
+    {
+      "numeroProcessoUnico": "50379103520218130702",
+      "sistema": "PJE-TJMG",
+      "grauProcesso": 1,
+      "tribunal": "TJ-MG",
+      "classeProcessual": {
+        "nome": "[CIVEL] CUMPRIMENTO DE SENTENCA",
+        "codigoCNJ": "12078"
+      },
+      "movimentos": [
+        {
+          "nomeOriginal": ["JUNTADA DE PETICAO DE MANIFESTACAO DA ADVOCACIA PUBLICA"],
+          "anexo": [
+            {
+              "titulo": "MANIFESTACAO DA ADVOCACIA PUBLICA",
+              "extensao": "PDF",
+              "nomeArquivo": "manifestacao.pdf",
+              "caminho": "https://link-assinado-temporario"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "message": "OK",
+  "status": 200
+}
+```
+
+---
+
+## 🔄 Status possíveis
+
+| Status | Descrição                                |
+|--------|--------------------------------------------|
+| `PROCESSING` | Consulta em andamento               |
+| `OK`         | Autos recuperados com sucesso        |
+| `BAD CREDENTIALS` | Login/senha/OTP inválidos     |
+| `SPECIAL ERROR` | Processo em segredo de justiça  |
+| `UNKNOWN ERROR` | Falha genérica no tribunal       |
+
+---
+
+## 📄 Notas
+
+- Os links retornados ficam disponíveis por até **24 horas**.
+- Os arquivos são PDFs extraídos diretamente do portal judicial oficial.
+
+---
+
+## 🔁 Recomeçar
+
+Se necessário, inicie uma nova solicitação com: [🔐 Buscar por Número CNJ](./buscar-por-numero-cnj)
