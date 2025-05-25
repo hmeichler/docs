@@ -150,3 +150,19 @@ A lógica dos filtros é a mesma do Dossiê Jurídico:
 | `400`  | Erro de validação no payload              |
 | `401`  | Token inválido ou expirado                |
 
+---
+
+## 🛡️ Validações aplicadas
+
+- CPF:
+  - Não nulo
+  - 11 dígitos numéricos
+  - Validação de CPF formal
+- Polo:
+  - `ATIVO` ou `PASSIVO`
+- Lista de `statusProcessuais`, `ramosDoDireito`, `segmentos`, `tribunais`:
+  - Todos os valores devem estar na lista de permitidos
+- Campos com listas extensas (`classesProcessuais`, `assuntosCNJ`):
+  - Máximo de 65.000 itens
+
+---
