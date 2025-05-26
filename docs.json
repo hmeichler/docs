@@ -103,14 +103,14 @@
           {
             "group": "Diário Oficial",
             "pages": [
-              "dou/overview"
+              "diario-oficial/overview"
             ]
           },
           {
-            "group": "Autos Processuais - Recursos",
+            "group": "Diário Oficial - Recursos",
             "pages": [
-              "docket/recursos/buscar-autos",
-              "docket/recursos/buscar-resultado"
+              "diario-oficial/recursos/buscar-por-termos",
+              "diario-oficial/recursos/buscar-por-diario"
             ]
           },
           {
