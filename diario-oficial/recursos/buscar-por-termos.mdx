@@ -1,0 +1,69 @@
+---
+title: Buscar por Termos
+description: "Pesquise trechos nos diários oficiais que contenham um termo específico."
+---
+
+# 🔍 Buscar por Termos
+
+Este endpoint retorna todas as páginas de diários oficiais em que o termo buscado aparece.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.inf.br/predictus-api/diarios/oficiais/buscarPorTermos
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+```json
+{
+  "termoBusca": "TERMO A SER BUSCADO",
+  "numeroPagina": 1
+}
+```
+
+---
+
+## 📚 Campos importantes
+
+- `termoBusca` (string): termo exato a ser buscado nos diários
+- `numeroPagina` (int, opcional): página de resultados (padrão: 1)
+
+---
+
+## ✅ Exemplo de resposta
+
+```json
+{
+  "resultados": 221,
+  "paginaAtual": 2,
+  "totalPaginas": 4,
+  "diarios": [
+    {
+      "pagina": 6934,
+      "id": 5561949,
+      "diario": "STJ",
+      "nome": "SUPERIOR TRIBUNAL DE JUSTICA",
+      "tipoCaderno": "PADRAO",
+      "dataPublicacao": "2022-09-09",
+      "trecho": "... TERMO A SER BUSCADO ...",
+      "edicao": "3473"
+    }
+  ]
+}
+```
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado                    |
+|--------|---------------------------------|
+| `200`  | Sucesso                        |
+| `204`  | Nenhum resultado encontrado    |
+| `400`  | Erro de validação              |
+| `401`  | Token inválido ou expirado     |

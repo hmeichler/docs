@@ -1,0 +1,61 @@
+---
+title: Buscar por ID de Diário
+description: "Recupere o conteúdo completo de uma página específica do diário oficial."
+---
+
+# 📖 Buscar por ID de Diário
+
+Este endpoint retorna o conteúdo completo (texto integral) da página de diário especificada.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.inf.br/predictus-api/diarios/oficiais/buscarPorDiario
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+```json
+{
+  "id": 5561949,
+  "numeroPagina": 6934
+}
+```
+
+---
+
+## 📚 Campos importantes
+
+- `id` (int): ID único da publicação retornado na busca anterior
+- `numeroPagina` (int): número da página
+
+---
+
+## ✅ Exemplo de resposta
+
+```json
+{
+  "id": 5561949,
+  "diario": "STJ",
+  "edicao": "3473",
+  "tipo": "PADRAO",
+  "dataPublicacao": "2022-09-09",
+  "conteudo": "RECURSO EM HABEAS CORPUS Nº 163885 - SC ...",
+  "totalPaginas": "10588",
+  "paginaAtual": "6934"
+}
+```
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado                    |
+|--------|---------------------------------|
+| `200`  | Sucesso                        |
+| `400`  | Erro de validação              |
+| `401`  | Token inválido ou expirado     |
