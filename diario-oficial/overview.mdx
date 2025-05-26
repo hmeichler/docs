@@ -1,0 +1,48 @@
+---
+title: Introdução
+description: "Consulte registros no Diário Oficial de diversos tribunais do Brasil usando termos de busca e acesse o conteúdo completo da página."
+---
+
+# 📃 Consulta ao Diário Oficial
+
+A API de Diários Oficiais da Predictus permite consultar publicações por termo, identificando citações em diários de justiça estaduais, federais e trabalhistas, além de acessar o **conteúdo completo da página** de qualquer edição.
+
+Esta funcionalidade é ideal para:
+
+- Descobrir se uma pessoa foi citada em diários oficiais
+- Investigar registros em processos que não aparecem em bases estruturadas
+- Complementar consultas judiciais com edições e trechos
+- Acompanhar andamentos, intimações ou despachos
+
+---
+
+## 🔎 Tipos de busca disponíveis
+
+<CardGroup cols={2}>
+  <Card title="Buscar por Termo" icon="search">
+    Localiza todas as ocorrências do termo em diários judiciais e administrativos.
+  </Card>
+  <Card title="Buscar Detalhes da Página" icon="file-text">
+    Retorna o conteúdo completo da página específica de um diário (texto integral).
+  </Card>
+</CardGroup>
+
+---
+
+## ✅ Retornos padronizados
+
+Todos os resultados incluem:
+
+- Nome do tribunal / órgão
+- Tipo e edição do diário
+- Data da publicação
+- Página onde o termo foi localizado
+- Trecho do contexto
+- ID para acessar a página completa depois
+
+---
+
+## ⏭ Exemplo de fluxo completo
+
+1. [Buscar por Termo](./recursos/buscar-por-termos)
+2. [Buscar Conteúdo da Página](./recursos/buscar-por-diario)
