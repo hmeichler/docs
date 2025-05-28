@@ -1,0 +1,75 @@
+---
+title: "Consulta de Consumo"
+description: "Endpoint para consultar o consumo mensal detalhado por serviço utilizado."
+---
+
+import { CodeBlock } from '@site/components/CodeBlock'
+
+# 📈 Consulta de Consumo
+
+Esse endpoint retorna o consumo mensal por serviço utilizado na API Predictus, detalhando:
+
+- total de chamadas realizadas (`totalChamadas`)
+- total de registros retornados (`totalRegistros`)
+
+## Endpoint
+
+```
+GET /predictus-api/consumo/{ano-mes}
+```
+
+**Exemplo:**
+
+```bash
+GET /predictus-api/consumo/2025-05
+```
+
+### Requisição
+
+- Autenticação obrigatória: **Bearer Token**
+- Parâmetro `ano-mes` no formato `YYYY-MM`
+
+### Headers
+
+```http
+Authorization: Bearer {{token}}
+```
+
+### Exemplo de requisição
+
+```bash
+curl --location 'https://api.predictus.inf.br/predictus-api/consumo/2025-05' \
+--header 'Authorization: Bearer {{token}}'
+```
+
+---
+
+## 🧾 Resposta
+
+A resposta será uma lista de objetos, cada um representando o consumo de um tipo de serviço:
+
+| Campo            | Tipo    | Descrição                                  |
+| ---------------- | ------- | ------------------------------------------ |
+| `data`           | string  | Mês da referência (`YYYY-MM`)              |
+| `servico`        | string  | Nome do serviço utilizado                  |
+| `totalChamadas`  | integer | Total de chamadas feitas ao serviço        |
+| `totalRegistros` | integer | Total de registros retornados pelo serviço |
+
+### Exemplo de resposta
+
+```json
+[
+    {
+        "data": "2025-05",
+        "servico": "DOSSIE_JURIDICO_POR_CPF_PARTE",
+        "totalChamadas": 1447025,
+        "totalRegistros": 11831480
+    },
+    {
+        "data": "2025-05",
+        "servico": "DOSSIE_JURIDICO_POR_CNPJ_PARTE",
+        "totalChamadas": 6,
+        "totalRegistros": 11918
+    }
+]
+```

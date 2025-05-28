@@ -1,0 +1,24 @@
+---
+title: Visão Geral de Consumo
+description: Entenda como funciona o controle e monitoramento de consumo da API Predictus.
+---
+
+# 📊 Visão Geral: Monitoramento de Consumo
+
+A Predictus oferece um endpoint dedicado para que você possa acompanhar **o uso da API** de forma transparente e segmentada por serviço.
+
+Esse recurso é útil para:
+
+- Monitorar a utilização mensal da sua conta
+- Validar faturas e cobranças por volume de dados
+- Identificar quais serviços estão sendo mais consumidos
+- Auditar o comportamento da sua integração
+
+Cada requisição ao endpoint retorna os seguintes dados, por tipo de serviço:
+
+- `data`: mês de referência
+- `servico`: nome do serviço acessado
+- `totalChamadas`: quantidade de chamadas feitas ao endpoint
+- `totalRegistros`: número total de registros retornados
+
+Para detalhes técnicos do endpoint, acesse: [Consulta de Consumo](./recursos/consultar-consumo-resumo)
