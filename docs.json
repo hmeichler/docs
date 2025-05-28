@@ -114,6 +114,18 @@
             ]
           },
           {
+            "group": "Logs de Consumo",
+            "pages": [
+              "consumo/overview"
+            ]
+          },
+          {
+            "group": "Logs de Consumo - Recursos",
+            "pages": [
+              "consumo/recursos/consultar-consumo-resumo"
+            ]
+          },
+          {
             "group": "Referências",
             "pages": [
               "referencias/assuntos",
