@@ -1,0 +1,117 @@
+---
+title: Jurimetria por Número do Processo (CNJ)
+description: "Gere estatísticas preditivas a partir de um processo judicial específico, com base em dados semelhantes julgados no mesmo tribunal e grau."
+---
+
+# 📊 Jurimetria por Número do Processo (CNJ)
+
+Este endpoint permite gerar **estatísticas jurídicas detalhadas** a partir de um processo específico. A Predictus identifica processos semelhantes no mesmo tribunal e grau para retornar padrões históricos de julgamento.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.inf.br/predictus-api/processos/judiciais/jurimetria/buscarPorNumeroCNJ
+```
+
+---
+
+## 🧾 Corpo da requisição (exemplo real)
+
+```json
+{
+  "numeroProcessoUnico": "00019377820165170004",
+  "tribunal": "TST",
+  "grauProcesso": 3
+}
+```
+
+---
+
+## 📚 Campos obrigatórios
+
+| Campo                 | Tipo    | Obrigatório | Descrição                                                  |
+|-----------------------|---------|-------------|-------------------------------------------------------------|
+| `numeroProcessoUnico` | string  | ✅          | Número do processo no padrão CNJ                           |
+| `tribunal`            | string  | ✅          | Sigla do tribunal (ex: `TJ-SP`, `TST`)                     |
+| `grauProcesso`        | number  | ✅          | Grau do processo (ex: `1` para 1º grau, `2` para 2º grau)  |
+
+---
+
+## 📈 O que é retornado?
+
+```json
+{
+  "totalProcessos": 1987,
+  "mediaValorCausa": 10430.90,
+  "mediaValorExecucao": 8190.47,
+  "mediaDiasAteJulgamento": 227,
+  "mediaDiasAteTransitoEmJulgado": 329,
+  "mediaDiasAteArquivamento": 421,
+  "distribuicaoPorJulgamento": {
+    "PROCEDENTE": {
+      "percentual": 58.1,
+      "quantidade": 1154,
+      "amostra": ["0000000-00.0000.0.00.0000"],
+      "mediaValorCausa": 11000.00,
+      "mediaValorExecucao": 8500.00
+    },
+    "IMPROCEDENTE": {
+      "percentual": 31.2,
+      "quantidade": 620,
+      "amostra": ["1111111-11.1111.1.11.1111"],
+      "mediaValorCausa": 9800.00,
+      "mediaValorExecucao": 7600.00
+    }
+  },
+  "topPartesPassivas": [
+    { "nome": "EMPRESA ABC LTDA", "quantidade": 102 }
+  ],
+  "topAdvogadosOfensores": [
+    { "nome": "MARIA ADVOGADA", "quantidade": 61 }
+  ],
+  "distribuicaoPorAno": {
+    "2019": {
+      "quantidade": 297,
+      "mediaDiasAteJulgamento": 215,
+      "mediaValorCausa": 9700.00,
+      "mediaValorExecucao": 7500.00
+    },
+    "2020": {
+      "quantidade": 482,
+      "mediaDiasAteJulgamento": 232,
+      "mediaValorCausa": 10800.00,
+      "mediaValorExecucao": 8300.00
+    }
+  }
+}
+```
+
+---
+
+## 📌 Requisitos e recomendações
+
+- O processo deve existir na base da Predictus
+- O sistema usa as informações do processo como **ponto de partida** para buscar milhares de casos semelhantes
+- A resposta é idêntica à da busca por parâmetros, permitindo reaproveitamento em dashboards e análises
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado                            |
+|--------|-----------------------------------------|
+| `200`  | Sucesso — dados estatísticos retornados |
+| `204`  | Nenhum processo semelhante encontrado   |
+| `400`  | Erro no payload (campo inválido/faltando)|
+| `401`  | Token inválido ou expirado              |
+
+---
+
+## 🧠 Aplicações práticas
+
+- Estimar **probabilidade de êxito** com base em casos semelhantes
+- Avaliar **risco judicial** para casos já em andamento
+- Identificar **tendência de julgamentos** para processos semelhantes
+- Apoiar decisões estratégicas no meio do litígio
