@@ -84,7 +84,8 @@
           {
             "group": "Jurimetria - Recursos",
             "pages": [
-              "jurimetria/recursos/buscar-por-parametros"
+              "jurimetria/recursos/buscar-por-parametros",
+              "jurimetria/recursos/buscar-por-numero-cnj"
             ]
           },
           {
