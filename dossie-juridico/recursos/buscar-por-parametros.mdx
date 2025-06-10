@@ -1,5 +1,5 @@
 ---
-title: Buscar por Parâmetros
+title: "Buscar por Parâmetros"
 description: "Consulte processos judiciais com base em critérios diversos como assunto, valor, classe, juiz, relator, polo, julgamentos e muito mais."
 ---
 
@@ -185,12 +185,12 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorPar
 
 ## 📚 Campos importantes
 
-- `partes` e `naoPartes` — lista de objetos com `cpf`, `cnpj`, `nome`, `polo`  
+- `partes` e `naoPartes` — lista de objetos com `cpf`, `cnpj`, `nome`, `polo`\
   Permite incluir ou excluir partes específicas na consulta
-- `advogados` e `naoAdvogados` — filtros por OAB, CPF ou nome  
+- `advogados` e `naoAdvogados` — filtros por OAB, CPF ou nome
 - `classesProcessuais`, `assuntosCNJ`, `statusProcessuais`, `ramosDoDireito`, `segmentos` — todos os filtros padronizados Predictus
 - `orgaosJulgadores`, `unidadesOrigem`, `tribunais` — filtros estruturais do processo
-- `valorCausa`, `dataDistribuicao`, `dataArquivamento`, `dataTransitoJulgado` — permitem busca por faixa
+- `valorCausa`, `dataDistribuicao`, `dataArquivamento`, `dataTransitoJulgado` — permitem busca por faixa (menorQue/menorIgualQue/maiorQue/maiorIgualQue)
 - `julgamentos` — resultado da sentença (ex: "IMPROCEDENCIA", "PROCEDENCIA EM PARTE")
   - Ver [lista completa de julgamentos](../../referencias/julgamentos)
 - `juizes`, `relatores` — busca por quem proferiu ou relatou decisões
@@ -203,23 +203,23 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorPar
 
 ## 📌 Como funcionam os filtros
 
-| Situação                         | Comportamento                                  |
-|----------------------------------|-----------------------------------------------|
-| Filtros diferentes               | Lógica **AND** entre eles                     |
-| Listas internas (ex: classes)    | Lógica **OR** dentro do array                 |
-| `naoPartes`, `naoAdvogados`, `naoNumerosProcessoUnico`     | Excluem registros com as condições indicadas  |
-| Faixas (`data`, `valor`)         | Deve estar dentro do intervalo fornecido      |
+| Situação                                               | Comportamento                                |
+| ------------------------------------------------------ | -------------------------------------------- |
+| Filtros diferentes                                     | Lógica **AND** entre eles                    |
+| Listas internas (ex: classes)                          | Lógica **OR** dentro do array                |
+| `naoPartes`, `naoAdvogados`, `naoNumerosProcessoUnico` | Excluem registros com as condições indicadas |
+| Faixas (`data`, `valor`)                               | Deve estar dentro do intervalo fornecido     |
 
 ---
 
 ## 🧾 Códigos de resposta
 
-| Código | Significado                            |
-|--------|-----------------------------------------|
-| `200`  | Sucesso — processos encontrados         |
-| `204`  | Nenhum processo encontrado              |
-| `400`  | Erro de validação no payload            |
-| `401`  | Token inválido ou expirado              |
+| Código | Significado                     |
+| ------ | ------------------------------- |
+| `200`  | Sucesso — processos encontrados |
+| `204`  | Nenhum processo encontrado      |
+| `400`  | Erro de validação no payload    |
+| `401`  | Token inválido ou expirado      |
 
 ---
 
@@ -235,4 +235,3 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorPar
 ## 🧾 Retorno
 
 Retorna uma lista de objetos do tipo [`processo`](../estrutura), com todos os campos solicitados em `camposRetorno`.
-

@@ -1,5 +1,5 @@
 ---
-title: Buscar Advogado por Nome ou Razão Social Exato
+title: "Buscar Advogado por Nome ou Razão Social Exato"
 description: "Consulte todos os processos judiciais relacionados a um advogado, com base no nome exato."
 ---
 
@@ -106,23 +106,23 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorNom
 
 ## 📚 Campos importantes
 
-- `nome` (string) — único campo obrigatório  
-  - Pode ser nome completo ou parcial  
-- `semDocumento` (boolean) — opcional  
+- `nome` (string) — único campo obrigatório
+  - Pode ser nome completo ou parcial
+- `semDocumento` (boolean) — opcional
   - Quando `true`, retorna apenas processos em que o advogado **não possui CPF ou CNPJ identificado**
 - `polo` — `ATIVO` ou `PASSIVO`
-- `grausProcesso` — lista de inteiros entre 1 e 4:  
-  - `1` → 1º Grau (ex: vara cível)  
-  - `2` → 2º Grau (tribunais estaduais/regionais)  
-  - `3` → Tribunais Superiores (STJ, TST etc.)  
+- `grausProcesso` — lista de inteiros entre 1 e 4:
+  - `1` → 1º Grau (ex: vara cível)
+  - `2` → 2º Grau (tribunais estaduais/regionais)
+  - `3` → Tribunais Superiores (STJ, TST etc.)
   - `4` → Supremo Tribunal Federal (STF)
-- `tribunais` — lista de siglas válidas (ex: `TJ-SP`, `TRT-9`, `STF`)  
+- `tribunais` — lista de siglas válidas (ex: `TJ-SP`, `TRT-9`, `STF`)
   - Ver [lista completa de tribunais](../../referencias/tribunais)
-- `valorCausa`, `dataDistribuicao` — permitem filtragem por faixa (menorQue/maiorQue)
-- `classesProcessuais`, `assuntosCNJ` — até 65.000 valores cada  
+- `valorCausa`, `dataDistribuicao` — permitem filtragem por faixa (menorQue/menorIgualQue/maiorQue/maiorIgualQue)
+- `classesProcessuais`, `assuntosCNJ` — até 65.000 valores cada
 - `statusProcessuais` — veja [valores válidos](../../referencias/status-processuais)
 - `ramosDoDireito` — veja [valores válidos](../../referencias/ramos-direito)
-- `segmentos` — deve conter apenas valores válidos (ex: `JUSTICA DO TRABALHO`, `STF`)  
+- `segmentos` — deve conter apenas valores válidos (ex: `JUSTICA DO TRABALHO`, `STF`)
   - Veja [lista completa de segmentos](../../referencias/segmentos)
 - `limiteResultados` — mínimo: 1 / máximo: 10.000 (padrão: 10.000)
 
@@ -132,19 +132,19 @@ POST https://api.predictus.inf.br/predictus-api/processos/judiciais/buscarPorNom
 
 A API aplica os filtros com **lógica combinada (AND entre filtros diferentes, OR dentro de listas)**:
 
-| Situação                         | Comportamento                                             |
-|----------------------------------|------------------------------------------------------------|
-| Vários filtros usados            | Todos devem ser satisfeitos (lógica **AND**)              |
-| Lista de valores (ex: tribunais) | Basta bater **um dos valores** da lista (lógica **OR**)   |
-| Campos únicos (ex: nome)         | Necessário corresponder parcialmente ou exatamente         |
-| Faixas (valor ou data)           | O valor do processo deve estar **dentro do intervalo**    |
+| Situação                         | Comportamento                                           |
+| -------------------------------- | ------------------------------------------------------- |
+| Vários filtros usados            | Todos devem ser satisfeitos (lógica **AND**)            |
+| Lista de valores (ex: tribunais) | Basta bater **um dos valores** da lista (lógica **OR**) |
+| Campos únicos (ex: nome)         | Necessário corresponder parcialmente ou exatamente      |
+| Faixas (valor ou data)           | O valor do processo deve estar **dentro do intervalo**  |
 
 ---
 
 ## 🧾 Códigos de resposta
 
 | Código | Significado                                      |
-|--------|--------------------------------------------------|
+| ------ | ------------------------------------------------ |
 | `200`  | Sucesso — processos encontrados                  |
 | `204`  | Nenhum processo encontrado para o nome informado |
 | `400`  | Erro de validação no payload                     |
