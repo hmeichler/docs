@@ -1,19 +1,19 @@
 ---
-title: Autenticação
+title: "Autenticação"
 description: "Autentique sua aplicação e gere seu token de acesso à API da Predictus"
 ---
 
 ## 🔐 Autenticação
 
-Para consumir qualquer endpoint da API Predictus, você precisa primeiro gerar um token de acesso.  
+Para consumir qualquer endpoint da API Predictus, você precisa primeiro gerar um token de acesso.\
 A autenticação segue o padrão **Bearer Token** via HTTP Header.
 
 ---
 
 ## 🎯 Fluxo de Autenticação
 
-Envie uma requisição `POST` para o endpoint `/auth` com seu `username` e `password`.  
-Se as credenciais estiverem corretas, você receberá um `accessToken` válido por 15 minutos (900 segundos).
+Envie uma requisição `POST` para o endpoint `/auth` com seu `username` e `password`.\
+Se as credenciais estiverem corretas, você receberá um `accessToken` válido por 30 minutos (1800 segundos).
 
 ---
 
@@ -50,7 +50,7 @@ curl --location 'https://api.predictus.com.br/auth' \
 ```json
 {
   "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "expiresIn": 900,
+  "expiresIn": 1800,
   "tokenType": "bearer"
 }
 ```
@@ -69,15 +69,15 @@ Authorization: Bearer {accessToken}
 
 ## 🚫 Expiração e Erros
 
-- O token é **válido por 15 minutos**
+- O token é **válido por 30 minutos**
 - Após a expiração, gere um novo token
 - **Não há refresh token**
 
 ### Códigos de erro
 
-| Código | Significado                               | Possível ação                     |
-|--------|-------------------------------------------|-----------------------------------|
-| `401`  | Credenciais inválidas                     | Verifique `username` e `password` |
+| Código | Significado           | Possível ação                     |
+| ------ | --------------------- | --------------------------------- |
+| `401`  | Credenciais inválidas | Verifique `username` e `password` |
 
 ---
 
