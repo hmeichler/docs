@@ -5,7 +5,7 @@ description: "Inicie a recuperação de autos processuais com base no número do
 
 # 🔐 Buscar por Número CNJ
 
-Este endpoint inicia o processo de extração de autos judiciais sigilosos de um processo, acessando diretamente o sistema do tribunal correspondente.
+Este endpoint inicia a extração de autos processuais sigilosos, acessando diretamente os sistemas dos tribunais — como ESAJ, PJe, Eproc, Projudi — com as credenciais do advogado que possui acesso ao processo.
 
 ---
 
@@ -17,30 +17,174 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/autos/buscar
 
 ---
 
-## 🧾 Corpo da requisição (exemplo)
+## 📥 Corpo da requisição (exemplo)
 
 ```json
 {
   "numeroProcessoUnico": "50379103520218130702",
   "sistema": "EPROC-TRF2",
-  "usuario": "advogado@example.com",
+  "usuario": "08108732905",
   "senha": "senhaSegura",
-  "mfaToken": "GI2GGYZQGY3GMZRSG44TQOJTGUYWIZJV"
+  "mfaToken": "GI2GGYZQGY3GMZRSG44TQOJTGUYWIZJV",
+  "email": "redirecionamento@cliente.com"
 }
 ```
 
 ---
 
-## 📚 Campos obrigatórios
+## 📌 Campos obrigatórios
 
-- `numeroProcessoUnico` — número do processo no formato CNJ (sem traços/pontos)
-- `sistema` — sistema judicial (ex: ESAJ, PJE, PROJUDI, EPROC)
-- `usuario` e `senha` — credenciais do advogado com acesso ao processo
-- `otp` — token de dois fatores (quando exigido)
+| Campo                | Descrição                                                                 |
+|----------------------|---------------------------------------------------------------------------|
+| `numeroProcessoUnico`| Número do processo no formato CNJ (sem traços ou pontos)                  |
+| `sistema`            | Código do sistema judicial. Veja a tabela abaixo                          |
+| `usuario`            | Credencial de login (CPF, OAB ou e-mail, conforme exigência do sistema)   |
+| `senha`              | Senha de acesso ao sistema                                                |
 
 ---
 
-## 🧾 Códigos de resposta
+## 🧩 Campos opcionais
+
+| Campo     | Quando usar                                                                 |
+|-----------|------------------------------------------------------------------------------|
+| `mfaToken`| Necessário somente quando o tribunal exige 2FA via aplicativo OTP (TOTP/QR) |
+| `email`   | Necessário somente quando o 2FA do tribunal for enviado por e-mail          |
+
+> ℹ️ Se o sistema exigir **2FA por e-mail**, o campo `email` **é obrigatório**. Esse e-mail deve estar com redirecionamento automático configurado para: **predictus-docket@mailbox.org**.  
+> Você pode criar uma **regra automática** (recomendado) ou reenviar manualmente o código recebido — mas atenção: o código expira em **menos de 1 minuto**, então é **fundamental** que a entrega seja rápida.
+
+---
+
+## 🖥️ Sistemas compatíveis
+
+| Sistema | Username | 2FA? | Tipo de 2FA | Requer email? |
+|---------|----------|------|-------------|----------------|
+| PJE-TRT1-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT1-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT2-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT2-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT3-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT3-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT4-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT4-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT5-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT5-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT6-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT6-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT7-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT7-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT8-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT8-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT9-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT9-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT10-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT10-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT11-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT11-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT12-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT12-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT13-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT13-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT14-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT14-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT15-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT15-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT16-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT16-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT17-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT17-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT18-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT18-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT19-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT19-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT20-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT20-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT21-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT21-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT22-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT22-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT23-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT23-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT24-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TRT24-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TST-DOCKET | CPF | ❌ | — | ❌ |
+| PROJUDI-TJBA-DOCKET | CPF | ❌ | — | ❌ |
+| PROJUDI-TJGO-DOCKET | CPF | ❌ | — (limite de 1/min) | ❌ |
+| PROJUDI-TJAM-DOCKET | CPF | ❌ | — | ❌ |
+| PROJUDI-TJAM-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PROJUDI-TJRR-DOCKET | CPF | ❌ | — | ❌ |
+| PROJUDI-TJRR-2G-DOCKET | CPF | ❌ | — | ❌ |
+| PROJUDI-TJPR-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PROJUDI-TJPR-2G-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PROJUDI-SEEU-DOCKET | CPF | ❌ | — | ❌ |
+| PJE-TJAP-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJAP-2G-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJBA-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJBA-2G-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJES-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJES-2G-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJMA-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJMA-2G-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJMG-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJMG-2G-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJMT-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJMT-2G-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJPA-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJPA-2G-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJPE-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJPE-2G-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJPI-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJPI-2G-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJRJ-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJRN-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJRN-2G-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJRO-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TJRO-2G-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TRF1-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TRF1-2G-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TRF3-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TRF3-2G-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TRF5-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TRF5-2G-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TRF6-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| PJE-TRF6-2G-DOCKET | CPF | ✅ | OTP App (QR Code) | ❌ |
+| ESAJ-TJAC-DOCKET | CPF | ❌ | — | ❌ |
+| ESAJ-TJAC-2G-DOCKET | CPF | ❌ | — | ❌ |
+| ESAJ-TJAL-DOCKET | CPF | ✅ | E-mail (código) | ✅ |
+| ESAJ-TJAL-2G-DOCKET | CPF | ✅ | E-mail (código) | ✅ |
+| ESAJ-TJAM-DOCKET | CPF | ❌ | — | ❌ |
+| ESAJ-TJAM-2G-DOCKET | CPF | ❌ | — | ❌ |
+| ESAJ-TJCE-DOCKET | CPF | ❌ | — | ❌ |
+| ESAJ-TJCE-2G-DOCKET | CPF | ❌ | — | ❌ |
+| ESAJ-TJMS-DOCKET | CPF | ✅ | E-mail (código) | ✅ |
+| ESAJ-TJMS-2G-DOCKET | CPF | ✅ | E-mail (código) | ✅ |
+| ESAJ-TJSP-DOCKET | CPF | ✅ | E-mail (código) | ✅ |
+| ESAJ-TJSP-REC-DOCKET | CPF | ✅ | E-mail (código) | ✅ |
+| ESAJ-TJSP-2G-DOCKET | CPF | ✅ | E-mail (código) | ✅ |
+| EPROC-JFES-DOCKET | CPF | ✅ | OTP App (TOTP) | ❌ |
+| EPROC-JFMG-DOCKET | CPF | ✅ | OTP App (TOTP) | ❌ |
+| EPROC-JFPR-DOCKET | CPF | ✅ | OTP App (TOTP) | ❌ |
+| EPROC-JFRS-DOCKET | CPF | ✅ | OTP App (TOTP) | ❌ |
+| EPROC-JFSC-DOCKET | CPF | ✅ | OTP App (TOTP) | ❌ |
+| EPROC-TRF6-DOCKET | CPF | ✅ | OTP App (TOTP) | ❌ |
+| EPROC-TRF4-DOCKET | CPF | ✅ | OTP App (TOTP) | ❌ |
+| EPROC-TRF2-DOCKET | CPF | ✅ | OTP App (TOTP) | ❌ |
+| EPROC-TJMRS-DOCKET | CPF | ✅ | OTP App (TOTP) | ❌ |
+| EPROC-TJSC-DOCKET | CPF | ✅ | OTP App (TOTP) | ❌ |
+| EPROC-TJSC-2G-DOCKET | CPF | ✅ | OTP App (TOTP) | ❌ |
+| EPROC-TJRS-DOCKET | CPF | ✅ | OTP App (TOTP) | ❌ |
+| EPROC-TJRS-2G-DOCKET | CPF | ✅ | OTP App (TOTP) | ❌ |
+| EPROC-TJRJ-DOCKET | CPF | ✅ | OTP App (TOTP) | ❌ |
+| EPROC-TJTO-DOCKET | CPF | ✅ | OTP App (TOTP) | ❌ |
+| EPROC-TJTO-2G-DOCKET | CPF | ✅ | OTP App (TOTP) | ❌ |
+| TJSE-DOCKET | CPF | ❌ | — | ❌ |
+| JUSBR-DOCKET | CPF | ❌ | — | ❌ |
+
+> ⚠️ O `JUSBR-DOCKET` funciona como um *fallback* — pode retornar processos mais recentes (digitais, pós-2015) de forma unificada, mas **não possui cobertura completa** e costuma ser mais instável.
+
+---
+
+## ✅ Respostas possíveis
 
 | Código | Significado                                 |
 |--------|----------------------------------------------|
@@ -52,13 +196,10 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/autos/buscar
 
 ---
 
-## 📄 Observações
+## 📦 Após iniciar
 
-- Após a chamada, será retornado um `id` único da solicitação.
-- Aguarde alguns segundos e utilize esse `id` para consultar os resultados dos autos com o endpoint de status.
+Você receberá um `id` da solicitação. Use esse ID para acompanhar e consultar os autos:
 
----
+➡️ [Buscar Resultado](./buscar-resultado)
 
-## 🚀 Prossiga
-
-Acompanhe o status e baixe os documentos com: [📦 Buscar Resultado](./buscar-resultado)
+> ⚠️ **Atenção**: Nos sistemas com 2FA via e-mail, o advogado deve configurar o redirecionamento automático para o endereço fornecido pela Predictus. O campo `email` na requisição ajuda a identificar e correlacionar corretamente o token recebido.
