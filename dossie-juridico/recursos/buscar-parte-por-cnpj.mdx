@@ -125,8 +125,7 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorCNP
   - `TRIBUNAL` → documento oficial capturado diretamente na capa do processo (**confiança alta**).
   - `CATALOGO` → documento obtido por consulta de CPF/CNPJ nos sites dos tribunais (**confiança alta**).
   - `AGREGADO` → documento atribuído por algoritmos de matching da Predictus (**confiança média, pode conter ruídos**).
-
-    Esse campo pode ser usado para filtrar apenas documentos de origem oficial (`TRIBUNAL`) ou cruzar diferentes origens
+  - Esse campo pode ser usado para filtrar apenas documentos de origem oficial (`TRIBUNAL`) ou cruzar diferentes origens
 - `grausProcesso` — lista de inteiros entre 1 e 4:
   - `1` → 1º Grau (ex: vara cível)
   - `2` → 2º Grau (tribunais estaduais/regionais)
