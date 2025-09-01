@@ -24,8 +24,14 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorCPF
 ```json
 {
   "cpf": "08108732905",
+  "nome": "HENDRIK",
   "polo": "ATIVO",
   "grausProcesso": [1],
+  "origensDocumento": [
+    "TRIBUNAL",
+    "CATALOGO",
+    "AGREGADO"
+  ],
   "limiteResultados": 10000,
   "tribunais": ["TJ-SC", "TRT-9"],
   "valorCausa": {
@@ -112,6 +118,15 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorCPF
   - Deve conter exatamente 11 dígitos numéricos
   - Deve ser um CPF válido conforme validação do algoritmo
 - `polo` — `ATIVO` ou `PASSIVO`
+- `nome`  (string) — campo **opcional** usado como **filtro auxiliar**.
+  - Deve ser utilizado apenas para restringir resultados quando há risco de homônimos
+  - Não substitui a busca principal pelo `cpf`.
+- `origensDocumento` (array de strings) — indica a origem da associação do documento:
+  - `TRIBUNAL` → documento oficial capturado diretamente na capa do processo (**confiança alta**).
+  - `CATALOGO` → documento obtido por consulta de CPF/CNPJ nos sites dos tribunais (**confiança alta**).
+  - `AGREGADO` → documento atribuído por algoritmos de matching da Predictus (**confiança média, pode conter ruídos**)
+
+    Esse campo pode ser usado para filtrar apenas documentos de origem oficial (`TRIBUNAL`) ou cruzar diferentes origens
 - `grausProcesso` — lista de inteiros entre 1 e 4:
   - `1` → 1º Grau (ex: vara cível)
   - `2` → 2º Grau (tribunais estaduais/regionais)

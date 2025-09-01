@@ -25,7 +25,13 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorCNP
 {
   "cnpj": "00000000000199",
   "polo": "ATIVO",
+  "nome": "BANCO",
   "grausProcesso": [1],
+  "origensDocumento": [
+    "TRIBUNAL",
+    "CATALOGO",
+    "AGREGADO"
+  ],
   "limiteResultados": 10000,
   "tribunais": ["TJ-SC", "TRT-9"],
   "valorCausa": {
@@ -108,14 +114,23 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorCNP
 
 ## 📚 Campos importantes
 
-- `cnpj` (string) — único campo obrigatório
+- `cnpj` (string) — **único campo obrigatório**
   - Deve conter exatamente 14 dígitos numéricos
   - Deve ser um CNPJ válido conforme validação do algoritmo
 - `polo` — `ATIVO` ou `PASSIVO`
+- `nome`  (string) — campo **opcional** usado como **filtro auxiliar**.
+  - Deve ser utilizado apenas para restringir resultados quando há risco de homônimos
+  - Não substitui a busca principal pelo `cnpj`.
+- `origensDocumento` (array de strings) — indica a origem da associação do documento:
+  - `TRIBUNAL` → documento oficial capturado diretamente na capa do processo (**confiança alta**).
+  - `CATALOGO` → documento obtido por consulta de CPF/CNPJ nos sites dos tribunais (**confiança alta**).
+  - `AGREGADO` → documento atribuído por algoritmos de matching da Predictus (**confiança média, pode conter ruídos**)
+
+    Esse campo pode ser usado para filtrar apenas documentos de origem oficial (`TRIBUNAL`) ou cruzar diferentes origens
 - `grausProcesso` — lista de inteiros entre 1 e 4:
   - `1` → 1º Grau (ex: vara cível)
   - `2` → 2º Grau (tribunais estaduais/regionais)
-  - `3` → Tribunais Superiores (STJ, TST etc.)
+  - `3` → Tribunais Superiores (STJ, TST, TSE etc.)
   - `4` → Supremo Tribunal Federal (STF)
 - `tribunais` — lista de siglas válidas (ex: `TJ-SP`, `TRT-9`, `STF`)
   - Ver [lista completa de tribunais](../../referencias/tribunais)
