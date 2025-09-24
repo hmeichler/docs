@@ -25,7 +25,7 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/autos/buscar
   "sistema": "EPROC-TRF2",
   "usuario": "08108732905",
   "senha": "senhaSegura",
-  "mfaToken": "GI2GGYZQGY3GMZRSG44TQOJTGUYWIZJV",
+  "tokenMFA": "GI2GGYZQGY3GMZRSG44TQOJTGUYWIZJV",
   "email": "redirecionamento@cliente.com"
 }
 ```
@@ -47,7 +47,7 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/autos/buscar
 
 | Campo      | Quando usar                                                                 |
 | ---------- | --------------------------------------------------------------------------- |
-| `mfaToken` | Necessário somente quando o tribunal exige 2FA via aplicativo OTP (TOTP/QR) |
+| `tokenMFA` | Necessário somente quando o tribunal exige 2FA via aplicativo OTP (TOTP/QR) |
 | `email`    | Necessário somente quando o 2FA do tribunal for enviado por e-mail          |
 
 > ℹ️ Se o sistema exigir **2FA por e-mail**, o campo `email` **é obrigatório**. Esse e-mail deve estar com redirecionamento automático configurado para: [**predictus-docket@mailbox.org**](mailto:predictus-docket@mailbox.org).\
