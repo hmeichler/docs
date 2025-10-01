@@ -115,6 +115,18 @@
               "diario-oficial/recursos/buscar-por-termos",
               "diario-oficial/recursos/buscar-por-diario"
             ]
+          },{
+            "group": "Mandado de Prisão",
+            "pages": [
+              "bnmp/overview"
+            ]
+          },
+          {
+            "group": "Mandado de Prisão - Recursos",
+            "pages": [
+              "bnmp/recursos/buscar-por-cpf",
+              "diario-oficial/recursos/buscar-por-diario"
+            ]
           },
           {
             "group": "Logs de Consumo",
