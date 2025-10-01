@@ -12,11 +12,24 @@ O retorno inclui **identificação da pessoa**, **dados do mandado** e **informa
 
 ## 🧠 Quando usar essa funcionalidade?
 
-- **Triagens de RH**: checagem pré-admissional e **monitoramento periódico** de colaboradores, especialmente para cargos sensíveis.  
-- **Conformidade e risco**: apoio a KYC/KYB/AML e auditorias internas.  
-- **Casos sob segredo de justiça**: como a Predictus **não acessa processos em segredo de justiça**, e muitos mandados têm processos correlatos sigilosos, esta consulta é o meio adequado para **identificar mandados em aberto** a partir de **fontes públicas** (BNMP/CNJ).
+<CardGroup cols={2}>
+  <Card title="Triagens de RH" icon="users">
+    Checagem pré-admissional e <b>monitoramento periódico</b> de colaboradores — especialmente para cargos sensíveis.
+  </Card>
 
-> Em outras palavras: mesmo quando o processo está sigiloso, o **registro do mandado** é exposto na base oficial — possibilitando a verificação de existência e status.
+  <Card title="Conformidade & Risco" icon="shield">
+    Apoio a <b>KYC/KYB/AML,</b> auditorias internas e políticas de integridade corporativa.
+  </Card>
+
+  <Card title="Segredo de Justiça" icon="lock">
+    Quando processos correlatos podem estar <b>sigilosos</b>, a consulta pública ao BNMP/CNJ permite identificar <b>mandados em aberto.</b>
+  </Card>
+
+  <Card title="Monitoramento Contínuo" icon="clock">
+    Revisões recorrentes para manter a base atualizada e detectar <b>novos mandados</b> ao longo do tempo.
+  </Card>
+</CardGroup>
+
 
 ---
 
@@ -41,53 +54,6 @@ O retorno inclui **identificação da pessoa**, **dados do mandado** e **informa
 1. **Envie a requisição** com o CPF para o endpoint de busca.  
 2. A API retorna um **array** de mandados (ou `204` quando não houver registros).  
 3. Utilize o `numeroProcesso` (quando presente) para correlacionar com outros recursos de processos da plataforma, se necessário.
-
----
-
-## 📤 Exemplo de chamada
-
-```bash
-curl --location 'https://api.predictus.com.br/predictus-api/mandados/prisao/buscarPorCPF'   --header 'Content-Type: application/json'   --header 'Authorization: Bearer <seu_token>'   --data '{
-    "cpf": "08108732904"
-  }'
-```
-
----
-
-## 🧱 Campos retornados (resumo)
-
-Campo | Descrição
----|---
-`nome`, `nomePai`, `nomeMae`, `alcunha`, `cpf`, `dataNascimento`, `sexo`, `profissao` | Identificação e dados pessoais conforme base oficial.
-`descricaoPeca` | Tipo do documento (ex.: Mandado de Prisão).
-`numeroPeca` | Número do mandado/documento.
-`numeroProcesso` | Número CNJ do processo relacionado (quando houver).
-`orgaoJudiciario` | Órgão judiciário responsável.
-`dataExpedicao` | Data de expedição (ISO 8601).
-`statusMandado` | Status atual (ex.: **Pendente de Cumprimento**).
-
-> Os valores refletem o conteúdo disponibilizado pela fonte oficial no momento da consulta.
-
----
-
-## 🧭 Códigos e estados de resposta
-
-| Código | Significado |
-|------:|-------------|
-| `200` | Sucesso — um array (possivelmente vazio) |
-| `204` | Nenhum registro encontrado para o CPF |
-| `400` | Erro de validação no payload |
-| `401` | Token inválido ou expirado |
-| `503` | Indisponibilidade temporária da fonte oficial |
-
----
-
-## 📌 Boas práticas
-
-- **Normalize o CPF** (11 dígitos) antes do envio.
-- Trate **homônimos**: quando o CPF não constar em certos registros, use nome + outros atributos para revisão humana, se necessário.
-- Considere que a disponibilidade/atualização da base oficial pode **variar**.
-- Logue o **horário da consulta** e o **status** para trilhas de auditoria.
 
 ---
 
