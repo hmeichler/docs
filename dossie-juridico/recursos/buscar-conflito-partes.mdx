@@ -1,0 +1,231 @@
+---
+title: "Buscar Conflito entre Partes"
+description: "Consulte processos em que TODAS as partes informadas aparecem no mesmo processo (X contra Y …)."
+---
+
+# ⚖️ Buscar Conflito entre Partes
+
+Este endpoint permite consultar processos em que **todas** as partes informadas aparecem **no mesmo processo**.  
+É o caso clássico “**X tem processo contra Y?**”.  
+Você também pode aplicar filtros por grau, tribunal, classe, assunto, valor da causa, status, ramo do direito e mais.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarConflitoPartes
+```
+
+---
+
+## 🧾 Corpo da requisição (exemplo completo)
+
+```json
+{
+  "partes": [
+    {
+      "nome": "HENDRIK",
+      "cpf": "08108732905",
+      "polo": "ATIVO",
+      "origensDocumento": ["TRIBUNAL"]
+    },
+    {
+      "nome": "AZUL",
+      "cnpj": "09296295000160",
+      "polo": "PASSIVO",
+      "origensDocumento": ["TRIBUNAL", "CATALOGO"]
+    }
+  ],
+  "grausProcesso": [1, 2],
+  "limiteResultados": 10000,
+  "tribunais": ["TJ-SC", "TRT-9"],
+  "valorCausa": {
+    "maiorIgualQue": 1000,
+    "menorIgualQue": 100000
+  },
+  "dataDistribuicao": {
+    "maiorIgualQue": "1970-01-01",
+    "menorIgualQue": "2025-12-31"
+  },
+  "classesProcessuais": [
+    "CUMPRIMENTO DE SENTENCA",
+    "ACAO TRABALHISTA - RITO ORDINARIO"
+  ],
+  "assuntosCNJ": [
+    "INDENIZACAO POR DANO MORAL",
+    "ATRASO DE VOO"
+  ],
+  "statusProcessuais": [
+    "EM TRAMITACAO",
+    "EM GRAU DE RECURSO"
+  ],
+  "ramosDoDireito": [
+    "DIREITO DO TRABALHO",
+    "DIREITO DO CONSUMIDOR"
+  ],
+  "segmentos": [
+    "JUSTICA ESTADUAL",
+    "JUSTICA DO TRABALHO"
+  ],
+  "sistemas": ["ESAJ", "PJE"],
+  "camposRetorno": {
+    "incluir": [
+      "urlProcesso",
+      "numeroProcessoUnico",
+      "numeroProcessoAntigo",
+      "statusObservacao",
+      "grauProcesso",
+      "juiz",
+      "relator",
+      "revisores",
+      "area",
+      "sistema",
+      "segmento",
+      "tribunalOrigem",
+      "tribunal",
+      "uf",
+      "orgaoJulgador",
+      "unidadeOrigem",
+      "classeProcessual",
+      "assuntosCNJ",
+      "dataDistribuicao",
+      "dataAutuacao",
+      "partes",
+      "advogadosSemParte",
+      "processosRelacionados",
+      "valorCausa",
+      "valorExecucao",
+      "eTutelaAntecipada",
+      "temInjuncao",
+      "eJusticaGratuita",
+      "ePrioritario",
+      "eSegredoJustica",
+      "eProcessoDigital",
+      "temAcordao",
+      "acordao",
+      "temSentenca",
+      "sentenca",
+      "dataProcessamento",
+      "statusPredictus"
+    ]
+  }
+}
+```
+
+---
+
+## 👤 Estrutura de `partes[]`
+
+Cada item de `partes` representa **um conjunto de condições** que deve ser satisfeito **no mesmo objeto de parte** dentro do processo:
+
+Campo | Tipo | Obrigatório | Descrição
+---|---|---|---
+`nome` | string | opcional | Pode ser usado sozinho ou junto com CPF/CNPJ (ex.: buscas por razão social/nome).
+`cpf` | string | condicional | 11 dígitos. **Regra:** nunca junto com `cnpj`.
+`cnpj` | string | condicional | 14 dígitos. **Regra:** nunca junto com `cpf`.
+`polo` | string | opcional | `ATIVO` ou `PASSIVO`. Quando ausente, aceita qualquer polo.
+`origensDocumento` | string[] | opcional | Subconjunto de `["AGREGADO","CATALOGO","TRIBUNAL"]` para restringir a origem do identificador da parte.
+
+### Regras de combinação para cada parte
+- ✅ Válido: **`nome`**, **`cpf`**, **`cnpj`**, **`nome+cpf`**, **`nome+cnpj`**  
+- ❌ Inválido: **`cpf+cnpj`** (com ou sem `nome`)  
+- ❌ Inválido: **sem `nome`, `cpf` e `cnpj`**
+
+### Tamanho da lista
+- `partes`: **mínimo 1, máximo 5** itens.
+
+---
+
+## 🔎 Como a busca funciona
+
+- **AND entre partes**: todos os itens de `partes[]` devem aparecer **no mesmo processo** (cada um casando em um objeto do array de partes do processo).
+- **AND entre filtros diferentes** (grau, tribunal, datas etc.).
+- **OR dentro de listas** (ex.: `tribunais`, `assuntosCNJ`, `classesProcessuais`).
+- `polo` (quando informado) é aplicado à respectiva parte.
+- `origensDocumento` filtra a origem do identificador daquela parte (ex.: priorizar somente `TRIBUNAL`).
+
+Dica: se você quer apenas saber **se existe** pelo menos um processo que satisfaça o conflito, pode enviar `limiteResultados: 1`. Em caso de inexistência, a API retorna **204**.
+
+---
+
+## ✅ Validações aplicadas
+
+- `partes`: 1 a 5 itens.
+- Para **cada parte**:
+  - **Obrigatório ao menos um**: `nome` **ou** `cpf` **ou** `cnpj`.
+  - **Proibido**: `cpf` **e** `cnpj` simultaneamente.
+  - `polo` (quando presente): `ATIVO` ou `PASSIVO`.
+  - `origensDocumento` (quando presente): valores dentro de `AGREGADO`, `CATALOGO`, `TRIBUNAL`.
+- Filtros adicionais:
+  - `grausProcesso`: inteiros entre **1** e **4**.
+  - `limiteResultados`: entre **1** e **10.000** (padrão: **10.000**).
+  - `assuntosCNJ` e `classesProcessuais`: até **65.000** itens.
+  - `tribunais`, `statusProcessuais`, `ramosDoDireito`, `segmentos`: devem conter valores válidos conforme referências.
+
+---
+
+## 📚 Campos de filtro (opcional)
+
+- `grausProcesso`: `[1..4]`
+- `tribunais`: lista de siglas válidas (ex.: `TJ-SP`, `TRT-9`, `STF`) — ver referências
+- `segmentos`: ex.: `JUSTICA ESTADUAL`, `JUSTICA DO TRABALHO` — ver referências
+- `valorCausa`: faixa com `maiorQue/maiorIgualQue/menorQue/menorIgualQue`
+- `dataDistribuicao`: faixa com `maiorQue/maiorIgualQue/menorQue/menorIgualQue` (`YYYY-MM-DD`)
+- `classesProcessuais`, `assuntosCNJ`, `statusProcessuais`, `ramosDoDireito`, `sistemas`
+- `camposRetorno.incluir`: campos adicionais a retornar (lista)
+
+---
+
+## 🧾 Exemplos rápidos
+
+### 1) “CPF X (ATIVO) contra CNPJ Y (PASSIVO)”
+```json
+{
+  "partes": [
+    { "cpf": "08108732905", "polo": "ATIVO" },
+    { "cnpj": "09296295000160", "polo": "PASSIVO" }
+  ],
+  "limiteResultados": 1000
+}
+```
+
+### 2) “Nome A contra Nome B”, sem polo
+```json
+{
+  "partes": [
+    { "nome": "HENDRIK" },
+    { "nome": "AZUL" }
+  ]
+}
+```
+
+### 3) Três partes (AND entre as três)
+```json
+{
+  "partes": [
+    { "cpf": "08108732905", "polo": "ATIVO" },
+    { "nome": "AZUL", "cnpj": "09296295000160", "polo": "PASSIVO" },
+    { "nome": "GOL" }
+  ],
+  "tribunais": ["TJ-SP"]
+}
+```
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado                                           |
+|-------:|--------------------------------------------------------|
+| `200`  | Sucesso — processos encontrados                        |
+| `204`  | Nenhum processo encontrado para o conflito informado   |
+| `400`  | Erro de validação (payload inválido)                   |
+| `401`  | Token inválido ou expirado                             |
+
+
+---
+
+## 🧩 Retorno
+
+Retorna uma lista de objetos do tipo [`processo`](../estrutura-dados) com os campos padrão da Predictus, acrescidos dos campos solicitados em `camposRetorno.incluir`.
