@@ -39,7 +39,8 @@
               "dossie-juridico/recursos/buscar-advogado-por-oab",
               "dossie-juridico/recursos/buscar-advogado-por-nome",
               "dossie-juridico/recursos/buscar-advogado-por-nome-exato",
-              "dossie-juridico/recursos/buscar-por-parametros"
+              "dossie-juridico/recursos/buscar-por-parametros",
+              "dossie-juridico/recursos/buscar-conflito-partes"
             ]
           },
           {
