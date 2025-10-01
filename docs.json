@@ -30,6 +30,7 @@
           {
             "group": "Dossiê Jurídico - Recursos",
             "pages": [              
+              "dossie-juridico/recursos/buscar-movimentacoes-simplificado",
               "dossie-juridico/recursos/buscar-movimentacoes",
               "dossie-juridico/recursos/buscar-parte-por-cpf",
               "dossie-juridico/recursos/buscar-parte-por-cnpj",
