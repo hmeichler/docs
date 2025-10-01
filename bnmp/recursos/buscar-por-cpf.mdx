@@ -1,0 +1,141 @@
+---
+title: "Buscar Mandados de Prisão por CPF"
+description: "Retorne mandados de prisão associados a um CPF a partir de fontes oficiais (BNMP/CNJ)."
+---
+
+# 🚔 Buscar Mandados de Prisão por CPF
+
+Este endpoint retorna **mandados de prisão** associados a um **CPF** informado, com base em dados públicos de fontes oficiais (BNMP/CNJ).  
+O retorno contempla identificação da pessoa, dados do mandado e informações do órgão judiciário responsável.
+A pesquisa é realizada em tempo real.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/mandados/prisao/buscarPorCPF
+```
+
+**Autenticação:** `Authorization: Bearer <token>`  
+**Content-Type:** `application/json`
+
+---
+
+## 🧾 Corpo da requisição
+
+```json
+{
+  "cpf": "33835967886"
+}
+```
+
+### Regras de validação
+- `cpf` (string) — **obrigatório**  
+  - 11 dígitos numéricos (pontuação opcional será ignorada)  
+  - Deve ser um CPF válido (validação formal)
+
+---
+
+## 📤 Exemplo (cURL)
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/mandados/prisao/buscarPorCPF'   --header 'Content-Type: application/json'   --header 'Authorization: Bearer <seu_token>'   --data '{
+    "cpf": "33835967886"
+  }'
+```
+
+---
+
+## 📥 Exemplo de resposta (`200`)
+
+```json
+[
+  {
+    "nome": "JULIA VOLTOLINI CAPARROZ",
+    "nomePai": "MAURO VOLTOLINI",
+    "nomeMae": "ROSELI RIBEIRO VOLTOLINI",
+    "alcunha": "Não informado",
+    "cpf": "338.359.678-86",
+    "dataNascimento": "1986-06-02",
+    "sexo": "Feminino",
+    "profissao": "Advogado",
+    "descricaoPeca": "Mandado de Prisão",
+    "numeroPeca": "0009394-93.2016.8.26.0576.01.0002-11",
+    "numeroProcesso": "0009394-93.2016.8.26.0576",
+    "orgaoJudiciario": "02 CRIMINAL DE SAO JOSE DO RIO PRETO",
+    "dataExpedicao": "2025-09-12T00:00:00.000Z",
+    "statusMandado": "Pendente de Cumprimento"
+  },
+  {
+    "nome": "JULIA VOLTOLINI CAPARROZ",
+    "nomePai": "MAURO VOLTOLINI",
+    "nomeMae": "ROSELI RIBEIRO VOLTOLINI",
+    "alcunha": "Não informado",
+    "cpf": "338.359.678-86",
+    "dataNascimento": "1986-06-02",
+    "sexo": "Feminino",
+    "profissao": "Advogado",
+    "descricaoPeca": "Mandado de Prisão",
+    "numeroPeca": "0032829-33.2015.8.26.0576.01.0001-15",
+    "numeroProcesso": "0032829-33.2015.8.26.0576",
+    "orgaoJudiciario": "01 CRIMINAL DE SAO JOSE DO RIO PRETO",
+    "dataExpedicao": "2025-09-22T00:00:00.000Z",
+    "statusMandado": "Pendente de Cumprimento"
+  }
+]
+```
+
+---
+
+## 🧱 Estrutura de resposta
+
+Campo | Tipo | Descrição
+---|---|---
+`nome` | string | Nome completo da pessoa.
+`nomePai` | string | Nome do pai.
+`nomeMae` | string | Nome da mãe.
+`alcunha` | string | Apelido/alcunha, quando disponível.
+`cpf` | string | CPF conforme fonte oficial.
+`dataNascimento` | string (YYYY-MM-DD) | Data de nascimento.
+`sexo` | string | Sexo conforme cadastro.
+`profissao` | string | Profissão (quando disponível).
+`descricaoPeca` | string | Tipo do documento (ex.: Mandado de Prisão).
+`numeroPeca` | string | Número do mandado/documento.
+`numeroProcesso` | string | Número CNJ do processo relacionado (NPU), quando houver.
+`orgaoJudiciario` | string | Órgão judiciário responsável.
+`dataExpedicao` | string (ISO 8601) | Data de expedição do mandado.
+`statusMandado` | string | Status do mandado (ex.: Pendente de Cumprimento).
+
+> **Observação:** os valores são refletidos conforme disponibilizados pela fonte oficial.
+
+---
+
+## 🧭 Códigos de resposta
+
+| Código | Significado                                 |
+|------:|----------------------------------------------|
+| `200` | Sucesso — um array (possivelmente vazio)     |
+| `204` | Nenhum registro encontrado para o CPF        |
+| `400` | Erro de validação no payload                 |
+| `401` | Token inválido ou expirado                   |
+| `503` | Indisponibilidade temporária da fonte oficial |
+
+---
+
+## 🔐 Segurança e privacidade
+- A chamada requer **Bearer Token** válido.
+- Dados retornados são de **fonte oficial** (BNMP/CNJ) e podem variar conforme disponibilidade e atualização.
+
+---
+
+## ❗ Erros comuns
+
+- **CPF inválido ou malformatado** → `400`  
+- **Sem resultados para o CPF** → `204`  
+- **Fonte oficial indisponível** → `503` (tente novamente mais tarde)
+
+---
+
+## 📎 Fonte de dados
+Informações provenientes do **Banco Nacional de Mandados de Prisão (BNMP/CNJ)**.

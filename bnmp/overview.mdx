@@ -1,0 +1,96 @@
+---
+title: "Introdução"
+description: "Consulte mandados de prisão associados a um CPF, com dados estruturados de fontes oficiais (BNMP/CNJ)."
+---
+
+# 🚔 Mandados de Prisão — Visão Geral
+
+A funcionalidade de **busca de mandados de prisão** da Predictus permite consultar, de forma padronizada, os registros associados a um **CPF** em bases oficiais.  
+O retorno inclui **identificação da pessoa**, **dados do mandado** e **informações do órgão judiciário** responsável.
+
+---
+
+## 🧠 Quando usar essa funcionalidade?
+
+- **Triagens de RH**: checagem pré-admissional e **monitoramento periódico** de colaboradores, especialmente para cargos sensíveis.  
+- **Conformidade e risco**: apoio a KYC/KYB/AML e auditorias internas.  
+- **Casos sob segredo de justiça**: como a Predictus **não acessa processos em segredo de justiça**, e muitos mandados têm processos correlatos sigilosos, esta consulta é o meio adequado para **identificar mandados em aberto** a partir de **fontes públicas** (BNMP/CNJ).
+
+> Em outras palavras: mesmo quando o processo está sigiloso, o **registro do mandado** é exposto na base oficial — possibilitando a verificação de existência e status.
+
+---
+
+## 🔗 Como funciona o acesso
+
+- A Predictus consulta **fontes oficiais** (BNMP/CNJ) e retorna os dados de forma estruturada.
+- A chamada é **autenticada por token (Bearer)** e aceita um **CPF** por requisição.
+- Respostas são **normalizadas** (padrões de datas, campos e enumerações), facilitando a integração.
+
+---
+
+## 🔐 Requisitos
+
+- **Token de acesso** (Bearer)
+- **CPF** válido (11 dígitos; pontuação opcional)
+- Conectividade com a API Predictus
+
+---
+
+## ⚙️ Fluxo de consulta
+
+1. **Envie a requisição** com o CPF para o endpoint de busca.  
+2. A API retorna um **array** de mandados (ou `204` quando não houver registros).  
+3. Utilize o `numeroProcesso` (quando presente) para correlacionar com outros recursos de processos da plataforma, se necessário.
+
+---
+
+## 📤 Exemplo de chamada
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/mandados/prisao/buscarPorCPF'   --header 'Content-Type: application/json'   --header 'Authorization: Bearer <seu_token>'   --data '{
+    "cpf": "08108732904"
+  }'
+```
+
+---
+
+## 🧱 Campos retornados (resumo)
+
+Campo | Descrição
+---|---
+`nome`, `nomePai`, `nomeMae`, `alcunha`, `cpf`, `dataNascimento`, `sexo`, `profissao` | Identificação e dados pessoais conforme base oficial.
+`descricaoPeca` | Tipo do documento (ex.: Mandado de Prisão).
+`numeroPeca` | Número do mandado/documento.
+`numeroProcesso` | Número CNJ do processo relacionado (quando houver).
+`orgaoJudiciario` | Órgão judiciário responsável.
+`dataExpedicao` | Data de expedição (ISO 8601).
+`statusMandado` | Status atual (ex.: **Pendente de Cumprimento**).
+
+> Os valores refletem o conteúdo disponibilizado pela fonte oficial no momento da consulta.
+
+---
+
+## 🧭 Códigos e estados de resposta
+
+| Código | Significado |
+|------:|-------------|
+| `200` | Sucesso — um array (possivelmente vazio) |
+| `204` | Nenhum registro encontrado para o CPF |
+| `400` | Erro de validação no payload |
+| `401` | Token inválido ou expirado |
+| `503` | Indisponibilidade temporária da fonte oficial |
+
+---
+
+## 📌 Boas práticas
+
+- **Normalize o CPF** (11 dígitos) antes do envio.
+- Trate **homônimos**: quando o CPF não constar em certos registros, use nome + outros atributos para revisão humana, se necessário.
+- Considere que a disponibilidade/atualização da base oficial pode **variar**.
+- Logue o **horário da consulta** e o **status** para trilhas de auditoria.
+
+---
+
+## 🚀 Prossiga
+
+- [🔎 Buscar Mandados por CPF](./recursos/buscar-por-cpf)
