@@ -127,12 +127,6 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorPar
   "naoNumerosProcessoUnico": [
     "50091485920228240090"
   ],
-  "juizes": [
-    "JOSE ALDO"
-  ],
-  "relatores": [
-    "JOSE ALDO"
-  ],
   "ufs": [
     "SC",
     "PR"
@@ -193,7 +187,6 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorPar
 - `valorCausa`, `dataDistribuicao`, `dataArquivamento`, `dataTransitoJulgado` — permitem busca por faixa (menorQue/menorIgualQue/maiorQue/maiorIgualQue)
 - `julgamentos` — resultado da sentença (ex: "IMPROCEDENCIA", "PROCEDENCIA EM PARTE")
   - Ver [lista completa de julgamentos](../../referencias/julgamentos)
-- `juizes`, `relatores` — busca por quem proferiu ou relatou decisões
 - `ufs` — siglas de estado (ex: "SP", "RJ", "SC")
 - `limiteResultados` — mínimo: 1 / máximo: 10.000 (padrão: 10.000)
 - `camposRetorno` — escolha os campos desejados no retorno
