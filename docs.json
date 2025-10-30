@@ -34,6 +34,7 @@
               "dossie-juridico/recursos/buscar-movimentacoes",
               "dossie-juridico/recursos/buscar-parte-por-cpf",
               "dossie-juridico/recursos/buscar-parte-por-cnpj",
+              "dossie-juridico/recursos/buscar-parte-por-raiz-cnpj",
               "dossie-juridico/recursos/buscar-parte-por-nome",
               "dossie-juridico/recursos/buscar-parte-por-nome-exato",
               "dossie-juridico/recursos/buscar-advogado-por-cpf",
