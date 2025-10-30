@@ -1,0 +1,164 @@
+---
+title: "Buscar Parte por Raiz de CNPJ"
+description: "Consulte processos de uma matriz e todas as suas filiais com uma única chamada."
+---
+
+# 🔎 Buscar por Raiz de CNPJ (Parte)
+
+Este endpoint é a forma mais eficiente de consultar todos os processos de um grupo empresarial. Ao fornecer os **8 dígitos da raiz de um CNPJ**, a API busca os processos vinculados à **matriz e a todas as suas filiais** de uma só vez.
+
+Você pode aplicar os mesmos filtros do endpoint de busca por CNPJ completo (grau, tribunal, valor, etc.).
+
+---
+
+## 💡 A Vantagem da Busca por Raiz
+
+A principal vantagem deste endpoint é a **economia de chamadas**. Em vez de consultar individualmente o CNPJ de cada filial de uma empresa, você utiliza apenas os 8 dígitos da raiz para buscar os processos de todo o grupo.
+
+| Antes (Busca por CNPJ completo)                                   | Agora (Busca por Raiz de CNPJ)                               |
+| ----------------------------------------------------------------- | ------------------------------------------------------------ |
+| 1. Descobrir os CNPJs de todas as 4 filiais.                      | 1. Usar a raiz do CNPJ (`42194191`).                           |
+| 2. Fazer **4 chamadas** à API, uma para cada CNPJ.                | 2. Fazer **1 única chamada** à API.                          |
+| 3. Juntar os resultados das 4 chamadas na sua aplicação.          | 3. Receber todos os resultados de forma consolidada.         |
+| **Total: 4 chamadas à API**                                       | **Total: 1 chamada à API**                                   |
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorRaizCNPJParte
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+### Exemplo mínimo
+
+O único campo obrigatório é a `raizCnpj`.
+
+```json
+{
+  "raizCnpj": "42194191"
+}
+```
+
+### Exemplo completo
+
+O exemplo abaixo demonstra o corpo da requisição com todos os filtros opcionais disponíveis, que funcionam da mesma forma que no endpoint de busca por CNPJ completo.
+
+```json
+{
+  "raizCnpj": "42194191",
+  "polo": "PASSIVO",
+  "nome": "EMPRESA",
+  "grausProcesso": [1, 2],
+  "origensDocumento": [
+    "TRIBUNAL",
+    "CATALOGO"
+  ],
+  "limiteResultados": 10000,
+  "tribunais": ["TJ-SP", "TRT-2"],
+  "valorCausa": {
+    "maiorQue": 50000
+  },
+  "dataDistribuicao": {
+    "maiorIgualQue": "2020-01-01"
+  },
+  "classesProcessuais": [
+    "PROCEDIMENTO COMUM CIVEL",
+    "EXECUCAO DE TITULO EXTRAJUDICIAL"
+  ],
+  "assuntosCNJ": [
+    "CONTRATOS BANCARIOS",
+    "RESPONSABILIDADE DO FORNECEDOR"
+  ],
+  "statusProcessuais": [
+    "EM TRAMITACAO"
+  ],
+  "ramosDoDireito": [
+    "DIREITO CIVIL"
+  ],
+  "segmentos": [
+    "JUSTICA ESTADUAL"
+  ],
+  "camposRetorno": {
+    "incluir": [
+      "numeroProcessoUnico",
+      "tribunal",
+      "valorCausa",
+      "partes"
+    ]
+  }
+}
+```
+
+---
+
+## 📚 Campos importantes
+
+- `raizCnpj` (string) — **único campo obrigatório**
+  - Deve conter exatamente os 8 primeiros dígitos de um CNPJ.
+- `polo` — `ATIVO` ou `PASSIVO`
+- `nome`  (string) — campo **opcional** usado como **filtro auxiliar**.
+  - Deve ser utilizado apenas para restringir resultados quando há risco de homônimos.
+  - Não substitui a busca principal pela `raizCnpj`.
+- `origensDocumento` (array de strings) — indica a origem da associação do documento:
+  - `TRIBUNAL` → documento oficial capturado diretamente na capa do processo (**confiança alta**).
+  - `CATALOGO` → documento obtido por consulta de CPF/CNPJ nos sites dos tribunais (**confiança alta**).
+  - `AGREGADO` → documento atribuído por algoritmos de matching da Predictus (**confiança média, pode conter ruídos**).
+- `grausProcesso` — lista de inteiros entre 1 e 4.
+- `tribunais` — lista de siglas válidas (ex: `TJ-SP`, `TRT-9`, `STF`)
+  - Ver [lista completa de tribunais](../../referencias/tribunais)
+- `valorCausa`, `dataDistribuicao` — permitem filtragem por faixa (menorQue/menorIgualQue/maiorQue/maiorIgualQue)
+- `classesProcessuais`, `assuntosCNJ` — até 65.000 valores cada
+- `statusProcessuais` — veja [valores válidos](../../referencias/status-processuais)
+- `ramosDoDireito` — veja [valores válidos](../../referencias/ramos-direito)
+- `segmentos` — veja [lista completa de segmentos](../../referencias/segmentos)
+- `limiteResultados` — mínimo: 1 / máximo: 10.000 (padrão: 10.000)
+
+---
+
+## 📌 Como funcionam os filtros
+
+A API aplica os filtros com **lógica combinada (AND entre filtros diferentes, OR dentro de listas)**:
+
+| Situação                         | Comportamento                                           |
+| -------------------------------- | ------------------------------------------------------- |
+| Vários filtros usados            | Todos devem ser satisfeitos (lógica **AND**)            |
+| Lista de valores (ex: tribunais) | Basta bater **um dos valores** da lista (lógica **OR**) |
+| Campos únicos (ex: raizCnpj)     | Precisa ser exatamente igual                            |
+| Faixas (valor ou data)           | O valor do processo deve estar **dentro do intervalo**  |
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado                                |
+| ------ | ------------------------------------------ |
+| `200`  | Sucesso — processos encontrados            |
+| `204`  | Nenhum processo encontrado para a raiz de CNPJ |
+| `400`  | Erro de validação no payload               |
+| `401`  | Token inválido ou expirado                 |
+
+---
+
+## 🛡️ Validações aplicadas
+
+- Raiz de CNPJ:
+  - Não nulo
+  - 8 dígitos numéricos
+- Polo:
+  - `ATIVO` ou `PASSIVO`
+- Lista de `statusProcessuais`, `ramosDoDireito`, `segmentos`, `tribunais`:
+  - Todos os valores devem estar na lista de permitidos
+- Campos com listas extensas (`classesProcessuais`, `assuntosCNJ`):
+  - Máximo de 65.000 itens
+- `limiteResultados`: entre 1 e 10.000
+
+---
+
+## 🧾 Retorno
+
+Retorna uma lista de objetos do tipo [`processo`](../estrutura), com dados estruturados e padronizados pela Predictus.
