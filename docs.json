@@ -29,7 +29,7 @@
           },
           {
             "group": "Dossiê Jurídico - Recursos",
-            "pages": [              
+            "pages": [
               "dossie-juridico/recursos/buscar-movimentacoes-simplificado",
               "dossie-juridico/recursos/buscar-movimentacoes",
               "dossie-juridico/recursos/buscar-parte-por-cpf",
@@ -86,7 +86,6 @@
           {
             "group": "Jurimetria - Recursos",
             "pages": [
-              "jurimetria/recursos/buscar-por-parametros",
               "jurimetria/recursos/buscar-por-numero-cnj"
             ]
           },
@@ -115,7 +114,8 @@
               "diario-oficial/recursos/buscar-por-termos",
               "diario-oficial/recursos/buscar-por-diario"
             ]
-          },{
+          },
+          {
             "group": "Mandado de Prisão",
             "pages": [
               "bnmp/overview"
@@ -152,7 +152,7 @@
             ]
           }
         ]
-      }      
+      }
     ],
     "global": {
       "anchors": [
