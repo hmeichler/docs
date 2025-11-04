@@ -37,26 +37,141 @@ Essa operação é feita com **autenticação direta nos portais oficiais dos tr
 
 ---
 
-## 📚 Sistemas suportados
+## 🖥️ Sistemas suportados
 
-A lista abaixo é **exemplificativa** e representa os principais sistemas compatíveis.  
-A Predictus também possui robôs funcionais para sistemas exclusivos de alguns tribunais, como:
-
-- **Tucujuris** (TJ-AP)
-- **Portal do Advogado** (TJ-SE)
-- **Sistema próprio do TJ-RJ**
+A lista abaixo é **exaustiva** e representa os sistemas compatíveis.  
 
 Outros sistemas regionais e específicos também podem ser suportados — entre em contato para confirmar.
 
-| Sistema | Tribunais | 2FA Necessário |
-|--------|-----------|----------------|
-| ESAJ   | TJ-SP, TJ-AC, TJ-AL, TJ-AM, TJ-CE, TJ-MS | ✅ (SP, MS) |
-| PROJUDI | TJ-BA, TJ-GO, TJ-PR, TJ-RR, TJ-AM | ✅ (PR, RR) |
-| PJe    | TJ-MG, TJ-RJ, TJ-DFT, TRF1, TRF3, TRF5... | ✅ (em alguns casos) |
-| EPROC  | TRFs, JFs e alguns TJs (ex: TJ-SC, TJ-RS) | ✅ |
-| JUSBR  | Todos os demais (fallback alternativo) | ❌ |
+| Sistema         | Username | 2FA? | Tipo de 2FA        | Requer email?  |
+| --------------- | -------- | ----- | ----------------- | -------------- |
+| PJE-TRT1        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT1-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT2        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT2-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT3        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT3-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT4        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT4-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT5        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT5-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT6        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT6-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT7        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT7-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT8        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT8-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT9        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT9-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT10       | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT10-2G    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT11       | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT11-2G    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT12       | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT12-2G    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT13       | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT13-2G    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT14       | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT14-2G    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT15       | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT15-2G    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT16       | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT16-2G    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT17       | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT17-2G    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT18       | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT18-2G    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT19       | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT19-2G    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT20       | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT20-2G    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT21       | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT21-2G    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT22       | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT22-2G    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT23       | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT23-2G    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT24       | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRT24-2G    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TST         | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PROJUDI-TJBA    | CPF      | ❌    | —                 | ❌             |
+| PROJUDI-TJGO    | CPF      | ❌    | —                 | ❌             |
+| PROJUDI-TJAM    | CPF      | ❌    | —                 | ❌             |
+| PROJUDI-TJAM-2G | CPF      | ❌    | —                 | ❌             |
+| PROJUDI-TJRR    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PROJUDI-TJRR-2G | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PROJUDI-TJPR    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PROJUDI-TJPR-2G | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PROJUDI-SEEU    | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJAP        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJAP-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJBA        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJBA-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJES        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJES-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJMA        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJMA-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJMG        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJMG-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJMT        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJMT-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJPA        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJPA-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJPE        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJPE-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJPI        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJPI-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJRJ        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJRN        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJRN-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJRO        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TJRO-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRF1        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRF1-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRF3        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRF3-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRF5        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRF5-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRF6        | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| PJE-TRF6-2G     | CPF      | ✅    | OTP App (TOTP)    | ❌             |
+| ESAJ-TJAC       | CPF      | ✅    | E-mail (código)   | ✅             |
+| ESAJ-TJAC-2G    | CPF      | ✅    | E-mail (código)   | ✅             |
+| ESAJ-TJAL       | CPF      | ✅    | E-mail (código)   | ✅             |
+| ESAJ-TJAL-2G    | CPF      | ✅    | E-mail (código)   | ✅             |
+| ESAJ-TJAM       | CPF      | ✅    | E-mail (código)   | ✅             |
+| ESAJ-TJAM-2G    | CPF      | ✅    | E-mail (código)   | ✅             |
+| ESAJ-TJCE       | CPF      | ✅    | E-mail (código)   | ✅             |
+| ESAJ-TJCE-2G    | CPF      | ✅    | E-mail (código)   | ✅             |
+| ESAJ-TJMS       | CPF      | ✅    | E-mail (código)   | ✅             |
+| ESAJ-TJMS-2G    | CPF      | ✅    | E-mail (código)   | ✅             |
+| ESAJ-TJSP       | CPF      | ✅    | E-mail (código)   | ✅             |
+| ESAJ-TJSP-REC   | CPF      | ✅    | E-mail (código)   | ✅             |
+| ESAJ-TJSP-2G    | CPF      | ✅    | E-mail (código)   | ✅             |
+| EPROC-JFES      | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-JFMG      | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-JFPR      | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-JFRS      | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-JFSC      | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-TRF6      | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-TRF4      | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-TRF2      | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-TJMRS     | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-TJAC      | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-TJAC-2G   | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-TJSC      | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-TJSC-2G   | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-TJSP      | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-TJSP-2G   | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-TJRS      | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-TJRS-2G   | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-TJRJ      | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-TJTO      | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| EPROC-TJTO-2G   | CPF/OAB  | ✅    | OTP App (TOTP)    | ❌             |
+| TJSE            | CPF      | ✅    | E-mail (código)   | ✅             |
+| JUSBR           | CPF      | ❌    | —                 | ❌             |
 
----
+> ⚠️ O `JUSBR` funciona como um _fallback_ — pode retornar processos mais recentes (digitais, pós-2015) de forma unificada, mas **não possui cobertura completa** e costuma ser mais instável.
+
 
 ## 🔄 Status possíveis na resposta
 
