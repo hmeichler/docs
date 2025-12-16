@@ -32,6 +32,7 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorPar
     {
       "nome": "08108732905",
       "cnpj": "00000000000191",
+      "raizCnpj": "12345678",
       "cpf": "08108732905",
       "polo": "ATIVO"
     }
@@ -179,7 +180,7 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorPar
 
 ## 📚 Campos importantes
 
-- `partes` e `naoPartes` — lista de objetos com `cpf`, `cnpj`, `nome`, `polo`\
+- `partes` e `naoPartes` — lista de objetos com `cpf`, `cnpj`, `raizCnpj`, `nome`, `polo`\
   Permite incluir ou excluir partes específicas na consulta
 - `advogados` e `naoAdvogados` — filtros por OAB, CPF ou nome
 - `classesProcessuais`, `assuntosCNJ`, `statusProcessuais`, `ramosDoDireito`, `segmentos` — todos os filtros padronizados Predictus
