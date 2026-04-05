@@ -54,18 +54,24 @@ Para cada termo elegível, o sistema busca processos judiciais distribuídos nos
 Se a busca encontrar resultados, uma mensagem é enviada para a fila exclusiva do cliente:
 
 ```json
-{
-  "termoId": "uuid-do-termo",
-  "tipoTermo": "CPF",
-  "valorTermo": "12345678901",
-  "periodicidade": "DIARIO",
-  "dataBuscaDe": "2026-03-29",
-  "dataBuscaAte": "2026-04-05",
-  "totalResultados": 3,
-  "resultados": [
-    { "...detalhes do processo..." }
-  ]
-}
+[
+  {
+    "mensagemId": "abc123",
+    "recibo": "AQEBwJnK...",
+    "conteudo": {
+      "termoId": "uuid-do-termo",
+      "tipoTermo": "CPF",
+      "valorTermo": "12345678901",
+      "periodicidade": "DIARIO",
+      "dataBuscaDe": "2026-03-29",
+      "dataBuscaAte": "2026-04-05",
+      "totalResultados": 3,
+      "resultados": [
+        { "...detalhes do processo..." }
+      ]
+    }
+  }
+]
 ```
 
 > Se não houver novos processos no período, **nenhuma mensagem é enviada**.
