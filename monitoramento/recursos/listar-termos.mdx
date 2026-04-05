@@ -1,0 +1,51 @@
+---
+title: "Listar Termos"
+description: "Liste todos os termos de monitoramento ativos da sua conta."
+---
+
+# 📋 Listar Termos
+
+Este endpoint retorna todos os termos de monitoramento ativos cadastrados para a sua conta.
+
+---
+
+## 🔗 Endpoint
+
+```
+GET https://api.predictus.com.br/predictus-api/v2/monitoramento/termos
+```
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/v2/monitoramento/termos' \
+--header 'Authorization: Bearer {accessToken}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "tipoTermo": "CPF",
+    "termo": "12345678901",
+    "periodicidade": "DIARIO",
+    "criadoEm": "2026-04-05T10:30:00"
+  }
+]
+```
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Lista de termos ativos |
+| `204` | Nenhum termo cadastrado |
+| `401` | Token inválido ou expirado |

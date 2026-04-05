@@ -1,0 +1,43 @@
+---
+title: "Remover Termo"
+description: "Remova um termo de monitoramento ativo."
+---
+
+# 🗑️ Remover Termo
+
+Este endpoint permite remover um termo de monitoramento. Após a remoção, o sistema deixará de realizar buscas automáticas para o termo.
+
+---
+
+## 🔗 Endpoint
+
+```
+DELETE https://api.predictus.com.br/predictus-api/v2/monitoramento/termos/{id}
+```
+
+---
+
+## 📚 Parâmetros
+
+| Parâmetro | Tipo | Obrigatório | Descrição |
+|-----------|------|-------------|-----------|
+| `id` | UUID | Sim | ID do termo (campo `id` retornado no cadastro) |
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location --request DELETE 'https://api.predictus.com.br/predictus-api/v2/monitoramento/termos/550e8400-e29b-41d4-a716-446655440000' \
+--header 'Authorization: Bearer {accessToken}'
+```
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `204` | Termo removido com sucesso |
+| `401` | Token inválido ou expirado |
+| `404` | Termo não encontrado |

@@ -129,6 +129,22 @@
             ]
           },
           {
+            "group": "Monitoramento",
+            "pages": [
+              "monitoramento/overview"
+            ]
+          },
+          {
+            "group": "Monitoramento - Recursos",
+            "pages": [
+              "monitoramento/recursos/cadastrar-termo",
+              "monitoramento/recursos/listar-termos",
+              "monitoramento/recursos/remover-termo",
+              "monitoramento/recursos/receber-mensagens",
+              "monitoramento/recursos/confirmar-recebimento"
+            ]
+          },
+          {
             "group": "Logs de Consumo",
             "pages": [
               "consumo/overview"

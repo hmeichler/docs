@@ -1,0 +1,79 @@
+---
+title: "Confirmar Recebimento"
+description: "Confirme o recebimento de mensagens do monitoramento para removê-las da fila."
+---
+
+# ✅ Confirmar Recebimento
+
+Este endpoint confirma o processamento de mensagens recebidas, removendo-as da fila. Use os recibos obtidos ao [receber mensagens](./receber-mensagens).
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/v2/monitoramento/mensagens/confirmarRecebimento
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+```json
+{
+  "recibos": [
+    "AQEBwJnK...",
+    "BRECxLmM..."
+  ]
+}
+```
+
+---
+
+## 📚 Campos
+
+| Campo | Obrigatório | Tipo | Descrição |
+|-------|-------------|------|-----------|
+| `recibos` | Sim | array de strings | Lista de recibos obtidos ao receber mensagens (máximo 10 por requisição) |
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/v2/monitoramento/mensagens/confirmarRecebimento' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "recibos": [
+    "AQEBwJnK...",
+    "BRECxLmM..."
+  ]
+}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+{
+  "status": "confirmado"
+}
+```
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Recebimento confirmado com sucesso |
+| `400` | Mais de 10 recibos enviados |
+| `401` | Token inválido ou expirado |
+
+---
+
+## 💡 Dica
+
+> Sempre confirme o recebimento após processar cada lote de mensagens. Se a confirmação falhar, a mensagem voltará à fila em **30 segundos** — não há perda de dados.

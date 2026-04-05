@@ -1,0 +1,92 @@
+---
+title: "Receber Mensagens"
+description: "Receba mensagens da sua fila exclusiva com os resultados do monitoramento de processos."
+---
+
+# 📬 Receber Mensagens
+
+Este endpoint permite consumir mensagens da sua fila exclusiva contendo os resultados das buscas de monitoramento. Mensagens não confirmadas voltam a ficar disponíveis após 30 segundos.
+
+---
+
+## 🔗 Endpoint
+
+```
+GET https://api.predictus.com.br/predictus-api/v2/monitoramento/mensagens?limite=10
+```
+
+---
+
+## 📚 Parâmetros
+
+| Parâmetro | Obrigatório | Default | Min | Max | Descrição |
+|-----------|-------------|---------|-----|-----|-----------|
+| `limite` | Não | 10 | 1 | 10 | Quantidade máxima de mensagens a receber |
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/v2/monitoramento/mensagens?limite=10' \
+--header 'Authorization: Bearer {accessToken}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+[
+  {
+    "mensagemId": "abc123",
+    "recibo": "AQEBwJnK...",
+    "conteudo": {
+      "termoId": "550e8400-e29b-41d4-a716-446655440000",
+      "tipoTermo": "CPF",
+      "valorTermo": "12345678901",
+      "periodicidade": "DIARIO",
+      "dataBuscaDe": "2026-03-29",
+      "dataBuscaAte": "2026-04-05",
+      "totalResultados": 3,
+      "resultados": [ "...detalhes dos processos..." ]
+    }
+  }
+]
+```
+
+---
+
+## 📚 Campos da resposta
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `mensagemId` | string | Identificador único da mensagem |
+| `recibo` | string | Token de recibo — deve ser guardado para [confirmar o recebimento](./confirmar-recebimento) |
+| `conteudo.termoId` | UUID | ID do termo que gerou o resultado |
+| `conteudo.tipoTermo` | string | Tipo do termo: `CPF`, `CNPJ` ou `CNPJ_RAIZ` |
+| `conteudo.valorTermo` | string | Valor do documento monitorado |
+| `conteudo.periodicidade` | string | Periodicidade configurada no termo |
+| `conteudo.dataBuscaDe` | date | Início do período da busca |
+| `conteudo.dataBuscaAte` | date | Fim do período da busca |
+| `conteudo.totalResultados` | integer | Quantidade de processos encontrados |
+| `conteudo.resultados` | array | Lista de processos encontrados |
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Mensagens recebidas com sucesso |
+| `401` | Token inválido ou expirado |
+
+---
+
+## 💡 Dicas
+
+> O campo `recibo` deve ser guardado para confirmar o recebimento da mensagem via o endpoint [Confirmar Recebimento](./confirmar-recebimento).
+
+> Mensagens não confirmadas voltam a ficar disponíveis após **30 segundos**. Isso garante que nenhuma mensagem seja perdida caso ocorra uma falha no processamento do lado do cliente.
+
+> Se houver mais de 10 mensagens pendentes, faça múltiplas chamadas até receber uma **resposta vazia**.

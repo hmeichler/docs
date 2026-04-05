@@ -1,0 +1,94 @@
+---
+title: "Cadastrar Termo"
+description: "Cadastre um termo de monitoramento para acompanhar automaticamente novos processos judiciais."
+---
+
+# 📝 Cadastrar Termo
+
+Este endpoint permite cadastrar um novo termo de monitoramento. Ao criar o termo, uma **busca imediata é disparada em segundo plano**. Se houver processos nos últimos 7 dias, os resultados já estarão disponíveis na fila de mensagens em poucos minutos.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/v2/monitoramento/termos
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+```json
+{
+  "tipoTermo": "CPF",
+  "termo": "12345678901",
+  "periodicidade": "DIARIO"
+}
+```
+
+---
+
+## 📚 Campos
+
+| Campo | Obrigatório | Tipo | Descrição |
+|-------|-------------|------|-----------|
+| `tipoTermo` | Sim | string | Tipo do documento: `CPF`, `CNPJ` ou `CNPJ_RAIZ` |
+| `termo` | Sim | string | Valor do documento a ser monitorado (8 a 14 caracteres alfanuméricos) |
+| `periodicidade` | Sim | string | Frequência das buscas: `DIARIO`, `SEMANAL`, `QUINZENAL`, `MENSAL` ou `TRIMESTRAL` |
+
+---
+
+## 🛡️ Validações
+
+| Tipo | Regra |
+|------|-------|
+| `CPF` | Exatamente 11 dígitos numéricos |
+| `CNPJ` | Exatamente 14 caracteres alfanuméricos |
+| `CNPJ_RAIZ` | Exatamente 8 caracteres alfanuméricos |
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/v2/monitoramento/termos' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "tipoTermo": "CPF",
+  "termo": "12345678901",
+  "periodicidade": "DIARIO"
+}'
+```
+
+---
+
+## ✅ Resposta esperada (201)
+
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "tipoTermo": "CPF",
+  "termo": "12345678901",
+  "periodicidade": "DIARIO",
+  "criadoEm": "2026-04-05T10:30:00"
+}
+```
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `201` | Termo criado com sucesso |
+| `401` | Token inválido ou expirado |
+| `409` | Termo já existe para este cliente |
+| `500` | Erro interno do servidor |
+
+---
+
+## 💡 Dica
+
+> Ao criar o termo, uma busca imediata é disparada automaticamente. Se houver processos nos últimos 7 dias, os resultados já estarão disponíveis na sua [fila de mensagens](./receber-mensagens) em poucos minutos — sem precisar esperar a próxima execução programada.

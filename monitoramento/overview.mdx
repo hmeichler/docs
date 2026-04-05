@@ -1,0 +1,128 @@
+---
+title: Introdução
+description: "Monitore automaticamente novos processos judiciais associados a CPFs, CNPJs ou raízes de CNPJ e receba os resultados via fila de mensagens."
+---
+
+# 📡 Monitoramento de Processos
+
+O serviço de Monitoramento permite acompanhar automaticamente **novos processos judiciais** associados a CPFs, CNPJs ou raízes de CNPJ. Ao cadastrar um termo de monitoramento, o sistema realiza buscas periódicas na base de dados e entrega os resultados via **fila de mensagens dedicada por cliente**.
+
+---
+
+## 🧠 Como funciona
+
+<Steps>
+  <Step title="Cadastre os termos">
+    Informe o tipo do termo (`CPF`, `CNPJ` ou `CNPJ_RAIZ`), o valor do documento e a periodicidade desejada. Uma busca imediata é disparada automaticamente no momento do cadastro.
+  </Step>
+  <Step title="Buscas automáticas">
+    O sistema executa buscas programadas de segunda a sexta-feira às 03:00 UTC. Apenas os termos cuja periodicidade coincide com o dia são processados.
+  </Step>
+  <Step title="Receba os resultados">
+    Quando novos processos são encontrados, as mensagens ficam disponíveis na sua fila exclusiva. Consuma via polling e confirme o recebimento.
+  </Step>
+</Steps>
+
+---
+
+## 🕐 Periodicidades disponíveis
+
+| Valor | Descrição | Quando executa |
+|-------|-----------|----------------|
+| `DIARIO` | Diário | Toda segunda a sexta |
+| `SEMANAL` | Semanal | Toda segunda-feira |
+| `QUINZENAL` | Quinzenal | Segunda-feira a cada duas semanas (referência: data de criação do termo) |
+| `MENSAL` | Mensal | Primeira segunda-feira do mês |
+| `TRIMESTRAL` | Trimestral | Primeira segunda-feira de janeiro, abril, julho e outubro |
+
+> Nenhuma periodicidade executa nos finais de semana.
+
+---
+
+## 🔍 Busca de processos
+
+Para cada termo elegível, o sistema busca processos judiciais distribuídos nos **últimos 7 dias**:
+
+- **CPF** — processos onde o CPF aparece como parte
+- **CNPJ** — processos onde o CNPJ aparece como parte
+- **CNPJ_RAIZ** — processos onde qualquer CNPJ com a mesma raiz aparece como parte
+
+---
+
+## 📬 Entrega de resultados
+
+Se a busca encontrar resultados, uma mensagem é enviada para a fila exclusiva do cliente:
+
+```json
+{
+  "termoId": "uuid-do-termo",
+  "tipoTermo": "CPF",
+  "valorTermo": "12345678901",
+  "periodicidade": "DIARIO",
+  "dataBuscaDe": "2026-03-29",
+  "dataBuscaAte": "2026-04-05",
+  "totalResultados": 3,
+  "resultados": [
+    { "...detalhes do processo..." }
+  ]
+}
+```
+
+> Se não houver novos processos no período, **nenhuma mensagem é enviada**.
+
+---
+
+## 🔄 Fluxo recomendado de integração
+
+```
+1. Autenticar (POST /auth)
+         |
+2. Cadastrar termos (POST /monitoramento/termos)
+         |
+         |--- busca imediata em background
+         |
+3. Polling periódico:
+   |
+   |--- GET /monitoramento/mensagens?limite=10
+   |         |
+   |         |--- processar cada mensagem
+   |         |
+   |         |--- POST /monitoramento/mensagens/confirmarRecebimento
+   |
+   |--- repetir (sugerido: a cada 5-15 minutos)
+```
+
+**Recomendações:**
+
+- Faça polling a cada **5 a 15 minutos** para receber mensagens
+- **Sempre confirme** o recebimento após processar a mensagem
+- Se a confirmação falhar, a mensagem voltará à fila em 30 segundos — não há perda de dados
+- Cada requisição de recebimento retorna no máximo 10 mensagens. Se houver mais, faça múltiplas chamadas até receber uma resposta vazia
+
+---
+
+## 🛡️ Tolerância a falhas
+
+O sistema possui mecanismos internos de resiliência:
+
+- **Retentativas automáticas** — se uma busca falhar (ex: timeout, indisponibilidade temporária), o sistema retenta com intervalos progressivos: 5 min, 15 min, 1 hora, 6 horas
+- **Máximo de tentativas** — 5 tentativas por termo por execução. Após isso, o termo é processado normalmente na próxima execução
+- **Mensagens grandes** — resultados que excedam 256 KB são automaticamente armazenados e entregues sem perda de dados
+- **Isolamento por cliente** — cada cliente possui sua própria fila de mensagens, garantindo total isolamento dos dados
+
+---
+
+## 💰 Faturamento
+
+O faturamento é baseado na **quantidade de termos ativos por mês**. Um termo é considerado ativo em um determinado mês se:
+
+- Foi criado antes do fim do mês
+- Não foi removido antes do início do mês
+
+> Termos criados e removidos dentro do mesmo mês são contabilizados.
+
+---
+
+## 🚀 Prossiga
+
+Escolha um recurso na barra lateral ou vá direto para: [Cadastrar Termo](./recursos/cadastrar-termo)
