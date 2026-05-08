@@ -1,0 +1,90 @@
+---
+title: "Estrutura de Dados — Pessoa Física"
+description: "Campos retornados pela consulta de Dossiê Financeiro por CPF."
+---
+
+# 🧾 Estrutura de Dados — Pessoa Física
+
+Abaixo estão todos os campos retornados pelo endpoint [Dossiê Financeiro por CPF](./recursos/buscar-dossie-por-cpf), com suas descrições e origens.
+
+> A resposta omite campos sem valor (serialização `NON_NULL`). Trate todos os campos como **opcionais** no consumo, exceto `cpf`, que sempre vem preenchido.
+
+---
+
+## 📑 Tabela de Campos
+
+| Campo | Descrição |
+| ----- | --------- |
+| `cpf` | CPF consultado (11 dígitos numéricos) |
+| `nome` | Nome completo da pessoa |
+| `nomeMae` | Nome da mãe |
+| `dataNascimento` | Data de nascimento (`yyyy-MM-dd`) |
+| `idade` | Idade em anos |
+| `sexo` | Sexo informado pelo bureau |
+| `grauInstrucao` | Grau de instrução (pode vir vazio se o bureau não retornar) |
+| `ocupacao` | Ocupação registrada (CBO) |
+| `ocupacao.codigo` | Código CBO |
+| `ocupacao.titulo` | Título da ocupação |
+| `classeSocial` | Classe social estimada |
+| `classeSocial.codigo` | Código numérico da classe social (ex: `"5"`) |
+| `classeSocial.classe` | Letra da classe (ex: `A`, `B`, `C`, `D`, `E`) |
+| `classeSocial.descricao` | Faixa salarial associada (ex: `"de 03 a 05 salarios minimos"`) |
+| `rendaPresumida` | Renda mensal presumida (BRL) |
+| `statusCpf` | Status do CPF na Receita |
+| `statusCpf.situacao` | Situação cadastral (`REGULAR`, `SUSPENSA`, `CANCELADA`, `NULA`, `PENDENTE DE REGULARIZACAO`, `TITULAR FALECIDO`) |
+| `statusCpf.dataConsulta` | Data da consulta na Receita (`yyyy-MM-dd`) |
+| `statusCpf.autenticacao` | Código de autenticação fornecido pela Receita |
+| `score` | Score de crédito |
+| `score.valor` | Pontuação numérica (geralmente 0 a 1000) |
+| `score.mensagem` | Mensagem indicativa do bureau (ex: `BAIXO RISCO DE INADIMPLENCIA`, `CREDITO NEGADO`, `DESCONHECIDO`) |
+| `contato` | Telefones e e-mails encontrados |
+| `contato.telefones` | Lista de telefones no formato `DDD-numero` |
+| `contato.emails` | Lista de e-mails |
+| `endereco` | Último endereço conhecido |
+| `endereco.logradouro` | Logradouro |
+| `endereco.numero` | Número |
+| `endereco.complemento` | Complemento |
+| `endereco.bairro` | Bairro |
+| `endereco.cidade` | Cidade |
+| `endereco.uf` | UF (sigla de 2 letras) |
+| `endereco.cep` | CEP |
+| `endereco.dataAtualizacao` | Data da última atualização do endereço |
+| `pendencias` | Lista de pendências financeiras (apontamentos) |
+| `pendencias[].origem` | Credor/origem da pendência (ex: banco, varejista) |
+| `pendencias[].cidade` | Cidade da origem |
+| `pendencias[].uf` | UF da origem |
+| `pendencias[].contrato` | Identificação do contrato/dívida |
+| `pendencias[].valor` | Valor em aberto (string com formato BR — ex: `1.234,56`) |
+| `pendencias[].dataVencimento` | Data de vencimento original |
+| `pendencias[].dataPendencia` | Data em que a pendência foi registrada |
+| `protestos` | Lista de protestos em cartório |
+| `protestos[].data` | Data do protesto |
+| `protestos[].cidade` | Cidade do cartório |
+| `protestos[].uf` | UF do cartório |
+| `protestos[].cartorio` | Identificação do cartório (pode vir como nome ou apenas o número, ex: `"0002"`) |
+| `protestos[].valor` | Valor protestado |
+| `ccf` | Lista de ocorrências de cheques sem fundo |
+| `ccf[].banco` | Nome do banco |
+| `ccf[].agencia` | Número da agência |
+| `ccf[].quantidade` | Quantidade de ocorrências |
+| `ccf[].motivo` | Motivo da devolução |
+| `ccf[].ultimaOcorrencia` | Data da última ocorrência |
+| `consultas` | Lista de consultas recentes feitas ao CPF (ordenadas da mais recente) |
+| `consultas[].data` | Data da consulta |
+| `consultas[].loja` | Quem consultou (loja/cliente) |
+| `consultas[].cidade` | Cidade (pode vir como string vazia) |
+| `consultas[].estado` | UF (pode vir como string vazia) |
+| `mensagens` | Avisos/mensagens do bureau |
+| `mensagens[].codigo` | Código da mensagem (numérico ou slug, ex: `"001"`, `"msg-txt-nclass"`) |
+| `mensagens[].descricao` | Texto da mensagem |
+| `sociedades` | Empresas em que o CPF aparece como sócio |
+| `sociedades[].cnpj` | CNPJ da empresa |
+| `sociedades[].razaoSocial` | Razão social |
+| `sociedades[].entrada` | Data de entrada na sociedade — frequentemente ausente |
+| `sociedades[].saida` | Data de saída — frequentemente ausente |
+| `resumoPendencias` | Resumo agregado das últimas 90 ocorrências |
+| `resumoPendencias.quantidadeUltimas90` | Quantidade de pendências nos últimos 90 dias |
+| `resumoPendencias.valorAcumuladoUltimas90` | Valor acumulado (BRL) |
+| `dividasAtivas` | Lista de dívidas ativas com órgãos públicos |
+| `dividasAtivas[].descricao` | Descrição completa da dívida (texto livre) |
+| `dividasAtivas[].valor` | Valor extraído da descrição (BRL) |

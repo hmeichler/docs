@@ -1,0 +1,91 @@
+---
+title: "Estrutura de Dados — Pessoa Jurídica"
+description: "Campos retornados pela consulta de Dossiê Financeiro por CNPJ."
+---
+
+# 🧾 Estrutura de Dados — Pessoa Jurídica
+
+Abaixo estão todos os campos retornados pelo endpoint [Dossiê Financeiro por CNPJ](./recursos/buscar-dossie-por-cnpj), com suas descrições e origens.
+
+> A resposta omite campos sem valor (serialização `NON_NULL`). Trate todos os campos como **opcionais** no consumo, exceto `cnpj`, que sempre vem preenchido.
+
+---
+
+## 📑 Tabela de Campos
+
+| Campo | Descrição |
+| ----- | --------- |
+| `cnpj` | CNPJ consultado (14 caracteres alfanuméricos) |
+| `razaoSocial` | Razão social da empresa |
+| `nomeFantasia` | Nome fantasia |
+| `dataAbertura` | Data de abertura da empresa (`yyyy-MM-dd`) |
+| `naturezaJuridica` | Natureza jurídica (ex: `LTDA`, `S/A`, `EIRELI`) |
+| `atividadePrincipal` | CNAE da atividade principal |
+| `atividadesSecundarias` | Lista de CNAEs secundárias |
+| `situacaoCadastral` | Situação cadastral na Receita (ex: `ATIVA`, `BAIXADA`, `SUSPENSA`, `INAPTA`, `NULA`) |
+| `motivoSituacao` | Motivo da situação cadastral atual |
+| `dataSituacao` | Data da situação cadastral atual |
+| `situacaoEspecial` | Situação especial (ex: `RECUPERACAO JUDICIAL`, `FALENCIA`) |
+| `dataSituacaoEspecial` | Data da situação especial |
+| `score` | Score de crédito da empresa |
+| `score.valor` | Pontuação numérica |
+| `score.mensagem` | Mensagem indicativa do bureau (ex: `BAIXO RISCO DE INADIMPLENCIA`, `CREDITO NEGADO`, `DESCONHECIDO`) |
+| `contato` | Telefones e e-mails encontrados |
+| `contato.telefones` | Lista de telefones no formato `DDD-numero` |
+| `contato.emails` | Lista de e-mails |
+| `endereco` | Endereço cadastral |
+| `endereco.logradouro` | Logradouro |
+| `endereco.numero` | Número |
+| `endereco.complemento` | Complemento |
+| `endereco.bairro` | Bairro |
+| `endereco.cidade` | Cidade |
+| `endereco.uf` | UF |
+| `endereco.cep` | CEP |
+| `endereco.dataAtualizacao` | Data/hora da última atualização |
+| `socios` | Quadro societário |
+| `socios[].cpfCnpj` | CPF (11 dígitos) ou CNPJ (14 caracteres) do sócio |
+| `socios[].nome` | Nome ou razão social do sócio |
+| `socios[].entrada` | Data de entrada na sociedade — frequentemente ausente |
+| `socios[].saida` | Data de saída — frequentemente ausente |
+| `administradores` | Lista de administradores formalmente registrados |
+| `administradores[].nomeOuRazaoSocial` | Nome ou razão social do administrador |
+| `administradores[].qualificacao` | Qualificação do administrador (ex: `16-PRESIDENTE`, `10-DIRETOR`) |
+| `administradores[].representanteLegalNome` | Nome do representante legal (quando o administrador é PJ) |
+| `administradores[].representanteLegalQualificacao` | Qualificação do representante legal |
+| `administradores[].paisDeOrigem` | País de origem (quando estrangeiro) |
+| `capitalSocial` | Capital social registrado (BRL) |
+| `faturamentoPresumido` | Faturamento anual presumido (BRL) |
+| `pendencias` | Lista de pendências financeiras (apontamentos) |
+| `pendencias[].origem` | Credor/origem da pendência |
+| `pendencias[].cidade` | Cidade da origem |
+| `pendencias[].uf` | UF da origem |
+| `pendencias[].contrato` | Identificação do contrato/dívida |
+| `pendencias[].valor` | Valor em aberto (string com formato BR) |
+| `pendencias[].dataVencimento` | Data de vencimento original |
+| `pendencias[].dataPendencia` | Data em que a pendência foi registrada |
+| `protestos` | Lista de protestos em cartório |
+| `protestos[].data` | Data do protesto |
+| `protestos[].cidade` | Cidade do cartório |
+| `protestos[].uf` | UF do cartório |
+| `protestos[].cartorio` | Identificação do cartório (pode vir como nome ou apenas o número, ex: `"0002"`) |
+| `protestos[].valor` | Valor protestado |
+| `ccf` | Lista de ocorrências de cheques sem fundo |
+| `ccf[].banco` | Nome do banco |
+| `ccf[].agencia` | Número da agência |
+| `ccf[].quantidade` | Quantidade de ocorrências |
+| `ccf[].motivo` | Motivo da devolução |
+| `ccf[].ultimaOcorrencia` | Data da última ocorrência |
+| `consultas` | Lista de consultas recentes feitas ao CNPJ (ordenadas da mais recente) |
+| `consultas[].data` | Data da consulta |
+| `consultas[].loja` | Quem consultou |
+| `consultas[].cidade` | Cidade (pode vir como string vazia) |
+| `consultas[].estado` | UF (pode vir como string vazia) |
+| `mensagens` | Avisos/mensagens do bureau |
+| `mensagens[].codigo` | Código da mensagem (numérico ou slug, ex: `"001"`, `"msg-txt-nclass"`) |
+| `mensagens[].descricao` | Texto da mensagem |
+| `resumoPendencias` | Resumo agregado das últimas 90 ocorrências |
+| `resumoPendencias.quantidadeUltimas90` | Quantidade de pendências nos últimos 90 dias |
+| `resumoPendencias.valorAcumuladoUltimas90` | Valor acumulado (BRL) |
+| `dividasAtivas` | Lista de dívidas ativas com órgãos públicos |
+| `dividasAtivas[].descricao` | Descrição completa da dívida (texto livre) |
+| `dividasAtivas[].valor` | Valor extraído da descrição (BRL) |

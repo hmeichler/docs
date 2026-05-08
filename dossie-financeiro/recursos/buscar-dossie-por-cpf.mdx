@@ -1,0 +1,181 @@
+---
+title: "Dossiê Financeiro por CPF"
+description: "Consulte o perfil financeiro consolidado de uma pessoa física: pendências, protestos, CCF, score, dívida ativa e dados cadastrais."
+---
+
+# 🔎 Dossiê Financeiro por CPF
+
+Este endpoint retorna o **perfil financeiro consolidado** de uma pessoa física a partir de um CPF, agregando dados de bureaus de crédito (SPC/Serasa) com identificação cadastral, score, pendências, protestos, CCF, consultas recentes, sociedades e dívida ativa.
+
+A resposta é um **objeto único** (não uma lista) — o CPF identifica unicamente a pessoa.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/pessoas/fisicas/pendenciasFinanceiras
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+```json
+{
+  "cpf": "12345678901"
+}
+```
+
+---
+
+## 📚 Campos
+
+| Campo | Obrigatório | Tipo | Descrição |
+|-------|-------------|------|-----------|
+| `cpf` | Sim | string | CPF a consultar — exatamente 11 dígitos numéricos, validado pelo algoritmo de CPF |
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/pessoas/fisicas/pendenciasFinanceiras' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "cpf": "12345678901"
+}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+> Campos sem valor são omitidos do JSON. O exemplo abaixo mostra todas as seções possíveis.
+
+```json
+{
+  "cpf": "12345678901",
+  "nome": "FULANO DE TAL",
+  "nomeMae": "MARIA DE TAL",
+  "dataNascimento": "1985-03-12",
+  "idade": 40,
+  "sexo": "M",
+  "grauInstrucao": "",
+  "ocupacao": {
+    "codigo": "521",
+    "titulo": "VENDEDORES E DEMONSTRADORES"
+  },
+  "classeSocial": {
+    "codigo": "5",
+    "classe": "C",
+    "descricao": "de 03 a 05 salarios minimos"
+  },
+  "rendaPresumida": 5264.33,
+  "statusCpf": {
+    "situacao": "REGULAR",
+    "dataConsulta": "2026-04-30",
+    "autenticacao": "ABCD.EFGH.IJKL.MNOP"
+  },
+  "score": {
+    "valor": 296,
+    "mensagem": "CREDITO NEGADO"
+  },
+  "contato": {
+    "telefones": ["48-987654321", "48-991234567", "11-988887777"],
+    "emails": ["fulano@example.com"]
+  },
+  "endereco": {
+    "logradouro": "RUA DAS FLORES",
+    "numero": "123",
+    "complemento": "CASA",
+    "bairro": "CENTRO",
+    "cidade": "SAO PAULO",
+    "uf": "SP",
+    "cep": "01400000",
+    "dataAtualizacao": "2021-05-28"
+  },
+  "pendencias": [
+    {
+      "origem": "BANCO XYZ S/A",
+      "cidade": "SCPC SAO PAULO",
+      "uf": "SP",
+      "contrato": "12066000247497",
+      "valor": "67.996,60",
+      "dataVencimento": "2025-07-24",
+      "dataPendencia": "2025-09-26"
+    }
+  ],
+  "protestos": [
+    {
+      "data": "2025-08-21",
+      "cidade": "SAO PAULO",
+      "uf": "SP",
+      "cartorio": "0002",
+      "valor": "2.525,40"
+    }
+  ],
+  "ccf": [],
+  "consultas": [
+    {
+      "data": "2026-05-07",
+      "loja": "FINANCEIRA EXEMPLO",
+      "cidade": "SAO PAULO",
+      "estado": "SP"
+    },
+    {
+      "data": "2026-04-15",
+      "loja": "FINANCEIRA EXEMPLO",
+      "cidade": "",
+      "estado": ""
+    }
+  ],
+  "mensagens": [
+    {
+      "codigo": "msg-txt-nclass",
+      "descricao": "ATENCAO   INFORMACAO NAO RESTRITIVA"
+    }
+  ],
+  "sociedades": [
+    {
+      "cnpj": "12345678000199",
+      "razaoSocial": "EMPRESA EXEMPLO LTDA"
+    }
+  ],
+  "resumoPendencias": {
+    "quantidadeUltimas90": 8,
+    "valorAcumuladoUltimas90": 85977.93
+  },
+  "dividasAtivas": []
+}
+```
+
+> Para o significado de cada campo, veja [📂 Estrutura de Dados — Pessoa Física](../estrutura-pf).
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+| ------ | ----------- |
+| `200`  | Sucesso — perfil financeiro encontrado |
+| `204`  | Nenhum dado financeiro encontrado para o CPF |
+| `400`  | Erro de validação no payload (CPF inválido ou ausente) |
+| `401`  | Token inválido ou expirado |
+| `500`  | Erro interno do servidor |
+
+---
+
+## 🛡️ Validações
+
+- `cpf`:
+  - Não nulo
+  - Exatamente 11 dígitos numéricos
+  - Validação de CPF formal (algoritmo de dígitos verificadores)
+
+---
+
+## 💡 Dica
+
+> Antes de tomar decisão de crédito apenas pelo `score.valor`, verifique também `statusCpf.situacao` (CPFs cancelados/suspensos exigem tratamento à parte) e `resumoPendencias.quantidadeUltimas90` (apontamentos recentes pesam mais que históricos antigos).

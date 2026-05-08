@@ -67,8 +67,7 @@
           {
             "group": "Dossiê Recuperação Judicial",
             "pages": [
-              "dossie-rj/overview",
-              "dossie-rj/estrutura-dados"
+              "dossie-rj/overview"
             ]
           },
           {
@@ -126,6 +125,21 @@
             "group": "Mandado de Prisão - Recursos",
             "pages": [
               "bnmp/recursos/buscar-por-cpf"
+            ]
+          },
+          {
+            "group": "Dossiê Financeiro",
+            "pages": [
+              "dossie-financeiro/overview",
+              "dossie-financeiro/estrutura-pf",
+              "dossie-financeiro/estrutura-pj"
+            ]
+          },
+          {
+            "group": "Dossiê Financeiro - Recursos",
+            "pages": [
+              "dossie-financeiro/recursos/buscar-dossie-por-cpf",
+              "dossie-financeiro/recursos/buscar-dossie-por-cnpj"
             ]
           },
           {

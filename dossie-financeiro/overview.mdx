@@ -1,0 +1,70 @@
+---
+title: Introdução
+description: "Consulte o perfil financeiro completo de uma pessoa física ou jurídica: pendências, protestos, CCF, score de crédito, dívida ativa e dados cadastrais."
+---
+
+# 💳 Dossiê Financeiro
+
+O **Dossiê Financeiro** da Predictus retorna um perfil financeiro consolidado de uma pessoa física (CPF) ou jurídica (CNPJ), agregando dados de bureaus de crédito (SPC/Serasa) com identificação cadastral, score, pendências, protestos, CCF, consultas recentes e dívida ativa em um único objeto estruturado.
+
+Diferente do Dossiê e Sumário Jurídicos — que olham apenas o **histórico processual** — este produto olha o **histórico financeiro/creditício** da parte.
+
+---
+
+## 🧠 Quando usar o Dossiê Financeiro?
+
+Use este módulo quando você quiser:
+
+- Avaliar **risco de crédito** antes de conceder um empréstimo, financiamento ou venda parcelada
+- Compor decisões de **PLD/Compliance** com indicadores objetivos de inadimplência
+- Reforçar **due diligence** de fornecedores, parceiros e clientes
+- Monitorar **score** e pendências de uma carteira de inadimplentes (NPLs)
+- Validar **dados cadastrais** (status de CPF/CNPJ, situação cadastral, endereço, contato) na origem da operação
+
+---
+
+## 🔍 Tipos de consulta disponíveis
+
+<CardGroup cols={2}>
+  <Card title="Dossiê Financeiro por CPF" icon="id-card">
+    Retorna o perfil financeiro completo de uma pessoa física: identificação, score, pendências, protestos, CCF, consultas, sociedades e dívida ativa.
+  </Card>
+  <Card title="Dossiê Financeiro por CNPJ" icon="building">
+    Retorna o perfil financeiro completo de uma pessoa jurídica: dados cadastrais, score, sócios, administradores, capital social, faturamento presumido, pendências e protestos.
+  </Card>
+</CardGroup>
+
+---
+
+## 📦 O que a resposta inclui?
+
+Tanto para CPF quanto para CNPJ, o retorno é um **objeto único** (não uma lista) com as seguintes seções principais:
+
+- **Identificação** — nome/razão social, dados cadastrais, endereço, contato
+- **Score de crédito** — pontuação numérica + mensagem indicativa
+- **Pendências financeiras** — apontamentos com origem, contrato, valor e datas
+- **Resumo de pendências** — quantidade e valor acumulado das últimas 90 ocorrências
+- **Protestos** — cartório, cidade/UF, data e valor
+- **CCF** (Cadastro de Cheques sem Fundo) — banco, agência, motivo e quantidade de ocorrências
+- **Consultas realizadas** — histórico de quem consultou o documento recentemente
+- **Dívida ativa** — descrição e valor de débitos com órgãos públicos
+- **Mensagens** — alertas contextuais retornados pelo bureau
+
+> Para o **schema completo** de cada campo, veja:
+> 👉 [📂 Estrutura de Dados — Pessoa Física](./estrutura-pf)
+> 👉 [📂 Estrutura de Dados — Pessoa Jurídica](./estrutura-pj)
+
+---
+
+## 🛡️ Boas práticas
+
+- **Cacheamento** — pendências mudam ao longo do dia, mas raramente em minutos. Cacheie respostas por algumas horas se o caso de uso permitir.
+- **Status do CPF/CNPJ** — antes de avaliar pendências, verifique `statusCpf.situacao` (PF) ou `situacaoCadastral` (PJ). Documentos cancelados/baixados merecem tratamento à parte.
+- **Score sozinho não decide** — combine `score.valor` com `pendencias`, `protestos` e `resumoPendencias` para uma visão consistente.
+- **Campos ausentes** — a resposta omite campos sem valor (`null`). Trate sempre com null-safety no consumo.
+
+---
+
+## 🚀 Prossiga
+
+Escolha um recurso na barra lateral ou vá direto para: [Dossiê Financeiro por CPF](./recursos/buscar-dossie-por-cpf)
