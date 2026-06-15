@@ -1,0 +1,138 @@
+---
+title: "Buscar por Número CNJ"
+description: "Gere um resumo inteligente de um processo judicial a partir do seu número CNJ único: análise de fatos, pedidos, condenações, fundamentos, recursos e linha do tempo."
+---
+
+# 🔎 Buscar por Número CNJ
+
+Este endpoint recebe o identificador de um processo judicial e retorna um **resumo gerado por IA** com análise em linguagem acessível (`resumoRH`) e decomposição técnica estruturada (`juridico`).
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/processos/judiciais/resumeai/buscarPorNumeroCNJ
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+```json
+{
+  "numeroProcessoUnico": "10004588220255020441",
+  "sistema": "PJE-TRT2",
+  "tribunal": "TRT-2",
+  "grauProcesso": 1,
+  "dataDistribuicao": "2025-04-24"
+}
+```
+
+---
+
+## 📚 Campos
+
+| Campo | Obrigatório | Tipo | Descrição |
+|-------|-------------|------|-----------|
+| `numeroProcessoUnico` | Sim | string | Número do processo no formato CNJ (20 dígitos numéricos, sem pontuação) |
+| `tribunal` | Sim | string | Código do tribunal (ex: `TRT-2`, `TJSP`, `STJ`) — ver [lista de tribunais](../../referencias/tribunais) |
+| `grauProcesso` | Sim | integer | Grau do processo: `1` (1º grau), `2` (2º grau), `3` (instância especial), `4` (instância extraordinária) |
+| `dataDistribuicao` | Sim | string | Data de distribuição do processo no formato `YYYY-MM-DD` |
+| `sistema` | Não | string | Sistema de origem do processo (ex: `PJE-TRT2`, `ESAJ`, `PROJUDI`) — auxilia na localização dos documentos |
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/processos/judiciais/resumeai/buscarPorNumeroCNJ' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "numeroProcessoUnico": "10004588220255020441",
+  "sistema": "PJE-TRT2",
+  "tribunal": "TRT-2",
+  "grauProcesso": 1,
+  "dataDistribuicao": "2025-04-24"
+}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+{
+  "resumoRH": "Em abril de 2025, o ex-funcionário João da Silva processou a empresa Transportes Exemplo Ltda. Ele alegou que recebia pagamentos 'por fora' (produtividade e comissões) que não entravam no cálculo de seus direitos, além de cobrar horas extras, adicional noturno, diferenças de tempo de espera e intervalos de refeição e descanso. O trabalhador também pediu indenização por danos morais por ter sofrido um assalto durante o trabalho e por excesso de jornada. O juiz decidiu a favor do trabalhador em parte: mandou a empresa integrar os valores pagos 'por fora' ao salário e pagar as horas extras, adicional noturno, tempo de espera e intervalos suprimidos. No entanto, o juiz negou os pedidos de indenização por danos morais. O processo ainda não acabou, pois ambas as partes apresentaram recurso (Recurso Ordinário) para o Tribunal.",
+  "juridico": {
+    "decisoesAntecipadas": "Não consta.",
+    "fatos": "O reclamante, motorista carreteiro, ajuizou reclamação trabalhista postulando o reconhecimento de salário 'por fora' (produtividade e comissões), horas extras, intervalos intra e interjornadas, adicional noturno, tempo de espera, além de indenizações por danos morais decorrentes de assalto sofrido em serviço. A reclamada apresentou defesa e documentos. Em audiência de instrução, foi ouvida uma testemunha do autor que confirmou o pagamento de comissões por fora. A sentença julgou os pedidos parcialmente procedentes. Ambas as partes recorreram da decisão.",
+    "fundamentos": "A decisão fundamentou-se na CLT: art. 457, § 4º (natureza das premiações); art. 71, § 4º (intervalo intrajornada); art. 235-C e parágrafos (jornada do motorista); art. 791-A (honorários sucumbenciais). Aplicou-se o entendimento do STF na ADI 5322 (inconstitucionalidade do tempo de espera indenizado e do fracionamento do intervalo interjornada, com modulação a partir de 12/07/2023). Foram citadas as Súmulas 264, 381 e 368 do TST, além das OJs 415 e 400 da SDI-1 do TST.",
+    "pedidos": "Integração de produtividade e comissões pagas extrafolha; horas extras excedentes à 8ª diária e 44ª semanal; diferenças de tempo de espera; horas por supressão de intervalos intrajornada e interjornada; adicional noturno; indenização por danos morais por assalto/sequestro; indenização por dano existencial por jornada excessiva; multa de 40% do FGTS. Valor atribuído à causa: R$ 283.637,90.",
+    "condenacoes": "A reclamada foi condenada ao pagamento de: integração da produtividade e de comissões com reflexos; horas extras; diferenças de tempo de espera (30%) até 11/07/2023; 1 hora de intervalo intrajornada nos dias sem anotação no diário de bordo; horas por supressão do intervalo interjornada a partir de 12/07/2023; adicional noturno; FGTS 40% sobre as verbas deferidas. Foram julgados improcedentes: danos morais por assalto (fato de terceiro) e dano existencial (falta de prova). Valor arbitrado à condenação: R$ 155.500,00.",
+    "recursos": "A reclamada opôs Embargos de Declaração, que foram rejeitados. Em seguida, o reclamante interpôs Recurso Ordinário (processado em 24/10/2025) e a reclamada também interpôs Recurso Ordinário (processado em 04/11/2025). Ambos os recursos foram remetidos ao TRT da 2ª Região para julgamento. Ainda não há decisão sobre os Recursos Ordinários.",
+    "linhaDoTempo": [
+      "2025-04-24 – DISTRIBUIÇÃO: Ação trabalhista distribuída.",
+      "2025-04-25 – DESPACHO: Determinação para emenda à inicial para indicação e liquidação dos valores dos pedidos.",
+      "2025-05-08 – DESPACHO: Recebimento da emenda à inicial e designação de audiência inicial.",
+      "2025-07-02 – AUDIÊNCIA: Realização de audiência inicial, recebimento da defesa e designação de audiência de instrução.",
+      "2025-08-29 – AUDIÊNCIA: Realização de audiência de instrução com oitiva de uma testemunha do reclamante.",
+      "2025-10-09 – SENTENÇA: Pedidos julgados parcialmente procedentes.",
+      "2025-10-21 – SENTENÇA DE EMBARGOS: Embargos de Declaração da reclamada rejeitados no mérito.",
+      "2025-10-24 – DECISÃO: Recebimento e processamento de Recurso Ordinário interposto pelo reclamante.",
+      "2025-11-04 – DECISÃO: Recebimento e processamento de Recurso Ordinário interposto pela reclamada."
+    ]
+  }
+}
+```
+
+---
+
+## 🧾 Campos da resposta
+
+### Raiz
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `resumoRH` | string | Resumo narrativo em linguagem acessível para leitores não jurídicos |
+| `juridico` | object | Análise jurídica técnica estruturada |
+
+### `juridico`
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `decisoesAntecipadas` | string | Decisões liminares ou tutelas antecipadas. Retorna `"Não consta."` se não houver |
+| `fatos` | string | Narrativa dos fatos relevantes do processo |
+| `fundamentos` | string | Base legal aplicada: artigos de lei, súmulas, OJs e precedentes citados |
+| `pedidos` | string | Todos os pedidos formulados com valores atribuídos à causa |
+| `condenacoes` | string | O que foi deferido e indeferido, com valores arbitrados |
+| `recursos` | string | Recursos interpostos pelas partes e estado atual |
+| `linhaDoTempo` | array\<string\> | Cronologia dos eventos no formato `YYYY-MM-DD – TIPO: Descrição` |
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Sucesso — resumo gerado com sucesso |
+| `204` | Processo não encontrado ou sem documentos disponíveis para análise |
+| `400` | Erro de validação no payload (campo obrigatório ausente ou inválido) |
+| `401` | Token inválido ou expirado |
+| `500` | Erro interno do servidor |
+
+---
+
+## 🛡️ Validações
+
+- `numeroProcessoUnico`: não nulo, exatamente 20 dígitos numéricos no padrão CNJ
+- `tribunal`: não nulo — ver [lista completa de tribunais](../../referencias/tribunais)
+- `grauProcesso`: não nulo, valor entre `1` e `4`
+- `dataDistribuicao`: não nulo, formato `YYYY-MM-DD`
+
+---
+
+## 💡 Dica
+
+> O campo `resumoRH` é ideal para exibir em dashboards, relatórios executivos e notificações para gestores. Já `juridico.linhaDoTempo` pode ser usado diretamente para montar uma visualização cronológica do processo em sistemas de gestão de passivos.

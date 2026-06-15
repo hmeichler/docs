@@ -1,0 +1,78 @@
+---
+title: Introdução
+description: "Obtenha um resumo inteligente de processos judiciais gerado por IA: análise de fatos, pedidos, condenações, fundamentos, recursos e linha do tempo — em linguagem acessível e técnica ao mesmo tempo."
+---
+
+# 🤖 Resume AI
+
+O **Resume AI** da Predictus aplica inteligência artificial sobre os documentos de um processo judicial para gerar dois tipos de resumo em linguagem natural:
+
+- **Resumo RH** (`resumoRH`) — narrativa simples e acessível, ideal para equipes de RH, compliance e gestão que precisam entender o processo sem conhecimento jurídico
+- **Análise Jurídica** (`juridico`) — decomposição técnica estruturada com fatos, pedidos, fundamentos legais, condenações, recursos e linha do tempo cronológica
+
+---
+
+## 🧠 Quando usar o Resume AI?
+
+Use este módulo quando você quiser:
+
+- **Triagem rápida** de processos sem precisar ler o inteiro teor das movimentações
+- **Onboarding de novos processos** em carteiras de gestão de passivos trabalhistas, cíveis ou tributários
+- **Due diligence** — entender o mérito e o risco de processos de uma empresa-alvo antes de uma transação
+- **Relatórios executivos** — comunicar situações processuais para stakeholders não jurídicos
+- **Automação de workflows** — alimentar sistemas de triagem, alertas e priorização com resumos estruturados
+
+---
+
+## 📦 O que a resposta inclui?
+
+<CardGroup cols={2}>
+  <Card title="Resumo RH" icon="user-tie">
+    Narrativa em linguagem simples para leitores não jurídicos: quem processou quem, o que pediu, o que foi deferido e qual é o status atual.
+  </Card>
+  <Card title="Análise Jurídica" icon="scale-balanced">
+    Decomposição técnica estruturada com fatos, pedidos detalhados, fundamentos legais (CLT, STF, TST), condenações, recursos e linha do tempo.
+  </Card>
+</CardGroup>
+
+### Seções da análise jurídica
+
+| Seção | Descrição |
+|-------|-----------|
+| `decisoesAntecipadas` | Decisões liminares ou tutelas antecipadas proferidas antes da sentença |
+| `fatos` | Narrativa dos fatos relevantes do processo |
+| `fundamentos` | Base legal aplicada: artigos, súmulas, OJs e precedentes citados na decisão |
+| `pedidos` | Lista de todos os pedidos formulados pelo(s) autor(es) com valores |
+| `condenacoes` | O que foi deferido e indeferido pelo juízo, com valores arbitrados |
+| `recursos` | Recursos interpostos pelas partes e seu estado atual |
+| `linhaDoTempo` | Cronologia dos eventos processuais no formato `YYYY-MM-DD – TIPO: Descrição` |
+
+---
+
+## ⚙️ Como funciona
+
+<Steps>
+  <Step title="Identifique o processo">
+    Informe o número CNJ único, o sistema de origem, o tribunal, o grau e a data de distribuição.
+  </Step>
+  <Step title="A IA processa os documentos">
+    O Resume AI busca os documentos do processo (petições, despachos, sentença) e aplica modelos de linguagem para extrair e estruturar as informações.
+  </Step>
+  <Step title="Receba o resumo estruturado">
+    A resposta contém o resumo em linguagem acessível (`resumoRH`) e a análise jurídica técnica (`juridico`) com todas as seções detalhadas.
+  </Step>
+</Steps>
+
+---
+
+## 🛡️ Boas práticas
+
+- **Verifique os dados de entrada** — `numeroProcessoUnico`, `tribunal` e `grauProcesso` devem corresponder exatamente ao processo no sistema de origem. Dados incorretos resultam em `204` ou resumo de processo errado.
+- **Latência** — a geração do resumo pode levar alguns segundos a mais que endpoints de busca convencionais, pois envolve processamento por IA.
+- **Campos ausentes** — se uma seção jurídica não tiver informação (ex: `decisoesAntecipadas`), o valor retornado será `"Não consta."`.
+
+---
+
+## 🚀 Prossiga
+
+Consulte o endpoint disponível: [Buscar por Número CNJ](./recursos/buscar-por-numero-cnj)
