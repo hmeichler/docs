@@ -20,7 +20,19 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/capa/buscarP
 
 ---
 
-## 🧾 Corpo da requisição (exemplo completo)
+## 🧾 Exemplo mínimo
+
+> `numeroProcessoUnico` é o único campo obrigatório. Todos os demais são filtros opcionais.
+
+```json
+{
+  "numeroProcessoUnico": "10004588220255020441"
+}
+```
+
+---
+
+## 🧾 Exemplo completo (com todos os filtros)
 
 ```json
 {

@@ -19,7 +19,22 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/sumarioPorOA
 
 ---
 
-## 🧾 Corpo da requisição (exemplo completo)
+## 🧾 Exemplo mínimo
+
+> `oab` é o único campo obrigatório. Todos os demais são filtros opcionais.
+
+```json
+{
+  "oab": {
+    "numero": 123456,
+    "uf": "SP"
+  }
+}
+```
+
+---
+
+## 🧾 Exemplo completo (com todos os filtros)
 
 ```json
 {

@@ -19,7 +19,19 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/sumarioPorCN
 
 ---
 
-## 🧾 Corpo da requisição (exemplo completo)
+## 🧾 Exemplo mínimo
+
+> `cnpj` é o único campo obrigatório. Todos os demais são filtros opcionais.
+
+```json
+{
+  "cnpj": "12345678000199"
+}
+```
+
+---
+
+## 🧾 Exemplo completo (com todos os filtros)
 
 ```json
 {
