@@ -46,6 +46,18 @@
             ]
           },
           {
+            "group": "Resume AI",
+            "pages": [
+              "resume-ai/overview"
+            ]
+          },
+          {
+            "group": "Resume AI - Recursos",
+            "pages": [
+              "resume-ai/recursos/buscar-por-numero-cnj"
+            ]
+          },
+          {
             "group": "Sumário Jurídico",
             "pages": [
               "sumario-juridico/overview"
