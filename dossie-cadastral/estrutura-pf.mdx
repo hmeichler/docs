@@ -1,0 +1,98 @@
+---
+title: "Estrutura de Dados — Pessoa Física"
+description: "Descrição completa de todos os campos retornados pelo Dossiê Cadastral para uma pessoa física (CPF)."
+---
+
+# 📂 Estrutura de Dados — Pessoa Física
+
+Esta página descreve todos os campos possíveis na resposta do endpoint [Dossiê Cadastral por CPF](./recursos/buscar-dados-cadastrais-pf).
+
+> Campos sem valor são omitidos da resposta. Trate sempre com null-safety.
+
+---
+
+## Identificação
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `cpf` | string | CPF consultado (11 dígitos) |
+| `documento` | string | Mesmo valor que `cpf` |
+| `nome` | string | Nome completo da pessoa física |
+| `nomeMae` | string | Nome da mãe |
+| `dataNascimento` | string | Data de nascimento no formato `YYYY-MM-DD` |
+| `idade` | integer | Idade em anos completos |
+| `sexo` | string | `MASCULINO` ou `FEMININO` |
+| `signo` | string | Signo zodiacal (ex: `ARIES`, `CAPRICORNIO`) |
+| `escolaridade` | string | Nível de escolaridade (ex: `SUPERIOR COMPLETO`, `ENSINO MEDIO`) |
+| `obito` | boolean | `true` se há registro de falecimento |
+
+---
+
+## Situação Cadastral na Receita Federal
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `situacaoCadastralRF` | string | Status do CPF na Receita Federal: `REGULAR`, `SUSPENSA`, `TITULAR FALECIDO`, `PENDENTE DE REGULARIZAÇÃO`, `CANCELADA POR ENCERRAMENTO`, `NULA`, `CANCELADA DE OFÍCIO` |
+| `dataSituacaoCadastralRF` | string | Data da última atualização da situação cadastral no formato `YYYY-MM-DD` |
+
+---
+
+## Renda Presumida
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `rendaPresumida` | object | Estimativa de renda |
+| `rendaPresumida.faixaRenda` | string | Faixa de renda (ex: `B (ENTRE 10 E 20 SM)`) |
+| `rendaPresumida.valorRenda` | number | Valor estimado da renda mensal em reais |
+
+---
+
+## Contato
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `telefones` | array | Lista de telefones associados |
+| `telefones[].tipo` | string | Tipo do telefone: `MOVEL`, `FIXO` ou `COMERCIAL` |
+| `telefones[].ddd` | string | DDD (2 dígitos) |
+| `telefones[].numero` | string | Número do telefone (sem DDD) |
+| `emails` | array\<string\> | Lista de e-mails associados |
+
+---
+
+## Endereços
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `enderecos` | array | Histórico de endereços |
+| `enderecos[].logradouro` | string | Logradouro (rua, avenida, etc.) |
+| `enderecos[].numero` | string | Número |
+| `enderecos[].complemento` | string | Complemento (quando disponível) |
+| `enderecos[].bairro` | string | Bairro |
+| `enderecos[].cidade` | string | Cidade |
+| `enderecos[].uf` | string | UF (sigla do estado) |
+| `enderecos[].cep` | string | CEP (8 dígitos, sem formatação) |
+
+---
+
+## Vínculos Societários
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `sociedades` | array | Empresas em que a pessoa é sócia ou administradora |
+| `sociedades[].cnpj` | string | CNPJ da empresa |
+| `sociedades[].razaoSocial` | string | Razão social da empresa |
+| `sociedades[].cargo` | string | Cargo na empresa (ex: `SOCIO-ADMINISTRADOR`, `ADMINISTRADOR`) |
+| `sociedades[].dataEntrada` | string | Data de entrada na sociedade no formato `YYYY-MM-DD` |
+
+---
+
+## Experiências Profissionais
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `experienciasProfissionais` | array | Histórico de vínculos empregatícios |
+| `experienciasProfissionais[].cnpj` | string | CNPJ do empregador |
+| `experienciasProfissionais[].razaoSocial` | string | Razão social do empregador |
+| `experienciasProfissionais[].cbo` | string | Classificação Brasileira de Ocupações (cargo/função) |
+| `experienciasProfissionais[].rendaEstimada` | number | Renda estimada naquele vínculo em reais |
+| `experienciasProfissionais[].dataAdmissao` | string | Data de admissão no formato `YYYY-MM-DD` |

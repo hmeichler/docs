@@ -143,6 +143,21 @@
             ]
           },
           {
+            "group": "Dossiê Cadastral",
+            "pages": [
+              "dossie-cadastral/overview",
+              "dossie-cadastral/estrutura-pf",
+              "dossie-cadastral/estrutura-pj"
+            ]
+          },
+          {
+            "group": "Dossiê Cadastral - Recursos",
+            "pages": [
+              "dossie-cadastral/recursos/buscar-dados-cadastrais-pf",
+              "dossie-cadastral/recursos/buscar-dados-cadastrais-pj"
+            ]
+          },
+          {
             "group": "Monitoramento",
             "pages": [
               "monitoramento/overview"

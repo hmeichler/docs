@@ -1,0 +1,176 @@
+---
+title: "Dossiê Cadastral por CNPJ"
+description: "Consulte o perfil cadastral completo de uma pessoa jurídica: razão social, situação cadastral, atividade econômica, contatos, endereços, sócios, histórico de funcionários e dívidas."
+---
+
+# 🔎 Dossiê Cadastral por CNPJ
+
+Este endpoint retorna o **perfil cadastral consolidado** de uma pessoa jurídica a partir de um CNPJ, agregando dados da Receita Federal com razão social, situação cadastral, atividade econômica, contatos, endereços, quadro societário, histórico de funcionários e dívidas federais.
+
+A resposta é um **objeto único** — o CNPJ identifica unicamente a empresa.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/pessoas/juridicas/dadosCadastrais
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+```json
+{
+  "cnpj": "71676316000146"
+}
+```
+
+---
+
+## 📚 Campos
+
+| Campo | Obrigatório | Tipo | Descrição |
+|-------|-------------|------|-----------|
+| `cnpj` | Sim | string | CNPJ a consultar — exatamente 14 dígitos numéricos, validado pelo algoritmo de CNPJ |
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/pessoas/juridicas/dadosCadastrais' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "cnpj": "71676316000146"
+}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+> Campos sem valor são omitidos do JSON. O exemplo abaixo mostra todas as seções possíveis.
+
+```json
+{
+  "cnpj": "71676316000146",
+  "matriz": true,
+  "razaoSocial": "SUPERMERCADOS MAMBO LTDA.",
+  "nomeFantasia": "SUPERMERCADOS MAMBO",
+  "idade": 33,
+  "dataAbertura": "1993-06-15",
+  "website": "mamboplus.com.br",
+  "quantidadeColaboradores": 686,
+  "porte": "DEMAIS",
+  "segmento": "COMERCIO",
+  "faturamentoEstimado": 528345436.27,
+  "naturezaJuridica": "SOCIEDADE EMPRESARIA LIMITADA",
+  "capitalSocial": 90000000.00,
+  "cnaePrincipal": "4711302",
+  "descricaoCnaePrincipal": "4711302 - COMERCIO VAREJISTA DE MERCADORIAS EM GERAL, COM PREDOMINANCIA DE PRODUTOS ALIMENTICIOS - SUPERMERCADOS",
+  "cnaesSecundarios": [
+    {
+      "codigo": "8299799",
+      "descricao": "8299799 - OUTRAS ATIVIDADES DE SERVICOS PRESTADOS PRINCIPALMENTE AS EMPRESAS NAO ESPECIFICADAS ANTERIORMENTE"
+    },
+    {
+      "codigo": "8211300",
+      "descricao": "8211300 - SERVICOS COMBINADOS DE ESCRITORIO E APOIO ADMINISTRATIVO"
+    }
+  ],
+  "situacaoCadastral": "ATIVA",
+  "dataSituacaoCadastral": "2005-09-24",
+  "telefones": [
+    {
+      "tipo": "MOVEL",
+      "ddd": "11",
+      "numero": "964128585"
+    },
+    {
+      "tipo": "FIXO",
+      "ddd": "11",
+      "numero": "38375700"
+    }
+  ],
+  "enderecos": [
+    {
+      "logradouro": "RUA GUAIPA",
+      "numero": "255",
+      "bairro": "VILA LEOPOLDINA",
+      "cidade": "SAO PAULO",
+      "uf": "SP",
+      "cep": "05089001"
+    }
+  ],
+  "emails": [
+    "loja@mambo.com.br",
+    "contato@mambo.com.br"
+  ],
+  "socios": [
+    {
+      "documento": "17333232875",
+      "nome": "ANDRE FRANCEZ NASSAR",
+      "dataEntrada": "1993-06-15"
+    },
+    {
+      "documento": "32240039000172",
+      "nome": "FNASS PARTICIPACOES LTDA",
+      "dataEntrada": "2020-01-13"
+    }
+  ],
+  "antigosSocios": [],
+  "historicoFuncionarios": [
+    {
+      "ano": 2024,
+      "qtdeFuncionarios": 216
+    },
+    {
+      "ano": 2023,
+      "qtdeFuncionarios": 206
+    },
+    {
+      "ano": 2022,
+      "qtdeFuncionarios": 220
+    }
+  ],
+  "dividas": {
+    "total": 0,
+    "totalPrevidenciaria": 0,
+    "totalFgts": 0,
+    "totalNaoPrevidenciaria": 0
+  },
+  "documento": "71676316000146"
+}
+```
+
+> Para o significado detalhado de cada campo, veja [📂 Estrutura de Dados — Pessoa Jurídica](../estrutura-pj).
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Sucesso — perfil cadastral encontrado |
+| `204` | Nenhum dado cadastral encontrado para o CNPJ |
+| `400` | Erro de validação no payload (CNPJ inválido ou ausente) |
+| `401` | Token inválido ou expirado |
+| `500` | Erro interno do servidor |
+
+---
+
+## 🛡️ Validações
+
+- `cnpj`:
+  - Não nulo
+  - Exatamente 14 dígitos numéricos
+  - Validação de CNPJ formal (algoritmo de dígitos verificadores)
+
+---
+
+## 💡 Dica
+
+> Antes de usar qualquer dado da resposta, verifique `situacaoCadastral`. CNPJs com situação `BAIXADA`, `INAPTA` ou `NULA` indicam que a empresa não está em operação regular — combine com `dividas.total` para avaliar exposição a passivos federais.

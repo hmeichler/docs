@@ -1,0 +1,82 @@
+---
+title: Introdução
+description: "Consulte o perfil cadastral completo de uma pessoa física (CPF) ou jurídica (CNPJ): identidade, contato, endereços, vínculos societários e histórico profissional."
+---
+
+# 🪪 Dossiê Cadastral
+
+O **Dossiê Cadastral** da Predictus retorna o perfil de identificação completo de uma pessoa física (CPF) ou jurídica (CNPJ), consolidando dados da Receita Federal, bureaus e fontes cadastrais em um único objeto estruturado.
+
+Diferente do Dossiê Jurídico — que olha o **histórico processual** — e do Dossiê Financeiro — que olha **pendências e crédito** — este produto foca em **quem é a pessoa**: seus dados de identidade, localização, contatos, vínculos societários e histórico profissional.
+
+---
+
+## 🧠 Quando usar o Dossiê Cadastral?
+
+Use este módulo quando você quiser:
+
+- **Validar identidade** de uma pessoa física antes de um onboarding ou operação
+- Verificar **situação cadastral** de um CPF ou CNPJ na Receita Federal
+- Obter **dados de contato** (telefones, e-mails) e **endereços** atualizados
+- Mapear **vínculos societários** de uma PF ou quadro de sócios de uma PJ
+- Enriquecer dados cadastrais de uma carteira de clientes ou fornecedores
+- Compor análise de **PLD/KYC** com identificação completa da contraparte
+
+---
+
+## 🔍 Tipos de consulta disponíveis
+
+<CardGroup cols={2}>
+  <Card title="Dossiê Cadastral por CPF" icon="id-card">
+    Retorna o perfil cadastral completo de uma pessoa física: identificação, situação na Receita Federal, endereços, contatos, renda presumida, vínculos societários e experiências profissionais.
+  </Card>
+  <Card title="Dossiê Cadastral por CNPJ" icon="building">
+    Retorna o perfil cadastral completo de uma pessoa jurídica: razão social, situação cadastral, atividade econômica, endereços, contatos, sócios, histórico de funcionários e dívidas.
+  </Card>
+</CardGroup>
+
+---
+
+## 📦 O que a resposta inclui?
+
+### Pessoa Física (CPF)
+
+- **Identificação** — nome, data de nascimento, nome da mãe, sexo, signo, idade, escolaridade
+- **Situação cadastral RF** — status do CPF na Receita Federal e data de atualização
+- **Óbito** — indicação se há registro de falecimento
+- **Renda presumida** — faixa de renda e valor estimado
+- **Contato** — telefones (móvel/fixo/comercial) e e-mails
+- **Endereços** — histórico de endereços com logradouro, bairro, cidade, UF e CEP
+- **Sociedades** — CNPJs em que a pessoa é sócia ou administradora, com cargo e data de entrada
+- **Experiências profissionais** — histórico de vínculos empregatícios com CBO e renda estimada
+
+### Pessoa Jurídica (CNPJ)
+
+- **Identificação** — razão social, nome fantasia, natureza jurídica, porte, segmento
+- **Situação cadastral** — status na Receita Federal e data de atualização
+- **Atividade econômica** — CNAE principal e CNAEs secundários
+- **Dados financeiros** — capital social, faturamento estimado, quantidade de colaboradores, website
+- **Contato** — telefones e e-mails
+- **Endereços** — endereço registrado na Receita Federal
+- **Sócios** — quadro societário atual com documento, nome e data de entrada
+- **Antigos sócios** — ex-sócios com histórico de saída
+- **Histórico de funcionários** — quantidade de empregados por ano
+- **Dívidas** — total de débitos previdenciários, FGTS e não previdenciários
+
+> Para o schema completo de cada campo, veja:
+> 👉 [📂 Estrutura de Dados — Pessoa Física](./estrutura-pf)
+> 👉 [📂 Estrutura de Dados — Pessoa Jurídica](./estrutura-pj)
+
+---
+
+## 🛡️ Boas práticas
+
+- **Situação cadastral primeiro** — antes de usar qualquer dado, verifique `situacaoCadastralRF` (PF) ou `situacaoCadastral` (PJ). Documentos cancelados ou suspensos exigem tratamento diferenciado.
+- **Campos ausentes** — a resposta omite campos sem valor. Trate sempre com null-safety no consumo.
+- **Combinação com outros produtos** — para uma visão completa, combine com o Dossiê Jurídico (processos) e o Dossiê Financeiro (pendências de crédito).
+
+---
+
+## 🚀 Prossiga
+
+Escolha um recurso na barra lateral ou vá direto para: [Dossiê Cadastral por CPF](./recursos/buscar-dados-cadastrais-pf)
