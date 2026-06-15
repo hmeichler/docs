@@ -19,7 +19,19 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorNom
 
 ---
 
-## 🧾 Corpo da requisição (exemplo completo)
+## 🧾 Exemplo mínimo
+
+> `nome` é o único campo obrigatório. Todos os demais são filtros opcionais.
+
+```json
+{
+  "nome": "FULANO DE TAL"
+}
+```
+
+---
+
+## 🧾 Exemplo completo (com todos os filtros)
 
 ```json
 {

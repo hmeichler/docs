@@ -32,21 +32,19 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorRai
 
 ---
 
-## 🧾 Corpo da requisição
+## 🧾 Exemplo mínimo
 
-### Exemplo mínimo
-
-O único campo obrigatório é a `raizCnpj`.
+> `raizCnpj` é o único campo obrigatório. Todos os demais são filtros opcionais.
 
 ```json
 {
-  "raizCnpj": "42194191"
+  "raizCnpj": "12345678"
 }
 ```
 
-### Exemplo completo
+---
 
-O exemplo abaixo demonstra o corpo da requisição com todos os filtros opcionais disponíveis, que funcionam da mesma forma que no endpoint de busca por CNPJ completo.
+## 🧾 Exemplo completo (com todos os filtros)
 
 ```json
 {

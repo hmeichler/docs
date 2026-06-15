@@ -19,7 +19,19 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorCPF
 
 ---
 
-## 🧾 Corpo da requisição (exemplo completo)
+## 🧾 Exemplo mínimo
+
+> `cpf` é o único campo obrigatório. Todos os demais são filtros opcionais.
+
+```json
+{
+  "cpf": "12345678901"
+}
+```
+
+---
+
+## 🧾 Exemplo completo (com todos os filtros)
 
 ```json
 {
