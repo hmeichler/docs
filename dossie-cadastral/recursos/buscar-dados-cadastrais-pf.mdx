@@ -1,0 +1,139 @@
+---
+title: "Dossiê Cadastral por CPF"
+description: "Consulte o perfil cadastral completo de uma pessoa física: identidade, situação na Receita Federal, contatos, endereços, renda presumida, vínculos societários e histórico profissional."
+---
+
+# 🔎 Dossiê Cadastral por CPF
+
+Este endpoint retorna o **perfil cadastral consolidado** de uma pessoa física a partir de um CPF, agregando dados da Receita Federal e fontes cadastrais com identificação completa, situação do documento, contatos, endereços, renda presumida, vínculos societários e histórico profissional.
+
+A resposta é um **objeto único** — o CPF identifica unicamente a pessoa.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/pessoas/fisicas/dadosCadastrais
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+```json
+{
+  "cpf": "12345678901"
+}
+```
+
+---
+
+## 📚 Campos
+
+| Campo | Obrigatório | Tipo | Descrição |
+|-------|-------------|------|-----------|
+| `cpf` | Sim | string | CPF a consultar — exatamente 11 dígitos numéricos, validado pelo algoritmo de CPF |
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/pessoas/fisicas/dadosCadastrais' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "cpf": "12345678901"
+}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+> Campos sem valor são omitidos do JSON. O exemplo abaixo mostra todas as seções possíveis.
+
+```json
+{
+  "cpf": "12345678901",
+  "nome": "FULANO DE TAL",
+  "dataNascimento": "1994-03-28",
+  "nomeMae": "SICLANA DE TAL",
+  "signo": "ARIES",
+  "sexo": "MASCULINO",
+  "idade": 32,
+  "escolaridade": "SUPERIOR COMPLETO",
+  "situacaoCadastralRF": "REGULAR",
+  "dataSituacaoCadastralRF": "2026-01-22",
+  "obito": false,
+  "rendaPresumida": {
+    "faixaRenda": "B (ENTRE 10 E 20 SM)",
+    "valorRenda": 30360.00
+  },
+  "telefones": [
+    {
+      "tipo": "MOVEL",
+      "ddd": "48",
+      "numero": "991289838"
+    },
+    {
+      "tipo": "COMERCIAL",
+      "ddd": "48",
+      "numero": "30912786"
+    }
+  ],
+  "enderecos": [
+    {
+      "logradouro": "RUA DAS FLORES",
+      "numero": "123",
+      "complemento": "APTO 201",
+      "bairro": "CENTRO",
+      "cidade": "FLORIANOPOLIS",
+      "uf": "SC",
+      "cep": "88010000"
+    }
+  ],
+  "emails": [
+    "fulano@example.com"
+  ],
+  "sociedades": [
+    {
+      "cnpj": "12345678000199",
+      "razaoSocial": "EMPRESA EXEMPLO LTDA",
+      "cargo": "SOCIO-ADMINISTRADOR",
+      "dataEntrada": "2024-10-22"
+    }
+  ],
+  "documento": "12345678901"
+}
+```
+
+> Para o significado detalhado de cada campo, veja [📂 Estrutura de Dados — Pessoa Física](../estrutura-pf).
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Sucesso — perfil cadastral encontrado |
+| `204` | Nenhum dado cadastral encontrado para o CPF |
+| `400` | Erro de validação no payload (CPF inválido ou ausente) |
+| `401` | Token inválido ou expirado |
+| `500` | Erro interno do servidor |
+
+---
+
+## 🛡️ Validações
+
+- `cpf`:
+  - Não nulo
+  - Exatamente 11 dígitos numéricos
+  - Validação de CPF formal (algoritmo de dígitos verificadores)
+
+---
+
+## 💡 Dica
+
+> Antes de usar qualquer dado da resposta, verifique `situacaoCadastralRF`. CPFs com situação diferente de `REGULAR` (ex: `SUSPENSA`, `CANCELADA DE OFÍCIO`) podem indicar inconsistências cadastrais e merecem tratamento diferenciado no seu fluxo.

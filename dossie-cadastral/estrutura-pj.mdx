@@ -1,0 +1,121 @@
+---
+title: "Estrutura de Dados — Pessoa Jurídica"
+description: "Descrição completa de todos os campos retornados pelo Dossiê Cadastral para uma pessoa jurídica (CNPJ)."
+---
+
+# 📂 Estrutura de Dados — Pessoa Jurídica
+
+Esta página descreve todos os campos possíveis na resposta do endpoint [Dossiê Cadastral por CNPJ](./recursos/buscar-dados-cadastrais-pj).
+
+> Campos sem valor são omitidos da resposta. Trate sempre com null-safety.
+
+---
+
+## Identificação
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `cnpj` | string | CNPJ consultado (14 dígitos) |
+| `documento` | string | Mesmo valor que `cnpj` |
+| `razaoSocial` | string | Razão social registrada na Receita Federal |
+| `nomeFantasia` | string | Nome fantasia (quando cadastrado) |
+| `naturezaJuridica` | string | Natureza jurídica (ex: `SOCIEDADE EMPRESARIA LIMITADA`) |
+| `porte` | string | Porte da empresa: `ME`, `EPP`, `MEDIO`, `GRANDE`, `DEMAIS` |
+| `segmento` | string | Segmento de atuação (ex: `COMERCIO`, `SERVICOS`, `INDUSTRIA`) |
+| `matriz` | boolean | `true` se é a matriz; `false` se é filial |
+| `idade` | integer | Idade da empresa em anos desde a abertura |
+| `dataAbertura` | string | Data de abertura no formato `YYYY-MM-DD` |
+| `website` | string | Site da empresa (quando disponível) |
+
+---
+
+## Situação Cadastral
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `situacaoCadastral` | string | Status na Receita Federal: `ATIVA`, `SUSPENSA`, `INAPTA`, `BAIXADA`, `NULA` |
+| `dataSituacaoCadastral` | string | Data da última alteração de situação no formato `YYYY-MM-DD` |
+
+---
+
+## Atividade Econômica
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `cnaePrincipal` | string | Código do CNAE principal (7 dígitos) |
+| `descricaoCnaePrincipal` | string | Código + descrição completa do CNAE principal |
+| `cnaesSecundarios` | array | Lista de CNAEs secundários |
+| `cnaesSecundarios[].codigo` | string | Código do CNAE (7 dígitos) |
+| `cnaesSecundarios[].descricao` | string | Código + descrição completa do CNAE |
+
+---
+
+## Dados Financeiros
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `capitalSocial` | number | Capital social registrado em reais |
+| `faturamentoEstimado` | number | Faturamento anual estimado em reais |
+| `quantidadeColaboradores` | integer | Número estimado de colaboradores ativos |
+
+---
+
+## Contato
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `telefones` | array | Lista de telefones associados |
+| `telefones[].tipo` | string | Tipo do telefone: `MOVEL`, `FIXO` ou `COMERCIAL` |
+| `telefones[].ddd` | string | DDD (2 dígitos) |
+| `telefones[].numero` | string | Número do telefone (sem DDD) |
+| `emails` | array\<string\> | Lista de e-mails associados |
+| `website` | string | Site da empresa |
+
+---
+
+## Endereços
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `enderecos` | array | Endereços registrados |
+| `enderecos[].logradouro` | string | Logradouro |
+| `enderecos[].numero` | string | Número |
+| `enderecos[].complemento` | string | Complemento (quando disponível) |
+| `enderecos[].bairro` | string | Bairro |
+| `enderecos[].cidade` | string | Cidade |
+| `enderecos[].uf` | string | UF (sigla do estado) |
+| `enderecos[].cep` | string | CEP (8 dígitos, sem formatação) |
+
+---
+
+## Quadro Societário
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `socios` | array | Sócios e administradores atuais |
+| `socios[].documento` | string | CPF (11 dígitos) ou CNPJ (14 dígitos) do sócio |
+| `socios[].nome` | string | Nome completo ou razão social do sócio |
+| `socios[].dataEntrada` | string | Data de entrada na sociedade no formato `YYYY-MM-DD` |
+| `antigosSocios` | array | Ex-sócios com histórico de saída (mesma estrutura que `socios`) |
+
+---
+
+## Histórico de Funcionários
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `historicoFuncionarios` | array | Quantidade de funcionários registrados por ano |
+| `historicoFuncionarios[].ano` | integer | Ano de referência |
+| `historicoFuncionarios[].qtdeFuncionarios` | integer | Quantidade de funcionários naquele ano |
+
+---
+
+## Dívidas
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `dividas` | object | Resumo de débitos federais |
+| `dividas.total` | number | Total de dívidas em reais |
+| `dividas.totalPrevidenciaria` | number | Débitos previdenciários (INSS) em reais |
+| `dividas.totalFgts` | number | Débitos de FGTS em reais |
+| `dividas.totalNaoPrevidenciaria` | number | Débitos não previdenciários em reais |
