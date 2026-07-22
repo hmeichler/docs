@@ -112,7 +112,7 @@ Os campos agregados são os mesmos do [Check](./check). Adicionalmente:
 | `grauProcesso` | number | Grau do processo (1 a 4) |
 | `dataDistribuicao` | string | Data de distribuição do processo (ISO 8601) |
 | `tipoParte` | string | Papel da entidade neste processo (`REU`, `AUTOR`, `TESTEMUNHA JUIZO`, etc.) |
-| `origemDocumento` | string | `TRIBUNAL`, `CATALOGO` ou `AGREGADO` — ver [origens do documento](../../dossie-juridico/recursos/buscar-parte-por-cpf) |
+| `origemDocumento` | string | Como o documento foi associado a **este** processo, o que determina a confiabilidade do vínculo: `TRIBUNAL` (capa do processo, confiança alta), `CATALOGO` (consulta de CPF/CNPJ no site do tribunal, confiança alta), `AGREGADO` (matching da Predictus, confiança média, pode conter ruído). Ver [origens do documento](../../dossie-juridico/recursos/buscar-parte-por-cpf) |
 | `termosEncontrados` | array | Organizações/termos citados neste processo específico |
 | `trechos` | array | Recortes literais do documento processual em que os termos aparecem |
 
@@ -143,4 +143,4 @@ Os campos agregados são os mesmos do [Check](./check). Adicionalmente:
 
 > **`trechos` é evidência, não veredito.** O recorte é literal e sai do documento processual como está — inclusive citações da defesa, depoimentos e menções em que a entidade não é a parte investigada. Leia o `tipoParte` junto com o trecho antes de qualquer decisão.
 
-> Confira o `nome` retornado contra o nome que você já tem em cadastro: é a forma mais rápida de descartar um falso positivo por homônimo.
+> **Leia o `origemDocumento` antes do trecho.** Ele diz o quanto o vínculo entre o documento e o processo é confiável: `TRIBUNAL` e `CATALOGO` saem da fonte oficial; `AGREGADO` é atribuição por matching e pode conter ruído. Somado ao `nome` — que você bate contra o seu cadastro — é o que separa o hit real do homônimo.

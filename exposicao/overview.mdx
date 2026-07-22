@@ -84,7 +84,8 @@ Em auditoria, provar que você **olhou** vale tanto quanto o que você encontrou
 
 - **Sem rótulo, sem score.** Nenhum campo diz "suspeito". Quem lê o trecho e decide é você — e é isso que torna a decisão defensável.
 - **`tiposParte` com contagem por papel.** Autor, réu, testemunha: aparecer em um processo não é o mesmo que ser investigado nele, e o dado deixa isso explícito.
-- **Antídoto para homônimo.** O Dossiê devolve o `nome` para você bater contra o seu cadastro e descartar o falso positivo na hora.
+- **A confiabilidade do vínculo vem explícita.** `origemDocumento` diz **como** aquele CPF/CNPJ foi associado ao processo: `TRIBUNAL` e `CATALOGO` vêm da fonte oficial (confiança alta), `AGREGADO` vem do matching da Predictus (confiança média, pode conter ruído). No Check, `origensDocumento` mostra a contagem por origem; no Dossiê, cada processo carrega a sua. Ocorrência que só existe como `AGREGADO` pede conferência antes de virar decisão.
+- **Antídoto para homônimo.** Junto com a origem, o Dossiê devolve o `nome` para você bater contra o seu cadastro e descartar o falso positivo na hora.
 - **LGPD por desenho.** Documento removido a pedido responde `204`, idêntico a um "nada consta" — a entidade **sai da base**, não fica marcada.
 - **Sem listagem por organização.** A consulta é sempre 1:1, por documento que você já tem relação e motivo para consultar. O produto responde *"o que consta sobre esta entidade"* — nunca *"de quem eu deveria suspeitar"*.
 

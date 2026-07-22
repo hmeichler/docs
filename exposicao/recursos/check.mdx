@@ -85,7 +85,7 @@ curl --location 'https://api.predictus.com.br/predictus-api/exposicao/check' \
 | `qtdProcessos` | number | Quantidade de processos em que o documento foi encontrado |
 | `tiposParte` | objeto | Mapa `papel → quantidade` — em quantos processos a entidade figura em cada papel (`REU`, `AUTOR`, `TESTEMUNHA JUIZO`, etc.) |
 | `termosCitados` | array | Organizações/termos citados nos processos encontrados |
-| `origensDocumento` | objeto | Mapa `origem → quantidade`. Valores: `TRIBUNAL`, `CATALOGO`, `AGREGADO` — ver [origens do documento](../../dossie-juridico/recursos/buscar-parte-por-cpf) |
+| `origensDocumento` | objeto | Mapa `origem → quantidade` — **como** o documento foi associado ao processo, o que determina a confiabilidade do vínculo: `TRIBUNAL` (capa do processo, confiança alta), `CATALOGO` (consulta de CPF/CNPJ no site do tribunal, confiança alta), `AGREGADO` (matching da Predictus, confiança média, pode conter ruído). Ver [origens do documento](../../dossie-juridico/recursos/buscar-parte-por-cpf) |
 | `ocorrenciasPorAno` | objeto | Mapa `ano → quantidade` de processos, pela data de distribuição |
 | `dataProcessamento` | string | Data/hora em que a base foi processada para este documento (ISO 8601) |
 
