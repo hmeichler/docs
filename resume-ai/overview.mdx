@@ -12,6 +12,18 @@ O **Resume AI** da Predictus aplica inteligência artificial sobre os documentos
 
 ---
 
+## ⚠️ Conteúdo gerado por inteligência artificial
+
+> **Leia antes de usar em produção.** O conteúdo devolvido por este módulo é **gerado por modelos de linguagem (IA)** a partir dos documentos do processo. Como toda saída de IA, está sujeito a **erros, omissões e alucinações** — informações que parecem corretas e bem escritas, mas não correspondem ao que consta nos autos.
+>
+> - **Não é parecer jurídico** e não substitui a leitura do processo por um profissional habilitado.
+> - **Revise antes de decidir.** Nenhuma decisão com efeito jurídico, financeiro, contratual ou trabalhista deve ser tomada apenas com base neste resumo.
+> - **Valores, datas, prazos e nomes** exigem conferência na fonte primária: use o `numeroProcessoUnico` para consultar os autos ou o [Dossiê Jurídico](../dossie-juridico/overview).
+> - **Saídas não são determinísticas.** A mesma requisição pode produzir textos diferentes entre chamadas.
+> - A responsabilidade pelo uso do conteúdo, inclusive perante terceiros e órgãos reguladores, é do cliente.
+
+---
+
 ## 🧠 Quando usar o Resume AI?
 
 Use este módulo quando você quiser:
@@ -70,6 +82,8 @@ Use este módulo quando você quiser:
 - **Verifique os dados de entrada** — `numeroProcessoUnico`, `tribunal` e `grauProcesso` devem corresponder exatamente ao processo no sistema de origem. Dados incorretos resultam em `204` ou resumo de processo errado.
 - **Latência** — a geração do resumo pode levar alguns segundos a mais que endpoints de busca convencionais, pois envolve processamento por IA.
 - **Campos ausentes** — se uma seção jurídica não tiver informação (ex: `decisoesAntecipadas`), o valor retornado será `"Não consta."`.
+- **Sinalize a origem para o usuário final** — ao exibir o resumo em telas, relatórios ou e-mails, deixe explícito que o texto foi gerado por IA e precisa de revisão. É o que mantém a expectativa de quem lê alinhada com o que a ferramenta entrega.
+- **Mantenha o `numeroProcessoUnico` junto do resumo** — é o que permite auditar qualquer afirmação contra os autos.
 
 ---
 

@@ -7,6 +7,8 @@ description: "Gere um resumo inteligente de um processo judicial a partir do seu
 
 Este endpoint recebe o identificador de um processo judicial e retorna um **resumo gerado por IA** com análise em linguagem acessível (`resumoRH`) e decomposição técnica estruturada (`juridico`).
 
+> ⚠️ **Conteúdo gerado por IA.** Todo o texto desta resposta é produzido por modelos de linguagem e pode conter **erros, omissões e alucinações**. Não é parecer jurídico: revise contra os autos antes de qualquer decisão, e confira valores, datas e nomes na fonte primária. Leia os limites de uso na [introdução do Resume AI](../overview).
+
 ---
 
 ## 🔗 Endpoint
@@ -37,9 +39,9 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/resumeai/bus
 |-------|-------------|------|-----------|
 | `numeroProcessoUnico` | Sim | string | Número do processo no formato CNJ (20 dígitos numéricos, sem pontuação) |
 | `tribunal` | Sim | string | Código do tribunal (ex: `TRT-2`, `TJSP`, `STJ`) — ver [lista de tribunais](../../referencias/tribunais) |
-| `grauProcesso` | Sim | integer | Grau do processo: `1` (1º grau), `2` (2º grau), `3` (instância especial), `4` (instância extraordinária) |
+| `sistema` | Sim | string | Sistema de origem do processo (ex: `PJE-TRT2`, `ESAJ`, `PROJUDI`) |
 | `dataDistribuicao` | Sim | string | Data de distribuição do processo no formato `YYYY-MM-DD` |
-| `sistema` | Não | string | Sistema de origem do processo (ex: `PJE-TRT2`, `ESAJ`, `PROJUDI`) — auxilia na localização dos documentos |
+| `grauProcesso` | Recomendado | integer | Grau do processo: `1` (1º grau), `2` (2º grau), `3` (instância especial), `4` (instância extraordinária) |
 
 ---
 
@@ -127,9 +129,12 @@ curl --location 'https://api.predictus.com.br/predictus-api/processos/judiciais/
 ## 🛡️ Validações
 
 - `numeroProcessoUnico`: não nulo, exatamente 20 dígitos numéricos no padrão CNJ
+- `sistema`: não nulo
 - `tribunal`: não nulo — ver [lista completa de tribunais](../../referencias/tribunais)
-- `grauProcesso`: não nulo, valor entre `1` e `4`
-- `dataDistribuicao`: não nulo, formato `YYYY-MM-DD`
+- `dataDistribuicao`: não nulo, formato `YYYY-MM-DD`, não pode ser data futura
+- `grauProcesso`: quando informado, valor entre `1` e `4`
+
+> Os quatro campos além do `numeroProcessoUnico` identificam a **instância exata** do processo — o mesmo número CNJ pode existir em mais de um grau ou sistema. Todos eles vêm prontos na resposta do [Dossiê Jurídico](../../dossie-juridico/overview): reaproveite os valores de lá em vez de montá-los à mão.
 
 ---
 
