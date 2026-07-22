@@ -1,0 +1,146 @@
+---
+title: "Dossiê de Exposição"
+description: "A evidência: os processos que ligam um CPF ou CNPJ a organizações criminosas, com o trecho literal e o número CNJ de cada um."
+---
+
+# 🔎 Dossiê de Exposição
+
+A **evidência**: tudo o que o [Check](./check) retorna, mais o `nome` da entidade e a lista de `processos` — cada um com seu `numeroProcessoUnico`, tribunal, classe, papel da parte e os **trechos literais** que citam a organização.
+
+É o que você anexa ao parecer: prova rastreável até a fonte primária, não um rótulo a justificar. Use-o nos documentos que o Check acendeu e cuja decisão precisa ser defensável.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/exposicao/dossie
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+```json
+{
+  "cpf": "12345678901"
+}
+```
+
+Ou, para pessoa jurídica:
+
+```json
+{
+  "cnpj": "12345678000199"
+}
+```
+
+---
+
+## 📚 Campos
+
+| Campo | Obrigatório | Tipo | Descrição |
+|-------|-------------|------|-----------|
+| `cpf` | Condicional | string | CPF a consultar — 11 dígitos numéricos, validado por dígito verificador |
+| `cnpj` | Condicional | string | CNPJ a consultar — 14 dígitos numéricos, validado por dígito verificador |
+
+> Informe **exatamente um** dos dois. Enviar ambos (ou nenhum) retorna `400`.
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/exposicao/dossie' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "cpf": "12345678901"
+}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+{
+  "documento": "12345678901",
+  "nome": "FULANO DE TAL",
+  "tipo": "PF",
+  "qtdProcessos": 1,
+  "tiposParte": { "TESTEMUNHA JUIZO": 1 },
+  "termosCitados": ["ORGANIZACAO EXEMPLO"],
+  "origensDocumento": { "AGREGADO": 1 },
+  "ocorrenciasPorAno": { "2009": 1 },
+  "dataProcessamento": "2026-07-13T06:01:01.663917+00:00",
+  "processos": [
+    {
+      "numeroProcessoUnico": "00143037620098260269",
+      "tribunal": "TJ-SP",
+      "classe": {
+        "nome": "ACAO PENAL - PROCEDIMENTO SUMARIO",
+        "codigoCNJ": "10943"
+      },
+      "grauProcesso": 1,
+      "dataDistribuicao": "2009-09-23T14:59:04",
+      "tipoParte": "TESTEMUNHA JUIZO",
+      "origemDocumento": "AGREGADO",
+      "termosEncontrados": ["ORGANIZACAO EXEMPLO"],
+      "trechos": ["TRECHO SINTETICO DE EXEMPLO CITANDO A ORGANIZACAO EXEMPLO"]
+    }
+  ]
+}
+```
+
+### Campos da resposta
+
+Os campos agregados são os mesmos do [Check](./check). Adicionalmente:
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `nome` | string | Nome/razão social da entidade, para conferência contra o seu cadastro (descarte de homônimo) |
+| `processos` | array | Processos em que o documento foi encontrado |
+
+#### `processos[]`
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `numeroProcessoUnico` | string | Número único CNJ, somente dígitos — use-o para puxar os autos na fonte |
+| `tribunal` | string | Sigla do tribunal — ver [lista completa de tribunais](../../referencias/tribunais) |
+| `classe` | objeto | `nome` e `codigoCNJ` da classe processual — ver [classes processuais](../../referencias/classes-processuais) |
+| `grauProcesso` | number | Grau do processo (1 a 4) |
+| `dataDistribuicao` | string | Data de distribuição do processo (ISO 8601) |
+| `tipoParte` | string | Papel da entidade neste processo (`REU`, `AUTOR`, `TESTEMUNHA JUIZO`, etc.) |
+| `origemDocumento` | string | `TRIBUNAL`, `CATALOGO` ou `AGREGADO` — ver [origens do documento](../../dossie-juridico/recursos/buscar-parte-por-cpf) |
+| `termosEncontrados` | array | Organizações/termos citados neste processo específico |
+| `trechos` | array | Recortes literais do documento processual em que os termos aparecem |
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+| ------ | ----------- |
+| `200`  | Sucesso — há ocorrências para o documento |
+| `204`  | Nada consta para o documento (sem corpo) |
+| `400`  | Erro de validação — documento inválido, ausente, ou ambos os campos enviados |
+| `401`  | Token inválido ou expirado |
+| `429`  | Limite de requisições excedido |
+| `500`  | Erro interno do servidor |
+
+---
+
+## 🛡️ Validações
+
+- Exatamente um entre `cpf` e `cnpj`
+- `cpf`: 11 dígitos numéricos + dígitos verificadores válidos
+- `cnpj`: 14 dígitos numéricos + dígitos verificadores válidos
+
+---
+
+## 💡 Dica
+
+> **`trechos` é evidência, não veredito.** O recorte é literal e sai do documento processual como está — inclusive citações da defesa, depoimentos e menções em que a entidade não é a parte investigada. Leia o `tipoParte` junto com o trecho antes de qualquer decisão.
+
+> Confira o `nome` retornado contra o nome que você já tem em cadastro: é a forma mais rápida de descartar um falso positivo por homônimo.

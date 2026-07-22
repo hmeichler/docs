@@ -170,6 +170,19 @@
             ]
           },
           {
+            "group": "Exposição a Organizações Criminosas",
+            "pages": [
+              "exposicao/overview"
+            ]
+          },
+          {
+            "group": "Exposição a Organizações Criminosas - Recursos",
+            "pages": [
+              "exposicao/recursos/check",
+              "exposicao/recursos/dossie"
+            ]
+          },
+          {
             "group": "Monitoramento",
             "pages": [
               "monitoramento/overview"

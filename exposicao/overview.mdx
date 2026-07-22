@@ -1,0 +1,104 @@
+---
+title: Introdução
+description: "Saiba, em uma chamada, se um CPF ou CNPJ aparece em processos judiciais que citam organizações criminosas — com o trecho literal como prova."
+---
+
+# 🚨 Exposição a Organizações Criminosas
+
+Uma chamada. Um documento. A resposta que o seu comitê de risco vai pedir: **este CPF/CNPJ aparece em processos judiciais que citam organizações criminosas?**
+
+E, quando aparece, você não recebe um selo vermelho para justificar depois — recebe **o trecho literal do processo, com o número do CNJ ao lado**. A evidência que se defende sozinha, em auditoria, em BACEN e em juízo.
+
+> 🎯 Sem score de caixa-preta. Sem inferência. O que consta, como consta, com a prova junto.
+
+---
+
+## 💡 Por que existe
+
+Listas de sanções e mídias negativas cobrem o que já virou notícia. **O processo judicial chega antes** — e é público, rastreável e citável.
+
+A Predictus varre a maior base processual do Brasil atrás das menções a **mais de 90 organizações criminosas mapeadas** — facções, milícias e grupos regionais — e entrega isso pronto para consumo em API: sem crawler seu, sem leitura manual de autos, sem falso positivo por nome parecido.
+
+<CardGroup cols={2}>
+  <Card title="+90 organizações mapeadas" icon="sitemap">
+    Facções, milícias e grupos regionais, rastreados em todos os tribunais do país — sobre a base que já responde por mais de 700 milhões de processos.
+  </Card>
+  <Card title="Evidência, não opinião" icon="quote-left">
+    O trecho vem literal, com `numeroProcessoUnico` — você confere na fonte primária quando quiser.
+  </Card>
+  <Card title="Resposta em milissegundos" icon="bolt">
+    Projeção pronta para leitura: cabe dentro do seu fluxo de onboarding sem travar o cliente.
+  </Card>
+  <Card title="Integração de uma tarde" icon="plug">
+    POST com um documento no corpo, `200` ou `204`. Sem paginação, sem estado, sem webhook.
+  </Card>
+</CardGroup>
+
+---
+
+## 🎯 Para quem é
+
+<CardGroup cols={2}>
+  <Card title="KYC e Onboarding" icon="user-check">
+    Checagem de clientes, sócios e beneficiários finais no momento do cadastro — antes de o dinheiro entrar.
+  </Card>
+  <Card title="PLD/FT e Compliance" icon="shield-halved">
+    Insumo objetivo e documentado para análise de contraparte e para o relatório que vai ao regulador.
+  </Card>
+  <Card title="Due Diligence de M&A" icon="handshake">
+    Fornecedores, parceiros e alvos de aquisição: exposição verificável antes da assinatura.
+  </Card>
+  <Card title="Seguros e Logística" icon="truck">
+    Motoristas, transportadores e credenciados — o elo fraco onde a fraude organizada entra.
+  </Card>
+</CardGroup>
+
+---
+
+## 📦 Dois SKUs, um fluxo
+
+<CardGroup cols={2}>
+  <Card title="Check — a triagem" icon="magnifying-glass">
+    Os agregados do que consta: quantos processos, em que papéis, quais organizações, em que anos. Barato e rápido, feito para rodar em **toda** a base de clientes.
+  </Card>
+  <Card title="Dossiê — a evidência" icon="folder-open">
+    Tudo do Check **mais** o nome da entidade e cada processo com seus trechos literais. Você chama só nos casos que o Check acendeu.
+  </Card>
+</CardGroup>
+
+**Rode o Check em volume, o Dossiê no que importa.** É a mesma lógica de um exame de triagem: você não paga o caro para todo mundo, paga onde a resposta muda a decisão.
+
+Ambos aceitam `cpf` **ou** `cnpj` (exatamente um por requisição), e a resposta tem o mesmo formato para pessoa física e jurídica — com `"tipo": "PF" | "PJ"` indicando qual.
+
+---
+
+## 🚫 "Nada consta" também é resposta
+
+Quando o documento não tem qualquer ocorrência, a API responde **`204 No Content`**, sem corpo. Não é erro: é o resultado limpo — e vem com o header `x-prd-request-id`, o seu comprovante datado de que a checagem foi feita e nada constava naquele momento.
+
+Em auditoria, provar que você **olhou** vale tanto quanto o que você encontrou.
+
+---
+
+## 🛡️ Construído para sobreviver à auditoria
+
+- **Sem rótulo, sem score.** Nenhum campo diz "suspeito". Quem lê o trecho e decide é você — e é isso que torna a decisão defensável.
+- **`tiposParte` com contagem por papel.** Autor, réu, testemunha: aparecer em um processo não é o mesmo que ser investigado nele, e o dado deixa isso explícito.
+- **Antídoto para homônimo.** O Dossiê devolve o `nome` para você bater contra o seu cadastro e descartar o falso positivo na hora.
+- **LGPD por desenho.** Documento removido a pedido responde `204`, idêntico a um "nada consta" — a entidade **sai da base**, não fica marcada.
+- **Sem listagem por organização.** A consulta é sempre 1:1, por documento que você já tem relação e motivo para consultar. O produto responde *"o que consta sobre esta entidade"* — nunca *"de quem eu deveria suspeitar"*.
+
+---
+
+## 🚀 Comece agora
+
+<CardGroup cols={2}>
+  <Card title="Check de Exposição" icon="magnifying-glass" href="./recursos/check">
+    Os agregados do que consta sobre o documento.
+  </Card>
+  <Card title="Dossiê de Exposição" icon="folder-open" href="./recursos/dossie">
+    Agregados + processos + trechos literais.
+  </Card>
+</CardGroup>
+
+> Ainda não tem token? Comece pela [Autenticação](../authentication). Dúvidas comerciais: **contato@predictus.inf.br**

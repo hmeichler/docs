@@ -1,0 +1,119 @@
+---
+title: "Check de Exposição"
+description: "A triagem: em uma chamada, se um CPF ou CNPJ consta em processos judiciais que citam organizações criminosas — e em que proporção."
+---
+
+# 🔎 Check de Exposição
+
+A **triagem**: responde se um CPF ou CNPJ aparece em processos judiciais que citam organizações criminosas e devolve os **agregados** do que foi encontrado — quantos processos, em que papéis, quais organizações, em que anos.
+
+Sem nome, sem lista de processos, sem trechos: é o SKU de volume, feito para rodar em toda a sua base de clientes dentro do fluxo de onboarding. Quando acender, aprofunde com o [Dossiê de Exposição](./dossie).
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/exposicao/check
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+```json
+{
+  "cpf": "12345678901"
+}
+```
+
+Ou, para pessoa jurídica:
+
+```json
+{
+  "cnpj": "12345678000199"
+}
+```
+
+---
+
+## 📚 Campos
+
+| Campo | Obrigatório | Tipo | Descrição |
+|-------|-------------|------|-----------|
+| `cpf` | Condicional | string | CPF a consultar — 11 dígitos numéricos, validado por dígito verificador |
+| `cnpj` | Condicional | string | CNPJ a consultar — 14 dígitos numéricos, validado por dígito verificador |
+
+> Informe **exatamente um** dos dois. Enviar ambos (ou nenhum) retorna `400`.
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/exposicao/check' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "cpf": "12345678901"
+}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+{
+  "documento": "12345678901",
+  "tipo": "PF",
+  "qtdProcessos": 5,
+  "tiposParte": { "REU": 2, "AUTOR": 3 },
+  "termosCitados": ["ORGANIZACAO EXEMPLO"],
+  "origensDocumento": { "TRIBUNAL": 5 },
+  "ocorrenciasPorAno": { "2020": 2, "2024": 2, "2025": 1 },
+  "dataProcessamento": "2026-07-13T06:01:01.663917+00:00"
+}
+```
+
+### Campos da resposta
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `documento` | string | O CPF/CNPJ consultado, somente dígitos |
+| `tipo` | string | `PF` ou `PJ` |
+| `qtdProcessos` | number | Quantidade de processos em que o documento foi encontrado |
+| `tiposParte` | objeto | Mapa `papel → quantidade` — em quantos processos a entidade figura em cada papel (`REU`, `AUTOR`, `TESTEMUNHA JUIZO`, etc.) |
+| `termosCitados` | array | Organizações/termos citados nos processos encontrados |
+| `origensDocumento` | objeto | Mapa `origem → quantidade`. Valores: `TRIBUNAL`, `CATALOGO`, `AGREGADO` — ver [origens do documento](../../dossie-juridico/recursos/buscar-parte-por-cpf) |
+| `ocorrenciasPorAno` | objeto | Mapa `ano → quantidade` de processos, pela data de distribuição |
+| `dataProcessamento` | string | Data/hora em que a base foi processada para este documento (ISO 8601) |
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+| ------ | ----------- |
+| `200`  | Sucesso — há ocorrências para o documento |
+| `204`  | Nada consta para o documento (sem corpo) |
+| `400`  | Erro de validação — documento inválido, ausente, ou ambos os campos enviados |
+| `401`  | Token inválido ou expirado |
+| `429`  | Limite de requisições excedido |
+| `500`  | Erro interno do servidor |
+
+---
+
+## 🛡️ Validações
+
+- Exatamente um entre `cpf` e `cnpj`
+- `cpf`: 11 dígitos numéricos + dígitos verificadores válidos
+- `cnpj`: 14 dígitos numéricos + dígitos verificadores válidos
+
+---
+
+## 💡 Dica
+
+> Todas as respostas trazem o header `x-prd-request-id`, inclusive no `204`. Guarde-o: é o comprovante auditável de que a checagem foi feita e de que nada constava naquele momento.
+
+> `tiposParte` é um mapa com contagem, não uma lista. Um documento com `{"AUTOR": 3, "REU": 2}` aparece majoritariamente como **autor** — o que muda completamente a leitura do resultado. Use o [Dossiê](./dossie) para ler os trechos antes de qualquer decisão.
