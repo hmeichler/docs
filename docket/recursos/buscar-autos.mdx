@@ -37,18 +37,22 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/autos/buscar
 | Campo                 | Descrição                                                               |
 | --------------------- | ----------------------------------------------------------------------- |
 | `numeroProcessoUnico` | Número do processo no formato CNJ (sem traços ou pontos)                |
-| `sistema`             | Código do sistema judicial. Veja a tabela abaixo                        |
-| `usuario`             | Credencial de login (CPF, OAB ou e-mail, conforme exigência do sistema) |
-| `senha`               | Senha de acesso ao sistema                                              |
+| `sistema`             | Código do sistema judicial — valor inválido retorna `400 Sistema inválido.` Veja a [lista de sistemas](../overview#sistemas-suportados) |
+| `usuario`             | Credencial de login (CPF, OAB ou e-mail, conforme exigência do sistema). String vazia é rejeitada |
+| `senha`               | Senha de acesso ao sistema. String vazia é rejeitada                    |
 
 ---
 
-## 🧩 Campos opcionais
+## 🧩 Campos condicionais
 
-| Campo      | Quando usar                                                                 |
-| ---------- | --------------------------------------------------------------------------- |
-| `tokenMFA` | Necessário somente quando o tribunal exige 2FA via aplicativo OTP (TOTP/QR) |
-| `email`    | Necessário somente quando o 2FA do tribunal for enviado por e-mail          |
+Estes campos são opcionais no geral, mas **obrigatórios conforme o sistema alvo** — a API valida antes de tentar o login e responde `400`:
+
+| Campo      | Quando é obrigatório                                                        | Erro se faltar |
+| ---------- | --------------------------------------------------------------------------- | -------------- |
+| `tokenMFA` | Sistemas com 2FA via aplicativo OTP (TOTP) — ver coluna **Tipo de 2FA** na [tabela de sistemas](../overview#sistemas-suportados) | `O tokenMFA é obrigatório para o sistema {sistema}` |
+| `email`    | Sistemas cujo 2FA chega por e-mail (todos os `ESAJ-*`, além de `STF` e `TUCUJURIS-TJAP`) — precisa ser um e-mail válido | `O email é obrigatório para o sistema {sistema}` |
+
+Nos demais sistemas, enviar `tokenMFA` ou `email` é inofensivo: o robô simplesmente ignora.
 
 > ℹ️ Se o sistema exigir **2FA por e-mail**, o campo `email` **é obrigatório**. Esse e-mail deve estar com redirecionamento automático configurado para: [**predictus-docket@mailbox.org**](mailto:predictus-docket@mailbox.org).\
 > Você pode criar uma **regra automática** (recomendado) ou reenviar manualmente o código recebido — mas atenção: o código expira em **menos de 1 minuto**, então é **fundamental** que a entrega seja rápida.
@@ -60,7 +64,7 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/autos/buscar
 | Código | Significado                                  |
 | ------ | -------------------------------------------- |
 | `200`  | Solicitação iniciada com sucesso             |
-| `400`  | Payload inválido                             |
+| `400`  | Payload inválido — CNJ fora do padrão, sistema desconhecido, `usuario`/`senha` em branco, ou falta do `tokenMFA`/`email` exigido pelo sistema |
 | `401`  | Credenciais incorretas ou OTP inválido       |
 | `429`  | Limite de tentativas excedido (aguarde)      |
 | `500`  | Erro interno ou indisponibilidade do sistema |
