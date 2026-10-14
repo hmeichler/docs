@@ -90,7 +90,9 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/sumarioPorCN
   - `4` → Supremo Tribunal Federal (STF)
 - `tribunais` — lista de siglas válidas (ex: `TJ-SP`, `TRT-9`, `STF`)  
   - Ver [lista completa de tribunais](../../referencias/tribunais)
-- `valorCausa`, `dataDistribuicao` — permitem filtragem por faixa (menorQue/maiorQue)
+- `valorCausa` — faixa sobre o **valor da causa** (`valorCausa.valor`) (menorQue/maiorQue). Considera **somente** o valor da causa: processo sem valor da causa não entra quando este filtro é usado.
+- `valorExecucao` — faixa sobre o **valor de execução** fixado na decisão (`statusPredictus.valorExecucao.valor`), no mesmo formato de `valorCausa`. Usado junto com `valorCausa`, o processo precisa atender aos dois.
+- `dataDistribuicao` — permite filtragem por faixa (menorQue/maiorQue)
 - `classesProcessuais`, `assuntosCNJ` — até 65.000 valores cada  
 - `statusProcessuais` — veja [valores válidos](../../referencias/status-processuais)
 - `ramosDoDireito` — veja [valores válidos](../../referencias/ramos-direito)

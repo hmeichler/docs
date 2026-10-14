@@ -185,7 +185,9 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorPar
 - `advogados` e `naoAdvogados` — filtros por OAB, CPF ou nome
 - `classesProcessuais`, `assuntosCNJ`, `statusProcessuais`, `ramosDoDireito`, `segmentos` — todos os filtros padronizados Predictus
 - `orgaosJulgadores`, `unidadesOrigem`, `tribunais` — filtros estruturais do processo
-- `valorCausa`, `dataDistribuicao`, `dataArquivamento`, `dataTransitoJulgado` — permitem busca por faixa (menorQue/menorIgualQue/maiorQue/maiorIgualQue)
+- `valorCausa` — faixa sobre o **valor da causa** (`valorCausa.valor`) (menorQue/menorIgualQue/maiorQue/maiorIgualQue). Considera **somente** o valor da causa: processo sem valor da causa não entra quando este filtro é usado.
+- `valorExecucao` — faixa sobre o **valor de execução** fixado na decisão (`statusPredictus.valorExecucao.valor`), no mesmo formato de `valorCausa`. Usado junto com `valorCausa`, o processo precisa atender aos dois.
+- `dataDistribuicao`, `dataArquivamento`, `dataTransitoJulgado` — permitem busca por faixa (menorQue/menorIgualQue/maiorQue/maiorIgualQue)
 - `julgamentos` — resultado da sentença (ex: "IMPROCEDENCIA", "PROCEDENCIA EM PARTE")
   - Ver [lista completa de julgamentos](../../referencias/julgamentos)
 - `ufs` — siglas de estado (ex: "SP", "RJ", "SC")

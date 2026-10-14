@@ -169,7 +169,8 @@ Dica: se você quer apenas saber **se existe** pelo menos um processo que satisf
 - `grausProcesso`: `[1..4]`
 - `tribunais`: lista de siglas válidas (ex.: `TJ-SP`, `TRT-9`, `STF`) — ver referências
 - `segmentos`: ex.: `JUSTICA ESTADUAL`, `JUSTICA DO TRABALHO` — ver referências
-- `valorCausa`: faixa com `maiorQue/maiorIgualQue/menorQue/menorIgualQue`
+- `valorCausa`: faixa com `maiorQue/maiorIgualQue/menorQue/menorIgualQue` sobre o **valor da causa** (`valorCausa.valor`) — somente o valor da causa
+- `valorExecucao`: mesma faixa, sobre o **valor de execução** fixado na decisão (`statusPredictus.valorExecucao.valor`); com os dois filtros, o processo precisa atender aos dois
 - `dataDistribuicao`: faixa com `maiorQue/maiorIgualQue/menorQue/menorIgualQue` (`YYYY-MM-DD`)
 - `classesProcessuais`, `assuntosCNJ`, `statusProcessuais`, `ramosDoDireito`, `sistemas`
 - `camposRetorno.incluir`: campos adicionais a retornar (lista)
