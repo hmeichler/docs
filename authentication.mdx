@@ -78,6 +78,32 @@ Authorization: Bearer {accessToken}
 | Código | Significado           | Possível ação                     |
 | ------ | --------------------- | --------------------------------- |
 | `401`  | Credenciais inválidas | Verifique `username` e `password` |
+| `429`  | Muitas tentativas de login (`BLOQUEIO_TEMPORARIO`) | Aguarde 1 minuto (header `Retry-After`) |
+
+### Limites de uso (`429`)
+
+Toda requisição autenticada conta para a cota da sua credencial. Quando um limite é atingido, a API responde **`429 Too Many Requests`** com um JSON que diz qual limite foi atingido:
+
+```json
+{
+  "codigo": "LIMITE_MENSAL_EXCEDIDO",
+  "mensagem": "Limite mensal de requisições atingido. Renova em 01/11/2026."
+}
+```
+
+| `codigo`                      | Significado                                       | Quando volta                                                              |
+| ----------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------- |
+| `LIMITE_MENSAL_EXCEDIDO`      | Cota mensal de requisições atingida               | No primeiro dia do mês seguinte; `Retry-After` traz os segundos até lá    |
+| `LIMITE_TESTE_EXCEDIDO`       | Cota total da credencial de teste atingida        | Não renova: é preciso contratar um plano                                  |
+| `LIMITE_POR_SEGUNDO_EXCEDIDO` | Limite de requisições por segundo atingido        | No segundo seguinte (`Retry-After: 1`)                                    |
+
+As respostas com cota também trazem os headers abaixo, **inclusive a recusada**:
+
+| Header                  | Conteúdo                                                        |
+| ----------------------- | --------------------------------------------------------------- |
+| `X-RateLimit-Limit`     | Cota da credencial                                              |
+| `X-RateLimit-Remaining` | Requisições restantes (`0` quando a cota acabou)                |
+| `X-RateLimit-Reset`     | Momento da renovação, em epoch (segundos) — ausente na credencial de teste |
 
 ---
 
