@@ -25,8 +25,8 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarConfli
 {
   "partes": [
     {
-      "nome": "HENDRIK",
-      "cpf": "08108732905",
+      "nome": "FULANO DE TAL",
+      "cpf": "52998224725",
       "polo": "ATIVO",
       "origensDocumento": ["TRIBUNAL"]
     },
@@ -183,7 +183,7 @@ Dica: se você quer apenas saber **se existe** pelo menos um processo que satisf
 ```json
 {
   "partes": [
-    { "cpf": "08108732905", "polo": "ATIVO" },
+    { "cpf": "52998224725", "polo": "ATIVO" },
     { "cnpj": "09296295000160", "polo": "PASSIVO" }
   ],
   "limiteResultados": 1000
@@ -194,7 +194,7 @@ Dica: se você quer apenas saber **se existe** pelo menos um processo que satisf
 ```json
 {
   "partes": [
-    { "nome": "HENDRIK" },
+    { "nome": "FULANO DE TAL" },
     { "nome": "AZUL" }
   ]
 }
@@ -204,7 +204,7 @@ Dica: se você quer apenas saber **se existe** pelo menos um processo que satisf
 ```json
 {
   "partes": [
-    { "cpf": "08108732905", "polo": "ATIVO" },
+    { "cpf": "52998224725", "polo": "ATIVO" },
     { "nome": "AZUL", "cnpj": "09296295000160", "polo": "PASSIVO" },
     { "nome": "GOL" }
   ],
