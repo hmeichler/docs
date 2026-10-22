@@ -78,7 +78,7 @@ Authorization: Bearer {accessToken}
 | Código | Significado           | Possível ação                     |
 | ------ | --------------------- | --------------------------------- |
 | `401`  | Credenciais inválidas | Verifique `username` e `password` |
-| `429`  | Muitas tentativas de login (`BLOQUEIO_TEMPORARIO`) | Aguarde 1 minuto (header `Retry-After`) |
+| `429`  | Muitas tentativas de login com senha errada (`BLOQUEIO_TEMPORARIO`) | Aguarde 1 minuto (header `Retry-After`): durante o bloqueio, nem a senha certa é aceita |
 
 ### Limites de uso (`429`)
 
@@ -104,6 +104,77 @@ As respostas com cota também trazem os headers abaixo, **inclusive a recusada**
 | `X-RateLimit-Limit`     | Cota da credencial                                              |
 | `X-RateLimit-Remaining` | Requisições restantes (`0` quando a cota acabou)                |
 | `X-RateLimit-Reset`     | Momento da renovação, em epoch (segundos) — ausente na credencial de teste |
+
+---
+
+## 🔑 Troca de senha
+
+O próprio cliente pode trocar a senha da sua credencial, usando um token válido e a senha atual. A troca não conta para a cota e não é cobrada.
+
+> Depois da troca, **todos os tokens emitidos antes dela deixam de valer** (em até 10 minutos), inclusive o usado na troca. Se a mesma credencial é usada em mais de um sistema, atualize a senha em todos: os que continuarem com a senha antiga deixam de autenticar.
+
+### 🔗 Endpoint
+
+```
+PUT https://api.predictus.com.br/predictus-api/conta/senha
+```
+
+### 🧾 Corpo da requisição
+
+```json
+{
+  "senhaAtual": "SUA_SENHA_ATUAL",
+  "novaSenha": "SUA_NOVA_SENHA"
+}
+```
+
+### 📚 Campos
+
+| Campo        | Obrigatório | Descrição                                                                                                  |
+| ------------ | ----------- | ---------------------------------------------------------------------------------------------------------- |
+| `senhaAtual` | Sim         | A senha em uso hoje                                                                                        |
+| `novaSenha`  | Sim         | A nova senha (ver regras em Validações)                                                                    |
+
+### 🛡️ Validações
+
+- `novaSenha`:
+  - Exatamente **72 caracteres** ASCII: letras, números e símbolos, sem espaços nem acentos
+  - Pelo menos **16 caracteres diferentes**, sem repetir um mesmo trecho
+  - Diferente da senha atual
+  - Senhas previsíveis são recusadas
+
+### 📥 Exemplo de cURL
+
+```bash
+curl --location --request PUT 'https://api.predictus.com.br/predictus-api/conta/senha' \
+--header 'Authorization: Bearer {accessToken}' \
+--header 'Content-Type: application/json' \
+--data '{
+  "senhaAtual": "SUA_SENHA_ATUAL",
+  "novaSenha": "SUA_NOVA_SENHA"
+}'
+```
+
+### ✅ Resposta esperada
+
+```json
+{
+  "mensagem": "Senha alterada. Os tokens emitidos antes da troca deixam de valer: faça login com a nova senha em todas as integrações que usam esta credencial."
+}
+```
+
+### 🧾 Códigos de resposta
+
+| Código | Significado                                                                                          |
+| ------ | ---------------------------------------------------------------------------------------------------- |
+| `200`  | Senha alterada                                                                                       |
+| `400`  | Campo ausente, `novaSenha` fora da regra, previsível ou igual à atual, ou `senhaAtual` incorreta (`{"erro": "..."}`) |
+| `401`  | Token ausente, inválido ou expirado                                                                  |
+| `429`  | Muitas tentativas com senha incorreta (`BLOQUEIO_TEMPORARIO`). Aguarde 1 minuto (header `Retry-After`) |
+
+As tentativas com `senhaAtual` incorreta contam junto com as tentativas de login erradas: o bloqueio de um vale para o outro.
+
+> 💡 Gere a nova senha aleatoriamente (por exemplo, com um gerenciador de senhas). Senhas previsíveis são recusadas.
 
 ---
 
