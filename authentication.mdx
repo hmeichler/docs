@@ -78,7 +78,7 @@ Authorization: Bearer {accessToken}
 | Código | Significado           | Possível ação                     |
 | ------ | --------------------- | --------------------------------- |
 | `401`  | Credenciais inválidas | Verifique `username` e `password` |
-| `429`  | Muitas tentativas de login (`BLOQUEIO_TEMPORARIO`) | Aguarde 1 minuto (header `Retry-After`) |
+| `429`  | Muitas tentativas de login com senha errada (`BLOQUEIO_TEMPORARIO`) | Aguarde 1 minuto (header `Retry-After`): durante o bloqueio, nem a senha certa é aceita |
 
 ### Limites de uso (`429`)
 
@@ -133,7 +133,7 @@ PUT https://api.predictus.com.br/predictus-api/conta/senha
 | Campo        | Obrigatório | Descrição                                                                                                  |
 | ------------ | ----------- | ---------------------------------------------------------------------------------------------------------- |
 | `senhaAtual` | Sim         | A senha em uso hoje                                                                                        |
-| `novaSenha`  | Sim         | Exatamente 72 caracteres ASCII: letras, números e símbolos, sem espaços nem acentos. Diferente da atual. |
+| `novaSenha`  | Sim         | Exatamente 72 caracteres ASCII: letras, números e símbolos, sem espaços nem acentos. Diferente da atual, com pelo menos 16 caracteres diferentes e sem repetir um mesmo trecho. |
 
 ### 📥 Exemplo de cURL
 
@@ -160,11 +160,13 @@ curl --location --request PUT 'https://api.predictus.com.br/predictus-api/conta/
 | Código | Significado                                                                                          |
 | ------ | ---------------------------------------------------------------------------------------------------- |
 | `200`  | Senha alterada                                                                                       |
-| `400`  | Campo ausente, `novaSenha` fora da regra ou igual à atual, ou `senhaAtual` incorreta (`{"erro": "..."}`) |
+| `400`  | Campo ausente, `novaSenha` fora da regra, previsível ou igual à atual, ou `senhaAtual` incorreta (`{"erro": "..."}`) |
 | `401`  | Token ausente, inválido ou expirado                                                                  |
 | `429`  | Muitas tentativas com senha incorreta (`BLOQUEIO_TEMPORARIO`). Aguarde 1 minuto (header `Retry-After`) |
 
 As tentativas com `senhaAtual` incorreta contam junto com as tentativas de login erradas: o bloqueio de um vale para o outro.
+
+> 💡 Gere a nova senha aleatoriamente (por exemplo, com um gerenciador de senhas). Senhas previsíveis são recusadas.
 
 ---
 
