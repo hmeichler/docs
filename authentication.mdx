@@ -107,6 +107,67 @@ As respostas com cota também trazem os headers abaixo, **inclusive a recusada**
 
 ---
 
+## 🔑 Troca de senha
+
+A própria credencial pode trocar a sua senha, com um token válido e a senha atual. A troca não conta para a cota e não é cobrada.
+
+> Depois da troca, **todos os tokens emitidos antes dela deixam de valer** (em até 10 minutos), inclusive o usado na troca. Se a mesma credencial é usada em mais de um sistema, atualize a senha em todos: os que continuarem com a senha antiga deixam de autenticar.
+
+### 🔗 Endpoint
+
+```
+PUT https://api.predictus.com.br/predictus-api/conta/senha
+```
+
+### 🧾 Corpo da requisição
+
+```json
+{
+  "senhaAtual": "SUA_SENHA_ATUAL",
+  "novaSenha": "SUA_NOVA_SENHA"
+}
+```
+
+### 📚 Campos
+
+| Campo        | Obrigatório | Descrição                                                                                                  |
+| ------------ | ----------- | ---------------------------------------------------------------------------------------------------------- |
+| `senhaAtual` | Sim         | A senha em uso hoje                                                                                        |
+| `novaSenha`  | Sim         | Exatamente 72 caracteres ASCII: letras, números e símbolos, sem espaços nem acentos. Diferente da atual. |
+
+### 📥 Exemplo de cURL
+
+```bash
+curl --location --request PUT 'https://api.predictus.com.br/predictus-api/conta/senha' \
+--header 'Authorization: Bearer {accessToken}' \
+--header 'Content-Type: application/json' \
+--data '{
+  "senhaAtual": "SUA_SENHA_ATUAL",
+  "novaSenha": "SUA_NOVA_SENHA"
+}'
+```
+
+### ✅ Resposta esperada
+
+```json
+{
+  "mensagem": "Senha alterada. Os tokens emitidos antes da troca deixam de valer: faça login com a nova senha em todas as integrações que usam esta credencial."
+}
+```
+
+### 🧾 Códigos de resposta
+
+| Código | Significado                                                                                          |
+| ------ | ---------------------------------------------------------------------------------------------------- |
+| `200`  | Senha alterada                                                                                       |
+| `400`  | Campo ausente, `novaSenha` fora da regra ou igual à atual, ou `senhaAtual` incorreta (`{"erro": "..."}`) |
+| `401`  | Token ausente, inválido ou expirado                                                                  |
+| `429`  | Muitas tentativas com senha incorreta (`BLOQUEIO_TEMPORARIO`). Aguarde 1 minuto (header `Retry-After`) |
+
+As tentativas com `senhaAtual` incorreta contam junto com as tentativas de login erradas: o bloqueio de um vale para o outro.
+
+---
+
 ## 💡 Dica
 
 > Por segurança e performance, recomendamos que seu sistema implemente uma **camada de cache do token** com expiração automática.
