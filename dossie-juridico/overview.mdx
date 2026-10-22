@@ -21,7 +21,9 @@ Com base nesses inputs, a Predictus retorna **dados estruturados** sobre os proc
 - Polo das partes (ativo/passivo)
 - Status padronizado (`StatusPredictus`)
 - Ramo do Direito
-- Movimentações e decisões (quando disponíveis)
+- Movimentações e decisões — **somente nas buscas por Número CNJ** (Capa ou completa)
+
+> **Importante:** as buscas por CPF, CNPJ, raiz de CNPJ, nome, advogado (CPF, OAB, nome), parâmetros e conflito de partes **não retornam movimentações**. Fluxo recomendado: (1) use essas buscas para listar os processos; (2) consulte cada `numeroProcessoUnico` em [Buscar por Número CNJ (Capa)](./recursos/buscar-movimentacoes-simplificado) ou [Buscar por Número CNJ](./recursos/buscar-movimentacoes) para obter os movimentos.
 
 ---
 

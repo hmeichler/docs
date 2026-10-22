@@ -244,6 +244,7 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorPar
 - `numerosProcessoUnico` e `naoNumerosProcessoUnico`: até 10.000 itens cada, com números válidos
 - `partes`, `naoPartes`, `advogados`, `naoAdvogados`, `assuntosCNJ`, `naoAssuntosCNJ`: até 100 itens cada
 - Parte com `nome` e `nomeExato` ao mesmo tempo → `400`
+- `movimentos` **não é suportado** nesta busca: se informado em `camposRetorno.incluir`, é **ignorado silenciosamente** (sem erro) e a resposta não traz movimentações.
 
 ---
 
@@ -259,3 +260,5 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorPar
 ## 🧾 Retorno
 
 Retorna uma lista de objetos do tipo [`processo`](../estrutura), com todos os campos solicitados em `camposRetorno`.
+
+> **Importante:** esta busca **não retorna movimentações** (`movimentos`). Para obter os movimentos de um processo, use o `numeroProcessoUnico` retornado aqui em [Buscar por Número CNJ (Capa)](./buscar-movimentacoes-simplificado) ou [Buscar por Número CNJ](./buscar-movimentacoes).
