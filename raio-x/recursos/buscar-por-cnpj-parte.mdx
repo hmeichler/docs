@@ -1,0 +1,198 @@
+---
+title: "Buscar por CNPJ (Parte)"
+description: "Obtenha um panorama em texto da vida judicial de uma empresa a partir de todos os seus processos."
+---
+
+# 🔎 Buscar por CNPJ (Parte)
+
+Este endpoint recebe um CNPJ e retorna um **panorama em texto da vida judicial da empresa**, a partir de todos os processos em que ela é parte, e aponta os processos que merecem leitura.
+
+Para incluir matriz e filiais, use [Buscar por Raiz de CNPJ](./buscar-por-raiz-cnpj-parte).
+
+> ⚠️ **Conteúdo gerado por IA.** O texto desta resposta pode conter **erros e omissões**. Não é parecer jurídico nem avaliação de risco: confira as informações na fonte antes de qualquer decisão. Leia os limites de uso na [introdução do Raio-X](../overview).
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/processos/judiciais/resumeai/buscarPorCNPJParte
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+> `cnpj` é o único campo obrigatório. Todos os demais são opcionais.
+
+```json
+{
+  "cnpj": "11222333000181"
+}
+```
+
+Com filtros:
+
+```json
+{
+  "cnpj": "11222333000181",
+  "nomeSujeito": "EMPRESA EXEMPLO LTDA",
+  "origensDocumento": [
+    "TRIBUNAL",
+    "CATALOGO"
+  ],
+  "polo": "PASSIVO",
+  "grausProcesso": [
+    1,
+    2
+  ],
+  "tribunais": [
+    "TJ-SP",
+    "TRT-2"
+  ],
+  "dataDistribuicao": {
+    "maiorIgualQue": "2020-01-01"
+  },
+  "statusProcessuais": [
+    "EM TRAMITACAO"
+  ],
+  "ramosDoDireito": [
+    "DIREITO DO TRABALHO",
+    "DIREITO CIVIL"
+  ]
+}
+```
+
+---
+
+## 📚 Campos
+
+- `cnpj` (string) — **obrigatório**. 14 caracteres: 12 alfanuméricos seguidos de 2 dígitos, CNPJ válido.
+- `nomeSujeito` (string) — nome usado para se referir à parte no texto. **Não filtra** os processos. Sem ele, o nome vem dos próprios processos.
+- `nome` (string) — filtro auxiliar para restringir resultados quando há risco de homônimos. Não substitui a busca pelo `cnpj`.
+- `polo` — `ATIVO` ou `PASSIVO`
+- `origensDocumento` — origem da associação do documento à parte: `TRIBUNAL`, `CATALOGO` ou `AGREGADO`. [Veja o significado de cada uma](../../dossie-juridico/recursos/buscar-parte-por-cpf)
+- `grausProcesso` — lista de inteiros entre 1 e 4:
+  - `1` → 1º Grau (ex: vara cível)
+  - `2` → 2º Grau (tribunais estaduais/regionais)
+  - `3` → Tribunais Superiores (STJ, TST etc.)
+  - `4` → Supremo Tribunal Federal (STF)
+- `tribunais` — lista de siglas válidas (ex: `TJ-SP`, `TRT-9`, `STF`). Ver [lista completa de tribunais](../../referencias/tribunais)
+- `valorCausa` — faixa sobre o valor da causa (`menorQue`, `menorIgualQue`, `maiorQue`, `maiorIgualQue`)
+- `valorExecucao` — faixa sobre o valor de execução fixado na decisão, no mesmo formato de `valorCausa`
+- `dataDistribuicao` — faixa de datas no formato `YYYY-MM-DD`, com os mesmos operadores
+- `classesProcessuais`, `assuntosCNJ` — até 65.000 valores cada
+- `statusProcessuais` — veja [valores válidos](../../referencias/status-processuais)
+- `ramosDoDireito` — veja [valores válidos](../../referencias/ramos-direito)
+- `segmentos` — veja [valores válidos](../../referencias/segmentos)
+
+---
+
+## 📌 Como funcionam os filtros
+
+Os filtros definem **quais processos entram no texto**. A lógica é **AND entre filtros diferentes e OR dentro de listas**: todos os filtros informados precisam ser satisfeitos, e basta bater um dos valores de cada lista.
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/processos/judiciais/resumeai/buscarPorCNPJParte' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "cnpj": "11222333000181"
+}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+{
+  "sujeito": {
+    "tipo": "CNPJ",
+    "valor": "11222333000181",
+    "nome": "EMPRESA EXEMPLO LTDA"
+  },
+  "modo": "intermediario",
+  "cobertura": "completa",
+  "totalProcessos": 42,
+  "resumo": "A Empresa Exemplo Ltda aparece principalmente em ações trabalhistas e de consumo, quase sempre no polo passivo, com processos distribuídos desde 2015. Cerca de um terço segue em andamento, em sua maioria na Justiça do Trabalho de São Paulo.",
+  "insights": [
+    "As ações trabalhistas se concentram em um único estado.",
+    "Os processos em que a empresa é autora são, em maioria, ações de cobrança."
+  ],
+  "linhaDoTempo": [
+    "2015: primeiro processo, uma ação de consumo.",
+    "2021 a 2023: aumento das ações trabalhistas."
+  ],
+  "processosEmDestaque": [
+    {
+      "numeroProcessoUnico": "00023456120245020001",
+      "motivo": "Ação trabalhista em que é ré, em andamento, com valor da causa alto."
+    }
+  ]
+}
+```
+
+---
+
+## 🧾 Campos da resposta
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `sujeito.tipo` | string | Tipo do identificador consultado: `CPF`, `CNPJ` ou `RAIZ_CNPJ` |
+| `sujeito.valor` | string | Identificador consultado |
+| `sujeito.nome` | string | Nome da parte, quando disponível |
+| `modo` | string | `intermediario`: o texto considera os dados de cada processo. `panoramico`: o texto considera as estatísticas do conjunto, usado em grandes volumes |
+| `cobertura` | string | `completa` no modo `intermediario`; `agregada` no modo `panoramico` |
+| `totalProcessos` | integer | Quantidade de processos considerados |
+| `resumo` | string | Panorama em texto da vida judicial da parte |
+| `insights` | array\<string\> | Observações factuais sobre o conjunto dos processos |
+| `linhaDoTempo` | array\<string\> | Principais marcos da trajetória judicial da parte |
+| `processosEmDestaque` | array\<object\> | Até 5 processos que merecem leitura. Vazio no modo `panoramico` |
+| `processosEmDestaque[].numeroProcessoUnico` | string | Número CNJ do processo |
+| `processosEmDestaque[].motivo` | string | Por que o processo merece leitura, em uma frase |
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Sucesso — texto gerado |
+| `204` | Nenhum processo encontrado para o CNPJ |
+| `400` | Erro de validação no payload |
+| `401` | Token inválido ou expirado |
+| `403` | Credencial sem acesso a este recurso |
+| `500` | Erro interno do servidor: `{"erro": "Erro interno do servidor."}` |
+| `503` | Serviço temporariamente indisponível. Tente novamente; quando vier o header `Retry-After`, aguarde os segundos indicados |
+
+Exemplo de `503`, com `Retry-After: 30`:
+
+```json
+{
+  "erro": "Não foi possível gerar o resumo. Tente novamente em instantes."
+}
+```
+
+> Todas as respostas trazem o header `x-prd-request-id`, inclusive o `204`. Informe esse valor ao suporte ao investigar uma chamada.
+
+---
+
+## 🛡️ Validações
+
+- `cnpj`: não nulo, 14 caracteres (12 alfanuméricos e 2 dígitos), CNPJ válido
+- `polo`: `ATIVO` ou `PASSIVO`
+- `nomeSujeito`: até 150 caracteres; apenas letras, números, espaços e `. , ' - & / ( ) º ª`
+- `statusProcessuais`, `ramosDoDireito`, `segmentos`, `tribunais`: todos os valores devem estar na lista de permitidos
+- `grausProcesso`: valores entre 1 e 4
+- `camposRetorno` não se aplica a este endpoint e é ignorado
+
+---
+
+## 💡 Dica
+
+> Para aprofundar em um item de `processosEmDestaque`, use o [Resume AI por Número CNJ](../../resume-ai/recursos/buscar-por-numero-cnj). Os demais campos que ele exige vêm da [consulta do processo por número CNJ](../../dossie-juridico/recursos/buscar-movimentacoes-simplificado).

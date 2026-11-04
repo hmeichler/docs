@@ -1,0 +1,202 @@
+---
+title: "Buscar por CPF (Parte)"
+description: "Obtenha um panorama em texto da vida judicial de uma pessoa a partir de todos os seus processos."
+---
+
+# 🔎 Buscar por CPF (Parte)
+
+Este endpoint recebe um CPF e retorna um **panorama em texto da vida judicial da pessoa**, a partir de todos os processos em que ela é parte, e aponta os processos que merecem leitura.
+
+> ⚠️ **Conteúdo gerado por IA.** O texto desta resposta pode conter **erros e omissões**. Não é parecer jurídico nem avaliação de risco: confira as informações na fonte antes de qualquer decisão. Leia os limites de uso na [introdução do Raio-X](../overview).
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/processos/judiciais/resumeai/buscarPorCPFParte
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+> `cpf` é o único campo obrigatório. Todos os demais são opcionais.
+
+```json
+{
+  "cpf": "52998224725"
+}
+```
+
+Com filtros:
+
+```json
+{
+  "cpf": "52998224725",
+  "nomeSujeito": "FULANA DE TAL",
+  "origensDocumento": [
+    "TRIBUNAL",
+    "CATALOGO"
+  ],
+  "polo": "PASSIVO",
+  "grausProcesso": [
+    1,
+    2
+  ],
+  "tribunais": [
+    "TJ-SP",
+    "TRT-2"
+  ],
+  "dataDistribuicao": {
+    "maiorIgualQue": "2020-01-01"
+  },
+  "statusProcessuais": [
+    "EM TRAMITACAO"
+  ],
+  "ramosDoDireito": [
+    "DIREITO DO TRABALHO",
+    "DIREITO CIVIL"
+  ]
+}
+```
+
+---
+
+## 📚 Campos
+
+- `cpf` (string) — **obrigatório**. 11 dígitos numéricos, CPF válido.
+- `nomeSujeito` (string) — nome usado para se referir à parte no texto. **Não filtra** os processos. Sem ele, o nome vem dos próprios processos.
+- `nome` (string) — filtro auxiliar para restringir resultados quando há risco de homônimos. Não substitui a busca pelo `cpf`.
+- `polo` — `ATIVO` ou `PASSIVO`
+- `origensDocumento` — origem da associação do documento à parte: `TRIBUNAL`, `CATALOGO` ou `AGREGADO`. [Veja o significado de cada uma](../../dossie-juridico/recursos/buscar-parte-por-cpf)
+- `grausProcesso` — lista de inteiros entre 1 e 4:
+  - `1` → 1º Grau (ex: vara cível)
+  - `2` → 2º Grau (tribunais estaduais/regionais)
+  - `3` → Tribunais Superiores (STJ, TST etc.)
+  - `4` → Supremo Tribunal Federal (STF)
+- `tribunais` — lista de siglas válidas (ex: `TJ-SP`, `TRT-9`, `STF`). Ver [lista completa de tribunais](../../referencias/tribunais)
+- `valorCausa` — faixa sobre o valor da causa (`menorQue`, `menorIgualQue`, `maiorQue`, `maiorIgualQue`)
+- `valorExecucao` — faixa sobre o valor de execução fixado na decisão, no mesmo formato de `valorCausa`
+- `dataDistribuicao` — faixa de datas no formato `YYYY-MM-DD`, com os mesmos operadores
+- `classesProcessuais`, `assuntosCNJ` — até 65.000 valores cada
+- `statusProcessuais` — veja [valores válidos](../../referencias/status-processuais)
+- `ramosDoDireito` — veja [valores válidos](../../referencias/ramos-direito)
+- `segmentos` — veja [valores válidos](../../referencias/segmentos)
+
+---
+
+## 📌 Como funcionam os filtros
+
+Os filtros definem **quais processos entram no texto**. A lógica é **AND entre filtros diferentes e OR dentro de listas**: todos os filtros informados precisam ser satisfeitos, e basta bater um dos valores de cada lista.
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/processos/judiciais/resumeai/buscarPorCPFParte' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "cpf": "52998224725"
+}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+{
+  "sujeito": {
+    "tipo": "CPF",
+    "valor": "52998224725",
+    "nome": "FULANA DE TAL"
+  },
+  "modo": "intermediario",
+  "cobertura": "completa",
+  "totalProcessos": 7,
+  "resumo": "Fulana de Tal aparece em processos principalmente das áreas cível e do consumidor, na maior parte como autora, distribuídos desde 2016. A maioria já terminou. Seguem em andamento uma execução fiscal e uma ação de cobrança, nas quais ela figura no polo passivo.",
+  "insights": [
+    "A maior parte dos processos foi distribuída entre 2019 e 2021.",
+    "Os processos em andamento são todos no polo passivo.",
+    "Não há processos criminais entre os considerados."
+  ],
+  "linhaDoTempo": [
+    "2016: primeiro processo, uma ação de consumo como autora.",
+    "2019 a 2021: período de maior concentração de processos.",
+    "2023: início da execução fiscal, ainda em andamento."
+  ],
+  "processosEmDestaque": [
+    {
+      "numeroProcessoUnico": "00012345120238260100",
+      "motivo": "Execução fiscal em que é executada, em andamento."
+    },
+    {
+      "numeroProcessoUnico": "00034567120228130024",
+      "motivo": "Ação de cobrança em que é ré, em andamento."
+    }
+  ]
+}
+```
+
+---
+
+## 🧾 Campos da resposta
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `sujeito.tipo` | string | Tipo do identificador consultado: `CPF`, `CNPJ` ou `RAIZ_CNPJ` |
+| `sujeito.valor` | string | Identificador consultado |
+| `sujeito.nome` | string | Nome da parte, quando disponível |
+| `modo` | string | `intermediario`: o texto considera os dados de cada processo. `panoramico`: o texto considera as estatísticas do conjunto, usado em grandes volumes |
+| `cobertura` | string | `completa` no modo `intermediario`; `agregada` no modo `panoramico` |
+| `totalProcessos` | integer | Quantidade de processos considerados |
+| `resumo` | string | Panorama em texto da vida judicial da parte |
+| `insights` | array\<string\> | Observações factuais sobre o conjunto dos processos |
+| `linhaDoTempo` | array\<string\> | Principais marcos da trajetória judicial da parte |
+| `processosEmDestaque` | array\<object\> | Até 5 processos que merecem leitura. Vazio no modo `panoramico` |
+| `processosEmDestaque[].numeroProcessoUnico` | string | Número CNJ do processo |
+| `processosEmDestaque[].motivo` | string | Por que o processo merece leitura, em uma frase |
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Sucesso — texto gerado |
+| `204` | Nenhum processo encontrado para o CPF |
+| `400` | Erro de validação no payload |
+| `401` | Token inválido ou expirado |
+| `403` | Credencial sem acesso a este recurso |
+| `500` | Erro interno do servidor: `{"erro": "Erro interno do servidor."}` |
+| `503` | Serviço temporariamente indisponível. Tente novamente; quando vier o header `Retry-After`, aguarde os segundos indicados |
+
+Exemplo de `503`, com `Retry-After: 30`:
+
+```json
+{
+  "erro": "Não foi possível gerar o resumo. Tente novamente em instantes."
+}
+```
+
+> Todas as respostas trazem o header `x-prd-request-id`, inclusive o `204`. Informe esse valor ao suporte ao investigar uma chamada.
+
+---
+
+## 🛡️ Validações
+
+- `cpf`: não nulo, 11 dígitos numéricos, CPF válido
+- `polo`: `ATIVO` ou `PASSIVO`
+- `nomeSujeito`: até 150 caracteres; apenas letras, números, espaços e `. , ' - & / ( ) º ª`
+- `statusProcessuais`, `ramosDoDireito`, `segmentos`, `tribunais`: todos os valores devem estar na lista de permitidos
+- `grausProcesso`: valores entre 1 e 4
+- `camposRetorno` não se aplica a este endpoint e é ignorado
+
+---
+
+## 💡 Dica
+
+> Para aprofundar em um item de `processosEmDestaque`, use o [Resume AI por Número CNJ](../../resume-ai/recursos/buscar-por-numero-cnj). Os demais campos que ele exige vêm da [consulta do processo por número CNJ](../../dossie-juridico/recursos/buscar-movimentacoes-simplificado).

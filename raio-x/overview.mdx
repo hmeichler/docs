@@ -1,0 +1,92 @@
+---
+title: Introdução
+description: "Obtenha um panorama em texto da vida judicial de uma pessoa ou empresa, ou da carteira de um advogado, a partir de todos os processos."
+---
+
+# 🩻 Raio-X
+
+O **Raio-X** da Predictus entrega um **panorama em texto** a partir de **todos os processos** de um CPF, CNPJ ou raiz de CNPJ, ou da carteira de um advogado. É uma visão geral para triagem: mostra o conjunto e aponta os processos que merecem leitura.
+
+> **Raio-X ou Resume AI?** O Raio-X olha para o **conjunto dos processos**. O [Resume AI](../resume-ai/overview) resume **um processo**, pelo número CNJ. O Raio-X não relata o que aconteceu dentro de cada processo: para isso, use o Resume AI nos itens de `processosEmDestaque`.
+
+---
+
+## ⚠️ Conteúdo gerado por inteligência artificial
+
+> **Leia antes de usar em produção.** O texto devolvido por este módulo é **gerado por IA** e está sujeito a **erros e omissões**: informações que parecem corretas, mas não correspondem aos dados dos processos.
+>
+> - **Não é parecer jurídico nem avaliação de risco.** O texto descreve o conjunto de processos e não substitui a análise de um profissional habilitado.
+> - **Revise antes de decidir.** Nenhuma decisão com efeito jurídico, financeiro, contratual ou trabalhista deve ser tomada apenas com base neste texto.
+> - **Ser parte em um processo não significa culpa ou responsabilidade.** Confira cada informação relevante na fonte, pelo [Dossiê Jurídico](../dossie-juridico/overview).
+> - **Saídas não são determinísticas.** A mesma requisição pode produzir textos diferentes entre chamadas.
+> - A responsabilidade pelo uso do conteúdo, inclusive perante terceiros e órgãos reguladores, é do cliente.
+
+---
+
+## 🧠 Quando usar o Raio-X?
+
+- **Triagem** de pessoas e empresas, sem percorrer a lista de processos
+- **Priorização** de quais processos ler primeiro, com `processosEmDestaque`
+- **Relatórios e telas** que precisam de uma leitura do histórico judicial em linguagem simples
+- **Visão da carteira de um advogado**: áreas de atuação, tribunais e lado dos clientes
+
+---
+
+## 📦 O que a resposta inclui?
+
+<CardGroup cols={2}>
+  <Card title="Parte (CPF, CNPJ, raiz de CNPJ)" icon="user">
+    Texto sobre a vida judicial da pessoa ou empresa: resumo, observações, marcos e processos em destaque.
+  </Card>
+  <Card title="Advogado (OAB, CPF)" icon="scale-balanced">
+    Texto sobre a carteira do advogado: resumo, observações e marcos. Não aponta processos individuais.
+  </Card>
+</CardGroup>
+
+| Campo | Parte | Advogado | Descrição |
+|-------|:-----:|:--------:|-----------|
+| `sujeito` / `advogado` | `sujeito` | `advogado` | Quem foi consultado |
+| `modo` | ✓ | ✓ | Base do texto: dados de cada processo (`intermediario`) ou estatísticas do conjunto (`panoramico`) |
+| `cobertura` | ✓ | — | `completa` no modo `intermediario`; `agregada` no modo `panoramico` |
+| `totalProcessos` | ✓ | ✓ | Quantidade de processos considerados |
+| `resumo` | ✓ | ✓ | Panorama em texto |
+| `insights` | ✓ | ✓ | Observações factuais sobre o conjunto |
+| `linhaDoTempo` | ✓ | ✓ | Principais marcos |
+| `processosEmDestaque` | ✓ | — | Até 5 processos que merecem leitura, com o motivo. Vazio no modo `panoramico` |
+
+O `modo` é definido automaticamente pelo volume de processos. Nas consultas de advogado, é sempre `panoramico`.
+
+---
+
+## ⚙️ Como funciona
+
+<Steps>
+  <Step title="Consulte o Raio-X">
+    Informe o identificador e, se quiser, os mesmos filtros da busca de processos (status, ramo do direito, tribunal, período e outros).
+  </Step>
+  <Step title="Leia o panorama">
+    Use `resumo`, `insights` e `linhaDoTempo` para entender o conjunto.
+  </Step>
+  <Step title="Aprofunde nos processos em destaque">
+    Para cada `numeroProcessoUnico` de interesse, obtenha `sistema`, `tribunal`, `grauProcesso` e `dataDistribuicao` na [consulta por número CNJ](../dossie-juridico/recursos/buscar-movimentacoes-simplificado) e chame o [Resume AI](../resume-ai/recursos/buscar-por-numero-cnj).
+  </Step>
+</Steps>
+
+---
+
+## 🛡️ Boas práticas
+
+- **Latência** — a geração leva mais tempo que uma busca convencional. Ajuste o tempo limite do seu cliente HTTP.
+- **Tempo limite** — em timeout, repita a mesma requisição.
+- **Sinalize a origem para o usuário final** — ao exibir o texto em telas, relatórios ou e-mails, deixe explícito que ele foi gerado por IA e precisa de revisão.
+- **Caminho dos endpoints** — os endpoints do Raio-X ficam sob `/processos/judiciais/resumeai/`. O que os distingue do Resume AI é o identificador: parte ou advogado, em vez de número CNJ.
+
+---
+
+## 🚀 Prossiga
+
+- [Buscar por CPF (Parte)](./recursos/buscar-por-cpf-parte)
+- [Buscar por CNPJ (Parte)](./recursos/buscar-por-cnpj-parte)
+- [Buscar por Raiz de CNPJ (Parte)](./recursos/buscar-por-raiz-cnpj-parte)
+- [Buscar por OAB (Advogado)](./recursos/buscar-por-oab)
+- [Buscar por CPF (Advogado)](./recursos/buscar-por-cpf-advogado)

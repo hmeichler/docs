@@ -62,6 +62,22 @@
             ]
           },
           {
+            "group": "Raio-X",
+            "pages": [
+              "raio-x/overview"
+            ]
+          },
+          {
+            "group": "Raio-X - Recursos",
+            "pages": [
+              "raio-x/recursos/buscar-por-cpf-parte",
+              "raio-x/recursos/buscar-por-cnpj-parte",
+              "raio-x/recursos/buscar-por-raiz-cnpj-parte",
+              "raio-x/recursos/buscar-por-oab",
+              "raio-x/recursos/buscar-por-cpf-advogado"
+            ]
+          },
+          {
             "group": "Sumário Jurídico",
             "pages": [
               "sumario-juridico/overview"

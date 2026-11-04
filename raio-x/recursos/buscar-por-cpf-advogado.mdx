@@ -1,0 +1,176 @@
+---
+title: "Buscar por CPF (Advogado)"
+description: "Obtenha um panorama em texto da carteira de um advogado a partir do seu CPF."
+---
+
+# 🔎 Buscar por CPF (Advogado)
+
+Este endpoint recebe o CPF de um advogado e retorna um **panorama em texto da sua carteira**: áreas de atuação, tribunais e de que lado costumam estar os clientes.
+
+Para o panorama de uma pessoa como parte, use [Buscar por CPF (Parte)](./buscar-por-cpf-parte).
+
+> ⚠️ **Conteúdo gerado por IA.** O texto desta resposta pode conter **erros e omissões**. Não é parecer jurídico nem avaliação de risco: confira as informações na fonte antes de qualquer decisão. Leia os limites de uso na [introdução do Raio-X](../overview).
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/processos/judiciais/resumeai/buscarPorCPFAdvogado
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+> `cpf` é o único campo obrigatório. Todos os demais são filtros opcionais.
+
+```json
+{
+  "cpf": "52998224725"
+}
+```
+
+Com filtros:
+
+```json
+{
+  "cpf": "52998224725",
+  "polo": "PASSIVO",
+  "grausProcesso": [
+    1,
+    2
+  ],
+  "tribunais": [
+    "TJ-SP",
+    "TRT-2"
+  ],
+  "dataDistribuicao": {
+    "maiorIgualQue": "2020-01-01"
+  },
+  "statusProcessuais": [
+    "EM TRAMITACAO"
+  ],
+  "ramosDoDireito": [
+    "DIREITO DO TRABALHO",
+    "DIREITO CIVIL"
+  ]
+}
+```
+
+---
+
+## 📚 Campos
+
+- `cpf` (string) — **obrigatório**. 11 dígitos numéricos, CPF válido.
+- `polo` — `ATIVO` ou `PASSIVO`: lado em que está o **cliente** representado pelo advogado
+- `grausProcesso` — lista de inteiros entre 1 e 4:
+  - `1` → 1º Grau (ex: vara cível)
+  - `2` → 2º Grau (tribunais estaduais/regionais)
+  - `3` → Tribunais Superiores (STJ, TST etc.)
+  - `4` → Supremo Tribunal Federal (STF)
+- `tribunais` — lista de siglas válidas (ex: `TJ-SP`, `TRT-9`, `STF`). Ver [lista completa de tribunais](../../referencias/tribunais)
+- `valorCausa` — faixa sobre o valor da causa (`menorQue`, `menorIgualQue`, `maiorQue`, `maiorIgualQue`)
+- `valorExecucao` — faixa sobre o valor de execução fixado na decisão, no mesmo formato de `valorCausa`
+- `dataDistribuicao` — faixa de datas no formato `YYYY-MM-DD`, com os mesmos operadores
+- `classesProcessuais`, `assuntosCNJ` — até 65.000 valores cada
+- `statusProcessuais` — veja [valores válidos](../../referencias/status-processuais)
+- `ramosDoDireito` — veja [valores válidos](../../referencias/ramos-direito)
+- `segmentos` — veja [valores válidos](../../referencias/segmentos)
+
+---
+
+## 📌 Como funcionam os filtros
+
+Os filtros definem **quais processos entram no texto**. A lógica é **AND entre filtros diferentes e OR dentro de listas**: todos os filtros informados precisam ser satisfeitos, e basta bater um dos valores de cada lista.
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/processos/judiciais/resumeai/buscarPorCPFAdvogado' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "cpf": "52998224725"
+}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+{
+  "advogado": {
+    "tipo": "CPF_ADVOGADO",
+    "valor": "52998224725"
+  },
+  "modo": "panoramico",
+  "totalProcessos": 860,
+  "resumo": "A carteira é concentrada em direito do trabalho e direito civil, com atuação principalmente nos tribunais de São Paulo. Os clientes estão mais frequentemente no polo ativo, como autores.",
+  "insights": [
+    "A Justiça do Trabalho reúne a maior parte dos processos.",
+    "A atuação no polo passivo se concentra em ações cíveis."
+  ],
+  "linhaDoTempo": [
+    "2014: primeiros processos da carteira.",
+    "A partir de 2019: aumento das ações trabalhistas."
+  ]
+}
+```
+
+---
+
+## 🧾 Campos da resposta
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `advogado.tipo` | string | `CPF_ADVOGADO` |
+| `advogado.valor` | string | Identificador consultado |
+| `modo` | string | Sempre `panoramico`: o texto considera as estatísticas da carteira |
+| `totalProcessos` | integer | Quantidade de processos considerados |
+| `resumo` | string | Panorama em texto da carteira do advogado |
+| `insights` | array\<string\> | Observações factuais sobre a carteira |
+| `linhaDoTempo` | array\<string\> | Principais marcos da atuação do advogado |
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Sucesso — texto gerado |
+| `204` | Nenhum processo encontrado para o advogado |
+| `400` | Erro de validação no payload |
+| `401` | Token inválido ou expirado |
+| `403` | Credencial sem acesso a este recurso |
+| `500` | Erro interno do servidor: `{"erro": "Erro interno do servidor."}` |
+| `503` | Serviço temporariamente indisponível. Tente novamente; quando vier o header `Retry-After`, aguarde os segundos indicados |
+
+Exemplo de `503`, com `Retry-After: 30`:
+
+```json
+{
+  "erro": "Não foi possível gerar o resumo. Tente novamente em instantes."
+}
+```
+
+> Todas as respostas trazem o header `x-prd-request-id`, inclusive o `204`. Informe esse valor ao suporte ao investigar uma chamada.
+
+---
+
+## 🛡️ Validações
+
+- `cpf`: não nulo, 11 dígitos numéricos, CPF válido
+- `polo`: `ATIVO` ou `PASSIVO`
+- `statusProcessuais`, `ramosDoDireito`, `segmentos`, `tribunais`: todos os valores devem estar na lista de permitidos
+- `grausProcesso`: valores entre 1 e 4
+- `camposRetorno` não se aplica a este endpoint e é ignorado
+
+---
+
+## 💡 Dica
+
+> O texto descreve a carteira como um todo e não cita processos individuais. Para listar os processos do advogado, use a busca do [Dossiê Jurídico](../../dossie-juridico/overview).
