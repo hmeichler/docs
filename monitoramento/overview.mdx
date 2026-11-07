@@ -22,7 +22,7 @@ O evento é enxuto: traz o número do processo e o motivo do match. O detalhe do
     Envie lotes de até 1.000 entidades: empresas, pessoas, advogados ou processos. Cada entidade pode levar o seu `clienteFinal` e uma `referenciaExterna` do seu sistema.
   </Step>
   <Step title="A Predictus acompanha a captura de processos">
-    A cada processo capturado, verificamos quais entidades aparecem nele. Os eventos costumam chegar no dia seguinte à captura.
+    A cada processo capturado, verificamos quais entidades aparecem nele. Os eventos costumam chegar em poucas horas após a captura.
   </Step>
   <Step title="Receba os eventos">
     Configure um [webhook](./webhook) para receber os eventos por `POST`, ou leia-os com [Ler Eventos](./recursos/ler-eventos) e confirme o recebimento.
@@ -70,7 +70,7 @@ Cada entidade escolhe um nível no campo `operacao`:
 - **Recaptura sem mudança** não gera evento.
 - **Processos em segredo de justiça** nunca geram evento.
 - **Processo cadastrado como `PROCESSO` que ainda não está na base** fica em `AGUARDANDO_CAPTURA` e passa a `ACOMPANHANDO` sozinho quando é capturado. Use o filtro `situacao` da [listagem](./recursos/listar-entidades) para ver quais são.
-- Os eventos costumam chegar **no dia seguinte à captura**.
+- Os eventos costumam chegar **em poucas horas após a captura**.
 
 ---
 
