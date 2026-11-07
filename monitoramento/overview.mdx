@@ -5,23 +5,17 @@ description: "Monitore empresas, pessoas, advogados e processos e receba um even
 
 # 📡 Monitoramento de Processos
 
-O Monitoramento avisa quando **aparece um processo novo** envolvendo uma empresa, pessoa ou advogado que você acompanha, e quando **um processo acompanhado tem novidade**. Você cadastra **entidades** e recebe **eventos** — pela leitura via API ou por webhook.
-
-O evento é enxuto: traz o número do processo e o motivo do match. O detalhe do processo vem pela consulta por número (ex: [Buscar por Número CNJ (Capa)](https://docs.predictus.inf.br/dossie-juridico/recursos/buscar-movimentacoes-simplificado)).
-
----
-
-## 🧠 Como funciona
+Cadastre empresas, pessoas, advogados ou processos e receba um **evento** quando surgir um processo novo ou quando um processo acompanhado tiver novidade.
 
 <Steps>
-  <Step title="Cadastre as entidades">
-    Envie lotes de até 1.000 entidades: empresas, pessoas, advogados ou processos. Cada entidade pode levar o seu `clienteFinal` e uma `referenciaExterna` do seu sistema.
+  <Step title="Comece aqui">
+    Cadastre, leia e confirme: 3 chamadas, sem webhook. Veja [Comece aqui](./comece-aqui).
   </Step>
-  <Step title="A Predictus acompanha a captura de processos">
-    A cada processo capturado, verificamos quais entidades aparecem nele. Os eventos costumam chegar em poucas horas após a captura.
+  <Step title="Ajuste o que monitorar">
+    Escolha o tipo de entidade e o nível de notificação (abaixo). Nomes e filtros são opcionais.
   </Step>
-  <Step title="Receba os eventos">
-    Configure um [webhook](./webhook) para receber os eventos por `POST`, ou leia-os com [Ler Eventos](./recursos/ler-eventos) e confirme o recebimento.
+  <Step title="Se preferir, receba por webhook">
+    Opcional: em vez de ler, receba os eventos por `POST`. Veja [Webhook](./webhook).
   </Step>
 </Steps>
 
@@ -70,22 +64,9 @@ Cada entidade escolhe um nível no campo `operacao`:
 
 ---
 
-## 🔤 Nomes
+## 🔤 Nomes e filtros
 
-Nomes ajudam a encontrar a parte quando o tribunal **não registrou o documento** dela.
-
-- **O nome só casa com parte sem documento.** Se a parte tem CPF ou CNPJ no processo, quem decide é o documento. Em `ADVOGADO`, o nome só casa com advogado registrado sem CPF, sem CNPJ e sem OAB.
-- **A comparação é exata**, depois de normalizar (maiúsculas, sem acento, sem espaços repetidos). Pontuação conta: `ACME LTDA` e `ACME LTDA.` são nomes diferentes.
-- **Cadastre cada grafia** que interessa: `ACME LTDA`, `ACME LTDA.`, `ACME S.A.`, a razão social antiga.
-- Match por nome tem confiança menor que por documento — o evento informa em `casouPor` por onde casou.
-
----
-
-## 🧰 Filtros
-
-`EMPRESA`, `PESSOA` e `ADVOGADO` aceitam `filtros` sobre o processo (polo, UF, tribunal, segmento, grau, ramo, classe, assunto, valor da causa, data de distribuição). Os identificadores dizem **quem**; os filtros dizem **quais processos interessam**. Lista completa em [Estrutura](./estrutura).
-
-> ⚠️ **O filtro olha o processo como ele está agora.** Um filtro `tribunais: ["TJ-SP"]` deixa de avisar enquanto o processo estiver em recurso no STJ; se os autos voltarem ao TJ-SP, você recebe de uma vez o que mudou. Para acompanhar recursos, inclua os tribunais superiores e os graus no filtro. O mesmo vale para redistribuição, alteração do valor da causa e mudança de classe.
+Opcionais. **Nomes** ajudam a encontrar a parte quando o tribunal não registrou o documento dela; **filtros** restringem quais processos geram eventos (UF, tribunal, classe, valor da causa etc.). Regras completas em [Estrutura da Entidade e do Evento](./estrutura).
 
 ---
 
@@ -93,8 +74,8 @@ Nomes ajudam a encontrar a parte quando o tribunal **não registrou o documento*
 
 | Canal | Como |
 |-------|------|
-| **Webhook** | Enviamos lotes de até 500 eventos por `POST` para a sua URL `https`, assinados. Veja [Webhook](./webhook) |
-| **Leitura** | Você lê até 1.000 eventos por chamada em [Ler Eventos](./recursos/ler-eventos) e confirma em [Confirmar Recebimento](./recursos/confirmar-eventos) |
+| **Leitura** (padrão) | Você lê até 1.000 eventos por chamada em [Ler Eventos](./recursos/ler-eventos) e confirma em [Confirmar Recebimento](./recursos/confirmar-eventos) |
+| **Webhook** (opcional) | Enviamos lotes de até 500 eventos por `POST` para a sua URL. Veja [Webhook](./webhook) |
 
 - **Um evento pode chegar mais de uma vez.** Deduplique pelo `eventoId`.
 - **Não há garantia de ordem.** Use `sequencia` para ordenar eventos da mesma entidade e instância.
@@ -146,13 +127,13 @@ Em operações em lote (tudo ou nada), o erro lista os itens rejeitados:
 ## 🚀 Prossiga
 
 <CardGroup cols={3}>
+  <Card title="Comece aqui" icon="play" href="./comece-aqui">
+    O fluxo mínimo em 3 chamadas.
+  </Card>
   <Card title="Cadastrar Entidades" icon="plus" href="./recursos/cadastrar-entidades">
-    Comece cadastrando as entidades que quer monitorar.
+    Todos os tipos de entidade, nomes e filtros.
   </Card>
-  <Card title="Webhook" icon="bolt" href="./webhook">
-    Receba os eventos por POST, com assinatura.
-  </Card>
-  <Card title="Ler Eventos" icon="inbox" href="./recursos/ler-eventos">
-    Leia os eventos via API e confirme o recebimento.
+  <Card title="Webhook (opcional)" icon="bolt" href="./webhook">
+    Receba os eventos por POST em vez de ler.
   </Card>
 </CardGroup>

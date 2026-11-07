@@ -38,7 +38,7 @@ O significado de cada origem em `origensDocumento`:
 - `CATALOGO` → documento obtido por consulta de CPF/CNPJ nos sites dos tribunais.
 - `AGREGADO` → documento atribuído pela Predictus a partir do nome da parte.
 
-Um documento de origem não aceita é tratado como se a parte **não tivesse documento** — o que libera o match por nome (veja [regras de nome](./overview)).
+Um documento de origem não aceita é tratado como se a parte **não tivesse documento** — o que libera o match por nome (veja [Nomes](#nomes)).
 
 ### Documentos por tipo
 
@@ -66,6 +66,15 @@ Um documento de origem não aceita é tratado como se a parte **não tivesse doc
 - **Duplicidade:** a mesma conta não pode ter duas entidades vivas do mesmo `clienteFinal` com o mesmo documento (mesmo CPF, mesma raiz, CNPJ já coberto por uma raiz monitorada, mesmo número de processo, mesma OAB em `ADVOGADO`). Clientes finais diferentes podem monitorar o mesmo documento.
 - **Campo desconhecido** na entidade ou em `filtros` é rejeitado com `400`, nomeando o campo.
 
+### Nomes
+
+Nomes ajudam a encontrar a parte quando o tribunal **não registrou o documento** dela.
+
+- **O nome só casa com parte sem documento.** Se a parte tem CPF ou CNPJ no processo, quem decide é o documento. Em `ADVOGADO`, o nome só casa com advogado registrado sem CPF, sem CNPJ e sem OAB.
+- **A comparação é exata**, depois de normalizar (maiúsculas, sem acento, sem espaços repetidos). Pontuação conta: `ACME LTDA` e `ACME LTDA.` são nomes diferentes.
+- **Cadastre cada grafia** que interessa: `ACME LTDA`, `ACME LTDA.`, `ACME S.A.`, a razão social antiga.
+- Match por nome tem confiança menor que por documento — o evento informa em `casouPor` por onde casou.
+
 ### Filtros
 
 Disponíveis para `EMPRESA`, `PESSOA` e `ADVOGADO`. A lógica é **AND entre filtros diferentes e OR dentro de cada lista**. Filtro ausente não restringe nada.
@@ -86,7 +95,10 @@ Disponíveis para `EMPRESA`, `PESSOA` e `ADVOGADO`. A lógica é **AND entre fil
 - **Classe e assunto casam por "contém a expressão"**, como na busca: `EXECUCAO` pega `EXECUCAO FISCAL`.
 - **Campo ausente no processo não passa no filtro.** Um processo sem valor da causa não passa em `valorCausa`.
 - **Advogado sem parte vinculada** (registrado pelo tribunal sem indicar quem representa) não tem polo e **não passa** em `polos`.
-- **O filtro olha o processo como ele está agora**, a cada nova captura. Veja o [efeito em recursos](./overview).
+- **O filtro olha o processo como ele está agora**, a cada nova captura.
+
+> ⚠️ **Atenção com recursos.** Um filtro `tribunais: ["TJ-SP"]` deixa de avisar enquanto o processo estiver em recurso no STJ; se os autos voltarem ao TJ-SP, você recebe de uma vez o que mudou. Para acompanhar recursos, inclua os tribunais superiores e os graus no filtro. O mesmo vale para redistribuição, alteração do valor da causa e mudança de classe.
+
 - Alterar os filtros vale a partir do processamento seguinte e não gera eventos retroativos.
 
 ---

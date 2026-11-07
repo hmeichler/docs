@@ -1,35 +1,19 @@
 ---
-title: Webhook
-description: "Receba os eventos do monitoramento por POST na sua URL: formato da entrega, assinatura, novas tentativas e IPs de origem."
+title: Webhook (opcional)
+description: "Opcional: receba os eventos do monitoramento por POST na sua URL, em vez de lê-los pela API."
 ---
 
-# 🔔 Webhook
+# 🔔 Webhook (opcional)
 
-Com o webhook configurado, a Predictus envia os eventos do monitoramento por `POST` para a sua URL, em lotes de até **500 eventos**. Uma URL por conta: use `clienteFinal` e `referenciaExterna` do evento para rotear internamente.
+**O webhook é opcional.** Você já recebe todos os eventos lendo [Ler Eventos](./recursos/ler-eventos) de tempos em tempos — veja [Comece aqui](./comece-aqui). O webhook é uma alternativa para quem prefere **receber** os eventos: a Predictus envia por `POST` para a sua URL, em lotes de até **500 eventos**.
 
-Para configurar, use [Configurar Webhook](./recursos/configurar-webhook). Em seguida, valide com [Testar Webhook](./recursos/testar-webhook).
+O básico:
 
----
+1. [Configure](./recursos/configurar-webhook) a URL e [teste](./recursos/testar-webhook).
+2. Receba o `POST` e responda **`2xx`**.
+3. Ignore `eventoId` repetido.
 
-## 🛡️ Requisitos da URL
-
-- Somente `https`, na porta **443**.
-- Sem usuário e senha na URL, e o host não pode ser um IP literal.
-- O endereço não pode resolver para IP privado ou interno.
-- Até 2.048 caracteres.
-
-URLs fora dessas regras são recusadas com `422`.
-
-### 🌐 IPs de origem
-
-As entregas saem **sempre** destes IPs. Libere-os no firewall do seu endpoint:
-
-```
-44.210.57.73
-98.89.114.217
-```
-
-> ⚠️ Esses IPs são **diferentes** dos IPs da API da Predictus.
+Uma URL por conta: use `clienteFinal` e `referenciaExterna` do evento para rotear internamente. A verificação da assinatura é recomendada e está no fim desta página.
 
 ---
 
@@ -98,6 +82,28 @@ X-Predictus-Assinatura: t=1762178531,v1=5f2b9c...
 - **Um evento pode chegar mais de uma vez** — por exemplo, se a sua resposta não chegar até nós a tempo. Deduplique pelo `eventoId`.
 - **Não há garantia de ordem.** Use `sequencia` para ordenar eventos da mesma entidade e instância.
 - A [leitura de eventos](./recursos/ler-eventos) continua disponível com o webhook ativo. Os dois canais disputam os mesmos eventos: cada evento sai por um deles, não pelos dois.
+
+---
+
+## 🛡️ Requisitos da URL
+
+- Somente `https`, na porta **443**.
+- Sem usuário e senha na URL, e o host não pode ser um IP literal.
+- O endereço não pode resolver para IP privado ou interno.
+- Até 2.048 caracteres.
+
+URLs fora dessas regras são recusadas com `422`.
+
+### 🌐 IPs de origem
+
+As entregas saem **sempre** destes IPs. Libere-os no firewall do seu endpoint:
+
+```
+44.210.57.73
+98.89.114.217
+```
+
+> ⚠️ Esses IPs são **diferentes** dos IPs da API da Predictus.
 
 ---
 

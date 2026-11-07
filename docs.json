@@ -205,6 +205,7 @@
           {
             "group": "Monitoramento",
             "pages": [
+              "monitoramento/comece-aqui",
               "monitoramento/overview",
               "monitoramento/estrutura",
               "monitoramento/webhook"
@@ -213,21 +214,45 @@
           {
             "group": "Monitoramento - Recursos",
             "pages": [
-              "monitoramento/recursos/cadastrar-entidades",
-              "monitoramento/recursos/listar-entidades",
-              "monitoramento/recursos/consultar-entidade",
-              "monitoramento/recursos/alterar-entidade",
-              "monitoramento/recursos/remover-entidades",
-              "monitoramento/recursos/contar-entidades",
-              "monitoramento/recursos/contar-por-cliente-final",
-              "monitoramento/recursos/ler-eventos",
-              "monitoramento/recursos/confirmar-eventos",
-              "monitoramento/recursos/configurar-webhook",
-              "monitoramento/recursos/consultar-webhook",
-              "monitoramento/recursos/girar-segredo",
-              "monitoramento/recursos/testar-webhook",
-              "monitoramento/recursos/remover-webhook",
-              "monitoramento/recursos/historico-entregas"
+              {
+                "group": "Entidades",
+                "expanded": true,
+                "pages": [
+                  "monitoramento/recursos/cadastrar-entidades",
+                  "monitoramento/recursos/listar-entidades",
+                  "monitoramento/recursos/consultar-entidade",
+                  "monitoramento/recursos/alterar-entidade",
+                  "monitoramento/recursos/remover-entidades"
+                ]
+              },
+              {
+                "group": "Eventos",
+                "expanded": true,
+                "pages": [
+                  "monitoramento/recursos/ler-eventos",
+                  "monitoramento/recursos/confirmar-eventos"
+                ]
+              },
+              {
+                "group": "Webhook (opcional)",
+                "expanded": true,
+                "pages": [
+                  "monitoramento/recursos/configurar-webhook",
+                  "monitoramento/recursos/testar-webhook",
+                  "monitoramento/recursos/remover-webhook"
+                ]
+              },
+              {
+                "group": "Avançado",
+                "expanded": false,
+                "pages": [
+                  "monitoramento/recursos/contar-entidades",
+                  "monitoramento/recursos/contar-por-cliente-final",
+                  "monitoramento/recursos/consultar-webhook",
+                  "monitoramento/recursos/girar-segredo",
+                  "monitoramento/recursos/historico-entregas"
+                ]
+              }
             ]
           },
           {
