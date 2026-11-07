@@ -1,0 +1,66 @@
+---
+title: "Consultar Entidade"
+description: "Consulte uma entidade monitorada pelo seu identificador."
+---
+
+# 🔎 Consultar Entidade
+
+Este endpoint retorna uma entidade ativa da sua conta pelo `entidadeId`.
+
+---
+
+## 🔗 Endpoint
+
+```
+GET https://api.predictus.com.br/predictus-api/monitoramento/entidades/{entidadeId}
+```
+
+---
+
+## 📚 Parâmetros
+
+| Parâmetro | Obrigatório | Descrição |
+|-----------|-------------|-----------|
+| `entidadeId` (path) | Sim | Identificador da entidade, retornado no [cadastro](./cadastrar-entidades) |
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/entidades/6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80' \
+--header 'Authorization: Bearer {accessToken}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+{
+  "entidadeId": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80",
+  "tipo": "EMPRESA",
+  "clienteFinal": "escritorio-0042",
+  "referenciaExterna": "contrato-31",
+  "operacao": "ATUALIZACOES",
+  "origensDocumento": ["TRIBUNAL", "CATALOGO", "AGREGADO"],
+  "raizCnpj": "12345678",
+  "nomes": ["ACME COMERCIO DE ALIMENTOS LTDA", "ACME COMERCIO DE ALIMENTOS LTDA.", "ACME ALIMENTOS S.A."],
+  "filtros": { "ufs": ["SP", "RJ"], "valorCausa": { "maiorIgualQue": 50000 } },
+  "criadoEm": "2026-11-03T14:02:11Z",
+  "alteradoEm": null
+}
+```
+
+Campos em [Estrutura da Entidade](../estrutura).
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Entidade encontrada |
+| `401` | Token inválido ou expirado |
+| `403` | Conta sem a permissão `MONITORAMENTO_V2` |
+| `404` | Entidade inexistente, removida ou de outra conta |

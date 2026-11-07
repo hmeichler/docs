@@ -1,0 +1,44 @@
+---
+title: "Remover Webhook"
+description: "Remova o webhook da conta e passe a receber os eventos apenas pela leitura."
+---
+
+# 🔎 Remover Webhook
+
+Este endpoint remove o webhook da sua conta. As entregas por `POST` param, e os eventos pendentes continuam disponíveis em [Ler Eventos](./ler-eventos) — nada se perde.
+
+Para voltar a usar o webhook, [configure-o de novo](./configurar-webhook): um **novo segredo** é gerado.
+
+---
+
+## 🔗 Endpoint
+
+```
+DELETE https://api.predictus.com.br/predictus-api/monitoramento/webhook
+```
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location --request DELETE 'https://api.predictus.com.br/predictus-api/monitoramento/webhook' \
+--header 'Authorization: Bearer {accessToken}'
+```
+
+---
+
+## ✅ Resposta esperada (204)
+
+Sem corpo.
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `204` | Webhook removido |
+| `401` | Token inválido ou expirado |
+| `403` | Conta sem a permissão `MONITORAMENTO_V2` |
+| `404` | Nenhum webhook configurado para a conta |

@@ -1,0 +1,94 @@
+---
+title: "Ler Eventos"
+description: "Leia os eventos pendentes do monitoramento, até 1.000 por chamada."
+---
+
+# 🔎 Ler Eventos
+
+Este endpoint retorna até **1.000 eventos pendentes** por chamada. Depois de processá-los, [confirme o recebimento](./confirmar-eventos).
+
+Eventos lidos ficam **reservados por 5 minutos** à espera da confirmação. Se não forem confirmados nesse prazo, voltam a ficar disponíveis — nenhum evento se perde por falha do seu lado.
+
+---
+
+## 🔗 Endpoint
+
+```
+GET https://api.predictus.com.br/predictus-api/monitoramento/eventos
+```
+
+---
+
+## 📚 Parâmetros
+
+| Parâmetro | Obrigatório | Default | Min | Max | Descrição |
+|-----------|-------------|---------|-----|-----|-----------|
+| `limite` | Não | 1000 | 1 | 1000 | Quantidade máxima de eventos a retornar |
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/eventos?limite=1000' \
+--header 'Authorization: Bearer {accessToken}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+{
+  "eventos": [
+    {
+      "eventoId": "2b0e8f4a-7c1d-5e3f-9a2b-4c6d8e0f1a2b",
+      "entidadeId": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80",
+      "clienteFinal": "escritorio-0042",
+      "referenciaExterna": "contrato-31",
+      "tipoNotificacao": "PROCESSO_NOVO",
+      "numeroProcessoUnico": "00012340320268260100",
+      "instancia": { "tribunal": "TJ-SP", "grau": 1, "classeProcessual": "PROCEDIMENTO COMUM CIVEL", "dataDistribuicao": "2026-11-02" },
+      "casouPor": { "tipo": "CNPJ_RAIZ", "valor": "12345678", "origem": "TRIBUNAL" },
+      "dataCaptura": "2026-11-03T03:14:00Z",
+      "sequencia": 1
+    }
+  ]
+}
+```
+
+Sem eventos pendentes, a resposta é `200` com `"eventos": []`. Campos do evento em [Estrutura do Evento](../estrutura).
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Eventos retornados (lista vazia quando não há pendentes) |
+| `400` | `limite` fora de 1 a 1000 |
+| `401` | Token inválido ou expirado |
+| `403` | Conta sem a permissão `MONITORAMENTO_V2` |
+| `429` | Mais de 1 leitura por segundo. Aguarde o tempo do cabeçalho `Retry-After` |
+
+---
+
+## 🔄 Fluxo recomendado
+
+```
+repetir:
+  GET /monitoramento/eventos
+  se eventos estiver vazio → parar e voltar mais tarde
+  gravar os eventos (deduplicando por eventoId)
+  POST /monitoramento/eventos/confirmarRecebimento com os eventoIds
+```
+
+---
+
+## 💡 Dica
+
+> **Deduplique pelo `eventoId`:** o mesmo evento pode ser entregue mais de uma vez, por exemplo se a confirmação não chegar a tempo.
+
+> Com [webhook](../webhook) ativo, a leitura disputa os mesmos eventos: cada evento sai por um dos canais. A leitura serve também para recuperar eventos enquanto o seu webhook está fora do ar ou suspenso.
+
+> Eventos não lidos nem confirmados ficam disponíveis por **14 dias**.

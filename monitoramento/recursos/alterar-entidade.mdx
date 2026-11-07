@@ -1,0 +1,114 @@
+---
+title: "Alterar Entidade"
+description: "Substitua por inteiro os documentos, nomes e configurações de uma entidade monitorada."
+---
+
+# 🔎 Alterar Entidade
+
+Este endpoint **substitui a entidade inteira** pelo corpo enviado: documentos, nomes, filtros e demais configurações. Campos omitidos são removidos — envie sempre a entidade completa, como no cadastro.
+
+Use para incluir ou remover nomes, CNPJs ou OABs, mudar filtros e nível de notificação, ou trocar raiz de CNPJ por lista de CNPJs (e vice-versa) em uma única chamada.
+
+---
+
+## 🔗 Endpoint
+
+```
+PUT https://api.predictus.com.br/predictus-api/monitoramento/entidades/{entidadeId}
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+O mesmo objeto de um item do [cadastro](./cadastrar-entidades). O `tipo` precisa ser o mesmo da entidade.
+
+```json
+{
+  "tipo": "EMPRESA",
+  "clienteFinal": "escritorio-0042",
+  "referenciaExterna": "contrato-31",
+  "cnpjs": ["12345678000195", "12345678000276"],
+  "nomes": ["ACME COMERCIO DE ALIMENTOS LTDA", "ACME COMERCIO DE ALIMENTOS LTDA."],
+  "filtros": { "ufs": ["SP", "RJ", "MG"] }
+}
+```
+
+---
+
+## 📚 Campos
+
+Os mesmos do cadastro. Descrição completa em [Estrutura da Entidade](../estrutura).
+
+- `entidadeId` (path) — **obrigatório**.
+- `tipo` — **obrigatório** e igual ao atual. Para mudar o tipo, remova a entidade e cadastre de novo.
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location --request PUT 'https://api.predictus.com.br/predictus-api/monitoramento/entidades/6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "tipo": "EMPRESA",
+  "clienteFinal": "escritorio-0042",
+  "referenciaExterna": "contrato-31",
+  "cnpjs": ["12345678000195", "12345678000276"],
+  "nomes": ["ACME COMERCIO DE ALIMENTOS LTDA", "ACME COMERCIO DE ALIMENTOS LTDA."],
+  "filtros": { "ufs": ["SP", "RJ", "MG"] }
+}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+A entidade já alterada:
+
+```json
+{
+  "entidadeId": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80",
+  "tipo": "EMPRESA",
+  "clienteFinal": "escritorio-0042",
+  "referenciaExterna": "contrato-31",
+  "operacao": "ATUALIZACOES",
+  "origensDocumento": ["TRIBUNAL", "CATALOGO", "AGREGADO"],
+  "cnpjs": ["12345678000195", "12345678000276"],
+  "nomes": ["ACME COMERCIO DE ALIMENTOS LTDA", "ACME COMERCIO DE ALIMENTOS LTDA."],
+  "filtros": { "ufs": ["SP", "RJ", "MG"] },
+  "criadoEm": "2026-11-03T14:02:11Z",
+  "alteradoEm": "2026-11-05T10:20:00Z"
+}
+```
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Entidade alterada |
+| `400` | Corpo inválido ou regra de cadastro violada (com `invalidos`) |
+| `401` | Token inválido ou expirado |
+| `403` | Conta sem a permissão `MONITORAMENTO_V2` |
+| `404` | Entidade inexistente, removida ou de outra conta |
+| `409` | `tipo` diferente do da entidade |
+
+---
+
+## 🛡️ Validações
+
+- As mesmas do [cadastro](./cadastrar-entidades), avaliadas sobre o resultado final.
+- A entidade precisa continuar com um documento: não é possível ficar só com nomes. Para parar de monitorar, [remova a entidade](./remover-entidades).
+
+---
+
+## 💡 Dica
+
+> **O que muda nos eventos:**
+> - Identificadores que continuam no corpo mantêm a data de cadastro original — nada se perde.
+> - Identificadores novos só geram eventos para o que acontecer a partir da alteração.
+> - Processos trazidos só por um identificador removido deixam de gerar eventos.
+> - Mudanças de filtro e de nível valem a partir do processamento seguinte, sem eventos retroativos.

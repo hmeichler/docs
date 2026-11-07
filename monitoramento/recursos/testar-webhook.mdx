@@ -1,0 +1,72 @@
+---
+title: "Testar Webhook"
+description: "Envie uma entrega de teste para a URL do webhook e veja o resultado."
+---
+
+# 🔎 Testar Webhook
+
+Este endpoint envia uma entrega de teste para a URL do webhook e devolve o resultado. O teste usa o mesmo formato, cabeçalhos e assinatura de uma entrega real, com `"teste": true` e **nenhum evento**:
+
+```json
+{ "entregaId": "1a2b3c4d-5e6f-4a8b-9c0d-e1f2a3b4c5d6", "teste": true, "eventos": [] }
+```
+
+Um teste bem-sucedido com o webhook `SUSPENSO` **reativa** o webhook (`ATIVO`).
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/monitoramento/webhook/teste
+```
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location --request POST 'https://api.predictus.com.br/predictus-api/monitoramento/webhook/teste' \
+--header 'Authorization: Bearer {accessToken}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+Sucesso:
+
+```json
+{ "sucesso": true, "statusHttp": 200, "latenciaMs": 143, "erro": null }
+```
+
+Falha:
+
+```json
+{ "sucesso": false, "statusHttp": 503, "latenciaMs": 812, "erro": "O endpoint respondeu 503." }
+```
+
+| Campo | Descrição |
+|-------|-----------|
+| `sucesso` | `true` se o endpoint respondeu `2xx` em até 10 segundos |
+| `statusHttp` | Status HTTP respondido. `null` quando não houve resposta (timeout, erro de TLS, conexão recusada) |
+| `latenciaMs` | Tempo de resposta em milissegundos |
+| `erro` | Motivo da falha. `null` no sucesso |
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Teste executado (veja `sucesso` para o resultado) |
+| `401` | Token inválido ou expirado |
+| `403` | Conta sem a permissão `MONITORAMENTO_V2` |
+| `404` | Nenhum webhook configurado para a conta |
+| `429` | Mais de 5 testes na última hora. Aguarde o tempo do cabeçalho `Retry-After` |
+
+---
+
+## 💡 Dica
+
+> Trate `"teste": true` no seu endpoint: valide a assinatura, responda `2xx` e não processe nada. O teste também aparece no [histórico de entregas](./historico-entregas).

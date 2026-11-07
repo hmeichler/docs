@@ -1,0 +1,60 @@
+---
+title: "Consultar Webhook"
+description: "Consulte a URL, a situação e o estado das entregas do webhook da sua conta."
+---
+
+# 🔎 Consultar Webhook
+
+Este endpoint retorna a configuração do webhook da sua conta. O segredo **nunca** é retornado aqui.
+
+---
+
+## 🔗 Endpoint
+
+```
+GET https://api.predictus.com.br/predictus-api/monitoramento/webhook
+```
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/webhook' \
+--header 'Authorization: Bearer {accessToken}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+{
+  "url": "https://erp.exemplo.com.br/predictus/monitoramento",
+  "situacao": "ATIVO",
+  "ultimaEntregaEm": "2026-11-05T08:01:12Z",
+  "falhasSeguidas": 0,
+  "suspensoEm": null
+}
+```
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `url` | string | URL cadastrada |
+| `situacao` | string | `ATIVO` ou `SUSPENSO`. Pode ganhar valores novos: ignore os que não conhecer |
+| `ultimaEntregaEm` | date-time ou `null` | Última entrega com resposta `2xx` |
+| `falhasSeguidas` | integer | Tentativas com falha desde a última entrega bem-sucedida |
+| `suspensoEm` | date-time ou `null` | Quando o webhook foi suspenso |
+
+> O webhook fica `SUSPENSO` depois de 24 horas falhando sem nenhum sucesso. Para reativar, corrija o endpoint e chame [Testar Webhook](./testar-webhook).
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Configuração retornada |
+| `401` | Token inválido ou expirado |
+| `403` | Conta sem a permissão `MONITORAMENTO_V2` |
+| `404` | Nenhum webhook configurado para a conta |

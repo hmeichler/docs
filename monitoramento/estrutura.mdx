@@ -1,0 +1,178 @@
+---
+title: Estrutura da Entidade e do Evento
+description: "Todos os campos da entidade monitorada (cadastro e resposta) e do evento de monitoramento."
+---
+
+# 🧾 Estrutura da Entidade e do Evento
+
+Esta página descreve, campo a campo, os dois objetos do Monitoramento:
+
+- **Entidade** — o que você cadastra e monitora (empresa, pessoa, advogado ou processo).
+- **Evento** — o aviso que você recebe quando há novidade em um processo de uma entidade.
+
+**Formato dos valores:** CPF com 11 dígitos, CNPJ com 14 caracteres, raiz de CNPJ com 8 caracteres e número de processo (`numeroProcessoUnico`) com 20 dígitos, **sempre sem máscara**. Letras minúsculas são aceitas e gravadas em maiúsculas. Datas no formato `AAAA-MM-DD`; data-hora em ISO-8601 UTC (ex: `2026-11-03T14:02:11Z`).
+
+---
+
+## 🏢 Entidade — corpo do cadastro e da alteração
+
+O mesmo objeto é usado em cada item do [cadastro em lote](./recursos/cadastrar-entidades) e no corpo da [alteração](./recursos/alterar-entidade).
+
+### Campos comuns
+
+| Campo | Tipo | Obrigatório | Descrição |
+|-------|------|-------------|-----------|
+| `tipo` | string | **Sim** | `EMPRESA`, `PESSOA`, `ADVOGADO` ou `PROCESSO` |
+| `clienteFinal` | string | Não | Seu cliente dono da entidade (1 a 64 caracteres). Agrupa, conta e remove entidades por cliente |
+| `referenciaExterna` | string | Não | Código livre do registro no seu sistema, como pasta ou contrato (1 a 64 caracteres). Volta em todo evento |
+| `operacao` | string | Não | `NOVOS` ou `ATUALIZACOES` (padrão). Veja [níveis de notificação](./overview) |
+| `origensDocumento` | lista | Não | Origens de documento aceitas no match: `TRIBUNAL`, `CATALOGO`, `AGREGADO`. Ausente = todas |
+| `filtros` | objeto | Não | Restringe quais processos da entidade geram eventos. Veja [filtros](#filtros) |
+| `nomes` | lista de strings | Não | Nomes da entidade (até 150 caracteres cada). Limite por tipo na tabela abaixo |
+
+> ⚠️ **Não coloque dado pessoal em `clienteFinal` nem em `referenciaExterna`** (CPF, nome do cliente). Esses campos trafegam em todo evento e em todo webhook — use um código interno do seu sistema.
+
+O significado de cada origem em `origensDocumento`:
+
+- `TRIBUNAL` → documento capturado diretamente na capa do processo.
+- `CATALOGO` → documento obtido por consulta de CPF/CNPJ nos sites dos tribunais.
+- `AGREGADO` → documento atribuído pela Predictus a partir do nome da parte.
+
+Um documento de origem não aceita é tratado como se a parte **não tivesse documento** — o que libera o match por nome (veja [regras de nome](./overview)).
+
+### Documentos por tipo
+
+| Tipo | Documento | Nomes |
+|------|-----------|-------|
+| `EMPRESA` | `raizCnpj` **ou** `cnpjs` — nunca os dois | até 10 |
+| `PESSOA` | `cpf` (obrigatório) | até 2 |
+| `ADVOGADO` | `oabs` e/ou `cpf` — ao menos um dos dois | até 2 |
+| `PROCESSO` | `numeroProcessoUnico` (obrigatório) | não aceita |
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `raizCnpj` | string | 8 caracteres `[0-9A-Z]`. Cobre todos os CNPJs da raiz, inclusive filiais abertas depois do cadastro |
+| `cnpjs` | lista de strings | De 1 a 500 CNPJs, todos com a **mesma raiz**. Para monitorar só parte de um grupo |
+| `cpf` | string | 11 dígitos, com dígito verificador válido |
+| `oabs` | lista de objetos | De 1 a 27 inscrições `{ "uf": "SP", "numero": 123456 }` (número de 1 a 999999), sem repetir o par `uf` + `numero` |
+| `numeroProcessoUnico` | string | 20 dígitos, com dígito verificador válido |
+
+> 💡 A raiz de CNPJ não tem dígito verificador: só o formato é validado. Uma raiz digitada errada é aceita e nunca gera evento — confira o valor antes de cadastrar.
+
+### Restrições por tipo
+
+- **`PROCESSO`** não aceita `nomes`, `filtros` nem `origensDocumento`, e só aceita `operacao` = `ATUALIZACOES`.
+- **`PESSOA`** e **`ADVOGADO`**: cada nome precisa ter **ao menos 2 palavras**.
+- **Duplicidade:** a mesma conta não pode ter duas entidades vivas do mesmo `clienteFinal` com o mesmo documento (mesmo CPF, mesma raiz, CNPJ já coberto por uma raiz monitorada, mesmo número de processo, mesma OAB em `ADVOGADO`). Clientes finais diferentes podem monitorar o mesmo documento.
+- **Campo desconhecido** na entidade ou em `filtros` é rejeitado com `400`, nomeando o campo.
+
+### Filtros
+
+Disponíveis para `EMPRESA`, `PESSOA` e `ADVOGADO`. A lógica é **AND entre filtros diferentes e OR dentro de cada lista**. Filtro ausente não restringe nada.
+
+| Filtro | Formato | Descrição |
+|--------|---------|-----------|
+| `polos` | lista | `ATIVO` e/ou `PASSIVO`. Em `ADVOGADO`, é o polo da parte que ele representa |
+| `ufs` | lista | Siglas de UF |
+| `tribunais` | lista | Siglas de tribunal. Veja a [lista completa de tribunais](../referencias/tribunais) |
+| `segmentos` | lista | Veja [valores válidos](../referencias/segmentos) |
+| `grausProcesso` | lista | Inteiros de 1 a 4 |
+| `ramosDoDireito` | lista | Veja [valores válidos](../referencias/ramos-direito) |
+| `classesProcessuais` / `naoClassesProcessuais` | lista | Até 500 valores. Inclui / exclui classes. Veja [classes](../referencias/classes-processuais) |
+| `assuntosCNJ` / `naoAssuntosCNJ` | lista | Até 500 valores. Inclui / exclui assuntos. Veja [assuntos](../referencias/assuntos) |
+| `valorCausa` | faixa | `maiorQue`, `maiorIgualQue`, `menorQue`, `menorIgualQue` (números) |
+| `dataDistribuicao` | faixa | Mesmos operadores, com datas `AAAA-MM-DD` |
+
+- **Classe e assunto casam por "contém a expressão"**, como na busca: `EXECUCAO` pega `EXECUCAO FISCAL`.
+- **Campo ausente no processo não passa no filtro.** Um processo sem valor da causa não passa em `valorCausa`.
+- **Advogado sem parte vinculada** (registrado pelo tribunal sem indicar quem representa) não tem polo e **não passa** em `polos`.
+- **O filtro olha o processo como ele está agora**, a cada nova captura. Veja o [efeito em recursos](./overview).
+- Alterar os filtros vale a partir do processamento seguinte e não gera eventos retroativos.
+
+---
+
+## 📤 Entidade — resposta
+
+A [consulta](./recursos/consultar-entidade), a [listagem](./recursos/listar-entidades) e a [alteração](./recursos/alterar-entidade) devolvem o mesmo formato do cadastro, com os valores normalizados, os padrões explícitos e campos de controle:
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `entidadeId` | UUID | Identificador da entidade |
+| `criadoEm` | date-time | Data do cadastro |
+| `alteradoEm` | date-time ou `null` | Data da última alteração |
+| `situacao` | string | Só `PROCESSO`: `ACOMPANHANDO` (o processo está na base da Predictus) ou `AGUARDANDO_CAPTURA` (ainda não está) |
+| `encontradoEm` | date-time ou `null` | Só `PROCESSO`: quando o processo passou a constar na base |
+
+- `clienteFinal` e `referenciaExterna` sempre aparecem (`null` se não cadastrados).
+- `operacao` sempre aparece; `origensDocumento` ausente no cadastro volta com as três origens.
+- Nomes voltam normalizados: maiúsculas, sem acento e sem espaços repetidos.
+- `filtros` ausente = sem filtro.
+
+```json
+{
+  "entidadeId": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80",
+  "tipo": "EMPRESA",
+  "clienteFinal": "escritorio-0042",
+  "referenciaExterna": "contrato-31",
+  "operacao": "ATUALIZACOES",
+  "origensDocumento": ["TRIBUNAL", "CATALOGO", "AGREGADO"],
+  "raizCnpj": "12345678",
+  "nomes": ["ACME COMERCIO DE ALIMENTOS LTDA", "ACME COMERCIO DE ALIMENTOS LTDA.", "ACME ALIMENTOS S.A."],
+  "filtros": { "ufs": ["SP", "RJ"], "valorCausa": { "maiorIgualQue": 50000 } },
+  "criadoEm": "2026-11-03T14:02:11Z",
+  "alteradoEm": null
+}
+```
+
+> `AGUARDANDO_CAPTURA` muda sozinho para `ACOMPANHANDO` quando o processo é capturado. Processos em segredo de justiça também aparecem como `AGUARDANDO_CAPTURA`.
+
+---
+
+## 🔔 Evento
+
+Cada evento avisa que há novidade em **um processo** de **uma entidade**. Ele é enxuto: traz o número do processo e o motivo do match, não o conteúdo do processo. Para ver o que mudou, consulte o processo pelo número (ex: [Buscar Movimentações](../dossie-juridico/recursos/buscar-movimentacoes)).
+
+O mesmo objeto é entregue pela [leitura de eventos](./recursos/ler-eventos) e pelo [webhook](./webhook).
+
+```json
+{
+  "eventoId": "2b0e8f4a-7c1d-5e3f-9a2b-4c6d8e0f1a2b",
+  "entidadeId": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80",
+  "clienteFinal": "escritorio-0042",
+  "referenciaExterna": "contrato-31",
+  "tipoNotificacao": "PROCESSO_NOVO",
+  "numeroProcessoUnico": "00012340320268260100",
+  "instancia": {
+    "tribunal": "TJ-SP",
+    "grau": 1,
+    "classeProcessual": "PROCEDIMENTO COMUM CIVEL",
+    "dataDistribuicao": "2026-11-02"
+  },
+  "casouPor": { "tipo": "CNPJ_RAIZ", "valor": "12345678", "origem": "TRIBUNAL" },
+  "dataCaptura": "2026-11-03T03:14:00Z",
+  "sequencia": 1
+}
+```
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `eventoId` | UUID | Identificador do evento. **Use para deduplicar**: o mesmo evento pode chegar mais de uma vez |
+| `entidadeId` | UUID | Entidade que gerou o evento |
+| `clienteFinal` | string ou `null` | Como cadastrado na entidade |
+| `referenciaExterna` | string ou `null` | Como cadastrada na entidade |
+| `tipoNotificacao` | string | `PROCESSO_NOVO` (processo recém-distribuído) ou `RECURSO_NOVO` (recurso ou ação recém-chegada em tribunal, 2º grau em diante). **Ausente = atualização** de um processo já acompanhado |
+| `numeroProcessoUnico` | string | Número do processo, 20 dígitos sem máscara |
+| `instancia.tribunal` | string ou `null` | Tribunal da instância que teve novidade |
+| `instancia.grau` | integer ou `null` | Grau da instância (1 a 4) |
+| `instancia.classeProcessual` | string ou `null` | Classe processual da instância |
+| `instancia.dataDistribuicao` | date ou `null` | Data de distribuição da instância |
+| `casouPor.tipo` | string | `CPF`, `CNPJ`, `CNPJ_RAIZ`, `OAB`, `NPU` ou `NOME` |
+| `casouPor.valor` | string | O identificador como cadastrado (normalizado). OAB no formato UF + número, ex: `SP123456` |
+| `casouPor.origem` | string ou `null` | Em match por documento: `TRIBUNAL`, `CATALOGO` ou `AGREGADO`. `null` em `OAB`, `NPU` e `NOME` |
+| `dataCaptura` | date-time | Quando a novidade foi capturada |
+| `sequencia` | integer | Contador crescente por entidade e instância do processo. Pode ter saltos |
+
+- **`instancia`**: um mesmo número de processo pode ter várias instâncias (1º grau, recursos, incidentes). O evento diz qual delas teve novidade.
+- **`casouPor`** é o identificador que trouxe o processo para a entidade. Ele se mantém nos eventos seguintes daquele processo, mesmo quando a novidade não envolve a parte. Match por documento vem antes de match por nome.
+- **`tipoNotificacao`, `casouPor.tipo` e `situacao` podem ganhar valores novos.** Ignore valores que você não conhece.
+- **`PROCESSO` nunca gera `PROCESSO_NOVO` nem `RECURSO_NOVO`**: o processo já é conhecido por você, então todo evento dele é atualização.

@@ -1,0 +1,80 @@
+---
+title: "Confirmar Recebimento"
+description: "Confirme o recebimento de eventos do monitoramento para que não sejam entregues novamente."
+---
+
+# 🔎 Confirmar Recebimento
+
+Este endpoint confirma o recebimento de até **1.000 eventos** lidos em [Ler Eventos](./ler-eventos). Eventos confirmados não são entregues de novo.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/monitoramento/eventos/confirmarRecebimento
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+```json
+{
+  "eventoIds": [
+    "2b0e8f4a-7c1d-5e3f-9a2b-4c6d8e0f1a2b",
+    "9c41d2e3-4f5a-5b6c-8d7e-9f0a1b2c3d4e"
+  ]
+}
+```
+
+---
+
+## 📚 Campos
+
+- `eventoIds` (lista de UUID) — **obrigatório**, de 1 a 1.000 ids, sem repetição.
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/eventos/confirmarRecebimento' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "eventoIds": [
+    "2b0e8f4a-7c1d-5e3f-9a2b-4c6d8e0f1a2b",
+    "9c41d2e3-4f5a-5b6c-8d7e-9f0a1b2c3d4e"
+  ]
+}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+{ "confirmados": 2 }
+```
+
+- `confirmados` — quantos eventos foram confirmados nesta chamada.
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Confirmação processada |
+| `400` | Lista vazia, com mais de 1.000 ids ou com id em formato inválido |
+| `401` | Token inválido ou expirado |
+| `403` | Conta sem a permissão `MONITORAMENTO_V2` |
+
+---
+
+## 💡 Dica
+
+> A confirmação é idempotente: id desconhecido, de outra conta ou já confirmado é ignorado, sem erro — e não entra em `confirmados`. Repetir a chamada após um timeout é seguro.
+
+> Eventos entregues pelo [webhook](../webhook) com resposta `2xx` já ficam confirmados; não é preciso chamar este endpoint para eles.

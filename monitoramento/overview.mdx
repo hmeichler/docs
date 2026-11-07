@@ -1,133 +1,162 @@
 ---
 title: Introdução
-description: "Monitore automaticamente novos processos judiciais associados a CPFs, CNPJs ou raízes de CNPJ e receba os resultados via fila de mensagens."
+description: "Monitore empresas, pessoas, advogados e processos e receba um evento quando surgir processo novo ou houver novidade em um processo acompanhado."
 ---
 
 # 📡 Monitoramento de Processos
 
-O serviço de Monitoramento permite acompanhar automaticamente **novos processos judiciais** associados a CPFs, CNPJs ou raízes de CNPJ. Ao cadastrar um termo de monitoramento, o sistema realiza buscas periódicas na base de dados e entrega os resultados via **fila de mensagens dedicada por cliente**.
+O Monitoramento avisa quando **aparece um processo novo** envolvendo uma empresa, pessoa ou advogado que você acompanha, e quando **um processo acompanhado tem novidade**. Você cadastra **entidades** e recebe **eventos** — pela leitura via API ou por webhook.
+
+O evento é enxuto: traz o número do processo e o motivo do match. O detalhe do processo vem pela consulta por número (ex: [Buscar Movimentações](../dossie-juridico/recursos/buscar-movimentacoes)).
+
+> 🔐 **Permissão:** os endpoints exigem a permissão `MONITORAMENTO_V2` na sua conta. Fale com o time comercial para habilitar.
+
+> ℹ️ A versão anterior do monitoramento (endpoints `/monitoramento/termos` e `/monitoramento/mensagens`) foi descontinuada e responde `404`.
 
 ---
 
 ## 🧠 Como funciona
 
 <Steps>
-  <Step title="Cadastre os termos">
-    Informe o tipo do termo (`CPF`, `CNPJ` ou `CNPJ_RAIZ`), o valor do documento e a periodicidade desejada. Uma busca imediata é disparada automaticamente no momento do cadastro.
+  <Step title="Cadastre as entidades">
+    Envie lotes de até 1.000 entidades: empresas, pessoas, advogados ou processos. Cada entidade pode levar o seu `clienteFinal` e uma `referenciaExterna` do seu sistema.
   </Step>
-  <Step title="Buscas automáticas">
-    O sistema executa buscas programadas de segunda a sexta-feira às 03:00 UTC. Apenas os termos cuja periodicidade coincide com o dia são processados.
+  <Step title="A Predictus acompanha a captura de processos">
+    A cada processo capturado, verificamos quais entidades aparecem nele. Os eventos costumam chegar em poucas horas após a captura.
   </Step>
-  <Step title="Receba os resultados">
-    Quando novos processos são encontrados, as mensagens ficam disponíveis na sua fila exclusiva. Consuma via polling e confirme o recebimento.
+  <Step title="Receba os eventos">
+    Configure um [webhook](./webhook) para receber os eventos por `POST`, ou leia-os com [Ler Eventos](./recursos/ler-eventos) e confirme o recebimento.
   </Step>
 </Steps>
 
 ---
 
-## 🕐 Periodicidades disponíveis
+## 🏢 Tipos de entidade
 
-| Valor | Descrição | Quando executa |
-|-------|-----------|----------------|
-| `DIARIO` | Diário | Toda segunda a sexta |
-| `SEMANAL` | Semanal | Toda segunda-feira |
-| `QUINZENAL` | Quinzenal | Segunda-feira a cada duas semanas (referência: data de criação do termo) |
-| `MENSAL` | Mensal | Primeira segunda-feira do mês |
-| `TRIMESTRAL` | Trimestral | Primeira segunda-feira de janeiro, abril, julho e outubro |
+| Tipo | O que monitora | Documento | Nomes |
+|------|----------------|-----------|-------|
+| `EMPRESA` | Processos em que a empresa é parte | uma raiz de CNPJ **ou** uma lista de CNPJs da mesma raiz | até 10 |
+| `PESSOA` | Processos em que a pessoa é parte | um CPF | até 2 |
+| `ADVOGADO` | Processos em que o advogado atua **como advogado** | até 27 OABs e/ou um CPF | até 2 |
+| `PROCESSO` | Um processo que você já conhece | um número de processo (CNJ) | — |
 
-> Nenhuma periodicidade executa nos finais de semana.
-
----
-
-## 🔍 Busca de processos
-
-Para cada termo elegível, o sistema busca processos judiciais distribuídos nos **últimos 7 dias**:
-
-- **CPF** — processos onde o CPF aparece como parte
-- **CNPJ** — processos onde o CNPJ aparece como parte
-- **CNPJ_RAIZ** — processos onde qualquer CNPJ com a mesma raiz aparece como parte
+- A **raiz de CNPJ** é o caminho recomendado para empresas: cobre todas as filiais, inclusive as abertas depois do cadastro.
+- Os identificadores de uma entidade casam por **OR**: basta um deles aparecer no processo.
+- Um processo gera **um** evento por entidade, mesmo que vários identificadores dela apareçam nele (ex: matriz e filial).
+- `ADVOGADO` não casa quando a pessoa é **parte** do processo. Para isso, cadastre também uma `PESSOA` com o mesmo CPF.
+- Campos e validações completos em [Estrutura da Entidade e do Evento](./estrutura).
 
 ---
 
-## 📬 Entrega de resultados
+## 🎚️ Níveis de notificação
 
-Se a busca encontrar resultados, uma mensagem é enviada para a fila exclusiva do cliente:
+Cada entidade escolhe um nível no campo `operacao`:
+
+| `operacao` | Você recebe |
+|------------|-------------|
+| `NOVOS` | Só `PROCESSO_NOVO` e `RECURSO_NOVO` — descoberta de ações e recursos recém-distribuídos |
+| `ATUALIZACOES` (padrão) | Tudo do nível `NOVOS` **e** as atualizações dos processos acompanhados |
+
+- `ATUALIZACOES` contém `NOVOS`: não existe "só atualizações" para empresa, pessoa ou advogado. Para acompanhar apenas processos que você já conhece, cadastre-os como `PROCESSO`.
+- `PROCESSO` é sempre `ATUALIZACOES`.
+- No evento de atualização, `tipoNotificacao` vem **ausente**: o evento diz que o processo teve novidade; a consulta pelo número mostra qual.
+
+---
+
+## 🕐 Quando um evento é gerado
+
+- **Só o que acontece depois do cadastro.** Não há carga inicial: processos e movimentações anteriores ao cadastro do identificador não geram evento.
+- **Processo antigo que volta a movimentar** gera evento de atualização no nível `ATUALIZACOES`.
+- **Recaptura sem mudança** não gera evento.
+- **Processos em segredo de justiça** nunca geram evento.
+- **Processo cadastrado como `PROCESSO` que ainda não está na base** fica em `AGUARDANDO_CAPTURA` e passa a `ACOMPANHANDO` sozinho quando é capturado. Use o filtro `situacao` da [listagem](./recursos/listar-entidades) para ver quais são.
+- Os eventos costumam chegar **em poucas horas após a captura**.
+
+---
+
+## 🔤 Nomes
+
+Nomes ajudam a encontrar a parte quando o tribunal **não registrou o documento** dela.
+
+- **O nome só casa com parte sem documento.** Se a parte tem CPF ou CNPJ no processo, quem decide é o documento. Em `ADVOGADO`, o nome só casa com advogado registrado sem CPF, sem CNPJ e sem OAB.
+- **A comparação é exata**, depois de normalizar (maiúsculas, sem acento, sem espaços repetidos). Pontuação conta: `ACME LTDA` e `ACME LTDA.` são nomes diferentes.
+- **Cadastre cada grafia** que interessa: `ACME LTDA`, `ACME LTDA.`, `ACME S.A.`, a razão social antiga.
+- Match por nome tem confiança menor que por documento — o evento informa em `casouPor` por onde casou.
+
+---
+
+## 🧰 Filtros
+
+`EMPRESA`, `PESSOA` e `ADVOGADO` aceitam `filtros` sobre o processo (polo, UF, tribunal, segmento, grau, ramo, classe, assunto, valor da causa, data de distribuição). Os identificadores dizem **quem**; os filtros dizem **quais processos interessam**. Lista completa em [Estrutura](./estrutura).
+
+> ⚠️ **O filtro olha o processo como ele está agora.** Um filtro `tribunais: ["TJ-SP"]` deixa de avisar enquanto o processo estiver em recurso no STJ; se os autos voltarem ao TJ-SP, você recebe de uma vez o que mudou. Para acompanhar recursos, inclua os tribunais superiores e os graus no filtro. O mesmo vale para redistribuição, alteração do valor da causa e mudança de classe.
+
+---
+
+## 📬 Entrega dos eventos
+
+| Canal | Como |
+|-------|------|
+| **Webhook** | Enviamos lotes de até 500 eventos por `POST` para a sua URL `https`, assinados. Veja [Webhook](./webhook) |
+| **Leitura** | Você lê até 1.000 eventos por chamada em [Ler Eventos](./recursos/ler-eventos) e confirma em [Confirmar Recebimento](./recursos/confirmar-eventos) |
+
+- **Um evento pode chegar mais de uma vez.** Deduplique pelo `eventoId`.
+- **Não há garantia de ordem.** Use `sequencia` para ordenar eventos da mesma entidade e instância.
+- Os dois canais podem ser usados juntos: cada evento chega por um deles e nunca se perde. A leitura também serve para recuperar eventos enquanto o seu webhook está fora do ar.
+- Um evento não entregue fica disponível por **14 dias**.
+
+---
+
+## 🚫 Erros
+
+Todas as respostas de erro têm o mesmo formato, com mensagem em português:
 
 ```json
-[
-  {
-    "mensagemId": "abc123",
-    "recibo": "AQEBwJnK...",
-    "conteudo": {
-      "termoId": "uuid-do-termo",
-      "tipoTermo": "CPF",
-      "valorTermo": "12345678901",
-      "periodicidade": "DIARIO",
-      "dataBuscaDe": "2026-03-29",
-      "dataBuscaAte": "2026-04-05",
-      "resultados": [
-        { "...detalhes do processo..." }
-      ]
-    }
-  }
-]
+{ "erro": "Entidade não encontrada." }
 ```
 
-> Se não houver novos processos no período, **nenhuma mensagem é enviada**.
+Em operações em lote (tudo ou nada), o erro lista os itens rejeitados:
 
----
-
-## 🔄 Fluxo recomendado de integração
-
-```
-1. Autenticar (POST /auth)
-         |
-2. Cadastrar termos (POST /monitoramento/termos)
-         |
-         |--- busca imediata em background
-         |
-3. Polling periódico:
-   |
-   |--- GET /monitoramento/mensagens?limite=10
-   |         |
-   |         |--- processar cada mensagem
-   |         |
-   |         |--- POST /monitoramento/mensagens/confirmarRecebimento
-   |
-   |--- repetir (sugerido: a cada 5-15 minutos)
+```json
+{
+  "erro": "Lote rejeitado: 2 entidades inválidas. Nada foi gravado.",
+  "invalidos": [
+    { "indice": 47, "campo": "cpf", "valor": "1234567890", "motivo": "CPF deve ter 11 dígitos" },
+    { "indice": 900, "campo": "raizCnpj", "valor": "12345678", "motivo": "Já monitorada nesta conta", "entidadeIdExistente": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80" }
+  ]
+}
 ```
 
-**Recomendações:**
+| Campo | Descrição |
+|-------|-----------|
+| `indice` | Posição do item no lote (a partir de 0) |
+| `campo` | Caminho do campo, ex: `oabs[3].numero` |
+| `valor` | Valor recebido |
+| `motivo` | Motivo da rejeição |
+| `entidadeIdExistente` | Só em duplicidade: o id da entidade que já existe |
 
-- Faça polling a cada **5 a 15 minutos** para receber mensagens
-- **Sempre confirme** o recebimento após processar a mensagem
-- Se a confirmação falhar, a mensagem voltará à fila em 30 segundos — não há perda de dados
-- Cada requisição de recebimento retorna no máximo 10 mensagens. Se houver mais, faça múltiplas chamadas até receber uma resposta vazia
-
----
-
-## 🛡️ Tolerância a falhas
-
-O sistema possui mecanismos internos de resiliência:
-
-- **Retentativas automáticas** — se uma busca falhar (ex: timeout, indisponibilidade temporária), o sistema retenta com intervalos progressivos: 5 min, 15 min, 1 hora, 6 horas
-- **Máximo de tentativas** — 5 tentativas por termo por execução. Após isso, o termo é processado normalmente na próxima execução
-- **Mensagens grandes** — resultados que excedam 256 KB são automaticamente armazenados e entregues sem perda de dados
-- **Isolamento por cliente** — cada cliente possui sua própria fila de mensagens, garantindo total isolamento dos dados
-
----
-
-## 💰 Faturamento
-
-O faturamento é baseado na **quantidade de termos ativos por mês**. Um termo é considerado ativo em um determinado mês se:
-
-- Foi criado antes do fim do mês
-- Não foi removido antes do início do mês
-
-> Termos criados e removidos dentro do mesmo mês são contabilizados.
+| Código | Quando |
+|--------|--------|
+| `400` | Corpo inválido ou regra de cadastro violada |
+| `401` | Token inválido ou expirado |
+| `403` | Conta sem a permissão `MONITORAMENTO_V2` |
+| `404` | Entidade inexistente, removida ou de outra conta |
+| `409` | Conflito (mudança de `tipo`, quantidade divergente na remoção por cliente final) |
+| `422` | URL de webhook recusada, ou remoção por cliente final acima do limite |
+| `429` | Limite de requisições; o cabeçalho `Retry-After` informa quantos segundos esperar |
 
 ---
 
 ## 🚀 Prossiga
 
-Escolha um recurso na barra lateral ou vá direto para: [Cadastrar Termo](./recursos/cadastrar-termo)
+<CardGroup cols={3}>
+  <Card title="Cadastrar Entidades" icon="plus" href="./recursos/cadastrar-entidades">
+    Comece cadastrando as entidades que quer monitorar.
+  </Card>
+  <Card title="Webhook" icon="bolt" href="./webhook">
+    Receba os eventos por POST, com assinatura.
+  </Card>
+  <Card title="Ler Eventos" icon="inbox" href="./recursos/ler-eventos">
+    Leia os eventos via API e confirme o recebimento.
+  </Card>
+</CardGroup>
