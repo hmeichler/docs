@@ -1,0 +1,58 @@
+---
+title: "Girar Segredo"
+description: "Gere um novo segredo de assinatura do webhook, mantendo o anterior válido por 24 horas."
+---
+
+# 🔎 Girar Segredo
+
+Este endpoint gera um **novo segredo** para a [assinatura das entregas](../webhook). O segredo anterior continua válido por **24 horas**: nesse período, cada entrega leva **duas assinaturas `v1`** no cabeçalho `X-Predictus-Assinatura`, uma com cada segredo. Assim você troca o segredo no seu sistema sem perder nenhuma entrega.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/monitoramento/webhook/segredo
+```
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location --request POST 'https://api.predictus.com.br/predictus-api/monitoramento/webhook/segredo' \
+--header 'Authorization: Bearer {accessToken}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+{
+  "segredo": "pms_8Hq1Lr...",
+  "anteriorValidoAte": "2026-11-06T14:02:11Z"
+}
+```
+
+| Campo | Descrição |
+|-------|-----------|
+| `segredo` | O novo segredo. Exibido **uma única vez** |
+| `anteriorValidoAte` | Até quando o segredo anterior continua assinando as entregas |
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Segredo gerado |
+| `401` | Token inválido ou expirado |
+| `403` | Conta sem a permissão `MONITORAMENTO_V2` |
+| `404` | Nenhum webhook configurado para a conta |
+
+---
+
+## 💡 Dica
+
+> Atualize o segredo no seu sistema antes de `anteriorValidoAte`. Enquanto os dois valem, aceite a entrega se **qualquer** assinatura `v1` bater.

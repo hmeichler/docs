@@ -1,0 +1,102 @@
+---
+title: "Histórico de Entregas"
+description: "Consulte as tentativas de entrega do webhook dos últimos 7 dias, com resultado, status HTTP e latência."
+---
+
+# 🔎 Histórico de Entregas
+
+Este endpoint lista as tentativas de entrega do webhook dos **últimos 7 dias**, inclusive os testes, das mais recentes para as mais antigas, em páginas de até **100 tentativas**.
+
+Cada tentativa traz o mesmo `entregaId` enviado no cabeçalho `X-Predictus-Entrega-Id`, para você cruzar com os seus logs.
+
+---
+
+## 🔗 Endpoint
+
+```
+GET https://api.predictus.com.br/predictus-api/monitoramento/webhook/entregas
+```
+
+---
+
+## 📚 Parâmetros
+
+| Parâmetro | Obrigatório | Descrição |
+|-----------|-------------|-----------|
+| `cursor` | Não | Valor de `proximoCursor` da página anterior. Omita na primeira página |
+| `resultado` | Não | Só tentativas com este resultado: `SUCESSO`, `FALHA_DESTINO`, `FALHA_PREDICTUS` ou `DESTINO_RECUSADO` |
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/webhook/entregas?resultado=FALHA_DESTINO' \
+--header 'Authorization: Bearer {accessToken}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+{
+  "entregas": [
+    {
+      "entregaId": "7d3e2a10-5b6c-4d7e-8f90-a1b2c3d4e5f6",
+      "tentativaEm": "2026-11-03T08:01:12Z",
+      "teste": false,
+      "quantidadeEventos": 500,
+      "resultado": "FALHA_DESTINO",
+      "statusHttp": 503,
+      "latenciaMs": 812,
+      "erro": "O endpoint respondeu 503."
+    },
+    {
+      "entregaId": "1a2b3c4d-5e6f-4a8b-9c0d-e1f2a3b4c5d6",
+      "tentativaEm": "2026-11-03T07:58:40Z",
+      "teste": false,
+      "quantidadeEventos": 500,
+      "resultado": "FALHA_PREDICTUS",
+      "statusHttp": null,
+      "latenciaMs": null,
+      "erro": "Indisponibilidade da Predictus; nova tentativa em 1 minuto."
+    }
+  ],
+  "proximoCursor": "eyJpZCI6OTkxfQ"
+}
+```
+
+| Campo | Descrição |
+|-------|-----------|
+| `entregaId` | Identificador da tentativa (o mesmo do cabeçalho `X-Predictus-Entrega-Id`) |
+| `tentativaEm` | Data e hora da tentativa |
+| `teste` | `true` se foi um [teste](./testar-webhook) |
+| `quantidadeEventos` | Quantos eventos o lote levava |
+| `resultado` | Resultado da tentativa (veja abaixo) |
+| `statusHttp` | Status HTTP respondido pelo seu endpoint. `null` quando não houve resposta |
+| `latenciaMs` | Tempo de resposta em milissegundos. `null` quando não houve resposta |
+| `erro` | Motivo da falha. `null` no sucesso |
+| `proximoCursor` | Cursor da próxima página. `null` = não há mais páginas |
+
+### Resultados
+
+| `resultado` | Significado |
+|-------------|-------------|
+| `SUCESSO` | Seu endpoint respondeu `2xx` |
+| `FALHA_DESTINO` | Seu endpoint respondeu fora de `2xx`, não respondeu em 10 segundos ou recusou a conexão |
+| `FALHA_PREDICTUS` | Falha do lado da Predictus. Não indica problema no seu endpoint e não conta para a suspensão |
+| `DESTINO_RECUSADO` | A URL passou a resolver para um IP privado ou interno e a entrega foi bloqueada |
+
+`resultado` pode ganhar valores novos: ignore os que não conhecer. O corpo da resposta do seu endpoint não é armazenado.
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Página retornada (pode vir vazia) |
+| `400` | Cursor ou `resultado` inválidos |
+| `401` | Token inválido ou expirado |
+| `403` | Conta sem a permissão `MONITORAMENTO_V2` |

@@ -1,0 +1,98 @@
+---
+title: "Configurar Webhook"
+description: "Cadastre ou troque a URL que recebe os eventos do monitoramento."
+---
+
+# 🔎 Configurar Webhook
+
+Este endpoint cadastra a URL do webhook da sua conta, ou troca a URL já cadastrada. A conta tem **um** webhook.
+
+Na **primeira configuração** (ou depois de [remover o webhook](./remover-webhook)), a resposta traz o **segredo** usado para [assinar as entregas](../webhook). Ele é exibido **uma única vez** — guarde-o com segurança. Trocar a URL mantém o segredo atual; para trocar o segredo, use [Girar Segredo](./girar-segredo).
+
+---
+
+## 🔗 Endpoint
+
+```
+PUT https://api.predictus.com.br/predictus-api/monitoramento/webhook
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+```json
+{
+  "url": "https://erp.exemplo.com.br/predictus/monitoramento"
+}
+```
+
+---
+
+## 📚 Campos
+
+- `url` (string) — **obrigatório**. URL `https` na porta 443, até 2.048 caracteres. Veja os [requisitos da URL](../webhook).
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location --request PUT 'https://api.predictus.com.br/predictus-api/monitoramento/webhook' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "url": "https://erp.exemplo.com.br/predictus/monitoramento"
+}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+Primeira configuração:
+
+```json
+{
+  "url": "https://erp.exemplo.com.br/predictus/monitoramento",
+  "situacao": "ATIVO",
+  "segredo": "pms_3q2Xk9...",
+  "ultimaEntregaEm": null,
+  "falhasSeguidas": 0,
+  "suspensoEm": null
+}
+```
+
+Troca de URL: o mesmo objeto, **sem** `segredo`. Campos descritos em [Consultar Webhook](./consultar-webhook).
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Webhook configurado |
+| `400` | `url` ausente |
+| `401` | Token inválido ou expirado |
+| `403` | Conta sem a permissão `MONITORAMENTO_V2` |
+| `422` | URL recusada. A mensagem informa o motivo |
+
+Exemplo de `422`:
+
+```json
+{ "erro": "O endereço resolve para uma rede privada." }
+```
+
+---
+
+## 🛡️ Validações
+
+- Somente `https`, na porta 443.
+- Sem usuário e senha na URL; o host não pode ser um IP literal.
+- O endereço não pode resolver para IP privado ou interno.
+
+---
+
+## 💡 Dica
+
+> Libere no seu firewall os IPs de origem das entregas: **44.210.57.73** e **98.89.114.217**. Depois de configurar, chame [Testar Webhook](./testar-webhook) para validar URL, certificado e assinatura de ponta a ponta.

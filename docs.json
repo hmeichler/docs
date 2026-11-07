@@ -205,17 +205,29 @@
           {
             "group": "Monitoramento",
             "pages": [
-              "monitoramento/overview"
+              "monitoramento/overview",
+              "monitoramento/estrutura",
+              "monitoramento/webhook"
             ]
           },
           {
             "group": "Monitoramento - Recursos",
             "pages": [
-              "monitoramento/recursos/cadastrar-termo",
-              "monitoramento/recursos/listar-termos",
-              "monitoramento/recursos/remover-termo",
-              "monitoramento/recursos/receber-mensagens",
-              "monitoramento/recursos/confirmar-recebimento"
+              "monitoramento/recursos/cadastrar-entidades",
+              "monitoramento/recursos/listar-entidades",
+              "monitoramento/recursos/consultar-entidade",
+              "monitoramento/recursos/alterar-entidade",
+              "monitoramento/recursos/remover-entidades",
+              "monitoramento/recursos/contar-entidades",
+              "monitoramento/recursos/contar-por-cliente-final",
+              "monitoramento/recursos/ler-eventos",
+              "monitoramento/recursos/confirmar-eventos",
+              "monitoramento/recursos/configurar-webhook",
+              "monitoramento/recursos/consultar-webhook",
+              "monitoramento/recursos/girar-segredo",
+              "monitoramento/recursos/testar-webhook",
+              "monitoramento/recursos/remover-webhook",
+              "monitoramento/recursos/historico-entregas"
             ]
           },
           {

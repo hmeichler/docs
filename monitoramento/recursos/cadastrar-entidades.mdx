@@ -1,0 +1,161 @@
+---
+title: "Cadastrar Entidades"
+description: "Cadastre em lote de 1 a 1.000 empresas, pessoas, advogados ou processos para monitorar."
+---
+
+# 🔎 Cadastrar Entidades
+
+Este endpoint cadastra de **1 a 1.000 entidades** por chamada. O lote é **tudo ou nada**: se qualquer entidade for inválida, nada é gravado e a resposta lista os itens rejeitados.
+
+O monitoramento começa a partir do cadastro: processos e movimentações anteriores não geram eventos.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/monitoramento/entidades
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+```json
+{
+  "entidades": [
+    {
+      "tipo": "EMPRESA",
+      "clienteFinal": "escritorio-0042",
+      "referenciaExterna": "contrato-31",
+      "raizCnpj": "12345678",
+      "nomes": ["ACME COMERCIO DE ALIMENTOS LTDA", "ACME COMERCIO DE ALIMENTOS LTDA.", "ACME ALIMENTOS S.A."],
+      "filtros": { "ufs": ["SP", "RJ"], "valorCausa": { "maiorIgualQue": 50000 } }
+    },
+    {
+      "tipo": "PESSOA",
+      "cpf": "12345678909",
+      "nomes": ["MARIA DA SILVA", "MARIA DA SILVA SOUZA"],
+      "operacao": "NOVOS",
+      "origensDocumento": ["TRIBUNAL"]
+    },
+    {
+      "tipo": "ADVOGADO",
+      "oabs": [{ "uf": "SP", "numero": 123456 }, { "uf": "RJ", "numero": 98765 }],
+      "nomes": ["JOAO PEREIRA"]
+    },
+    {
+      "tipo": "PROCESSO",
+      "numeroProcessoUnico": "00012340320268260100",
+      "clienteFinal": "escritorio-0042",
+      "referenciaExterna": "pasta-778"
+    }
+  ]
+}
+```
+
+---
+
+## 📚 Campos
+
+- `entidades` (lista) — **obrigatório**, de 1 a 1.000 itens.
+
+Cada item segue o objeto **Entidade**. Principais campos:
+
+| Campo | Obrigatório | Descrição |
+|-------|-------------|-----------|
+| `tipo` | **Sim** | `EMPRESA`, `PESSOA`, `ADVOGADO` ou `PROCESSO` |
+| `raizCnpj` / `cnpjs` | `EMPRESA`: um dos dois | Raiz de 8 caracteres, ou de 1 a 500 CNPJs da mesma raiz |
+| `cpf` | `PESSOA`: sim. `ADVOGADO`: este ou `oabs` | 11 dígitos |
+| `oabs` | `ADVOGADO`: este ou `cpf` | De 1 a 27 `{ "uf", "numero" }` |
+| `numeroProcessoUnico` | `PROCESSO`: sim | 20 dígitos, sem máscara |
+| `nomes` | Não | Até 10 (`EMPRESA`) ou 2 (`PESSOA`, `ADVOGADO`). Não aceito em `PROCESSO` |
+| `clienteFinal` | Não | Seu cliente dono da entidade (até 64 caracteres) |
+| `referenciaExterna` | Não | Código do registro no seu sistema (até 64 caracteres) |
+| `operacao` | Não | `NOVOS` ou `ATUALIZACOES` (padrão) |
+| `origensDocumento` | Não | `TRIBUNAL`, `CATALOGO`, `AGREGADO`. Ausente = todas |
+| `filtros` | Não | Filtros sobre o processo. Não aceito em `PROCESSO` |
+
+Descrição completa de cada campo, dos filtros e das regras em [Estrutura da Entidade e do Evento](../estrutura).
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/entidades' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "entidades": [
+    { "tipo": "PESSOA", "cpf": "12345678909" },
+    { "tipo": "PROCESSO", "numeroProcessoUnico": "00012340320268260100" }
+  ]
+}'
+```
+
+---
+
+## ✅ Resposta esperada (201)
+
+Um item por entidade, **na mesma ordem do lote**:
+
+```json
+{
+  "entidades": [
+    { "indice": 0, "entidadeId": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80", "clienteFinal": null, "referenciaExterna": null },
+    { "indice": 1, "entidadeId": "0a9b8c7d-6e5f-4a3b-2c1d-0e9f8a7b6c5d", "clienteFinal": null, "referenciaExterna": null, "situacao": "AGUARDANDO_CAPTURA" }
+  ]
+}
+```
+
+| Campo | Descrição |
+|-------|-----------|
+| `indice` | Posição da entidade no lote enviado (a partir de 0) |
+| `entidadeId` | Identificador da entidade criada |
+| `clienteFinal` / `referenciaExterna` | Como cadastrados (`null` se ausentes) |
+| `situacao` | Só `PROCESSO`: `ACOMPANHANDO` (o processo está na base) ou `AGUARDANDO_CAPTURA` (ainda não está) |
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `201` | Lote cadastrado |
+| `400` | Lote rejeitado: corpo inválido, entidade inválida ou duplicada, ou limite de entidades do contrato atingido. Nada foi gravado |
+| `401` | Token inválido ou expirado |
+| `403` | Conta sem a permissão `MONITORAMENTO_V2` |
+
+Exemplo de `400`:
+
+```json
+{
+  "erro": "Lote rejeitado: 2 entidades inválidas. Nada foi gravado.",
+  "invalidos": [
+    { "indice": 1, "campo": "nomes[1]", "valor": "MARIA", "motivo": "Nome de pessoa precisa de ao menos 2 palavras" },
+    { "indice": 3, "campo": "raizCnpj", "valor": "12345678", "motivo": "Já monitorada nesta conta", "entidadeIdExistente": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80" }
+  ]
+}
+```
+
+Quando o limite de entidades do contrato é atingido, a resposta `400` não traz `invalidos` e a mensagem informa o saldo disponível.
+
+---
+
+## 🛡️ Validações
+
+- CPF, CNPJ e número do processo precisam ter **dígito verificador válido**. A raiz de CNPJ é validada só pelo formato.
+- Todos os `cnpjs` de uma entidade precisam ter a **mesma raiz**.
+- UF da OAB entre as 27 seccionais; o par `uf` + `numero` não pode se repetir.
+- Nomes de `PESSOA` e `ADVOGADO` precisam de **ao menos 2 palavras**; nome vazio é rejeitado.
+- `ufs`, `tribunais`, `segmentos` e `ramosDoDireito` são validados contra as mesmas listas da busca; faixas precisam ter ao menos um limite, com o inferior menor ou igual ao superior.
+- `PROCESSO` com `operacao: "NOVOS"` é rejeitado.
+- Duplicidade com entidade viva do mesmo `clienteFinal` é rejeitada.
+- Campo desconhecido na entidade ou em `filtros` é rejeitado, nomeando o campo.
+
+---
+
+## 💡 Dica
+
+> **Reenvio seguro:** se a resposta `201` se perder (timeout, queda de rede), reenvie o mesmo lote. As entidades que já foram criadas voltam no `400` como duplicadas, com o `entidadeIdExistente` — use-o para reconciliar sem cadastrar em dobro.

@@ -1,0 +1,105 @@
+---
+title: "Listar Entidades"
+description: "Liste as entidades monitoradas, com paginação por cursor e filtros por cliente final, referência externa e situação."
+---
+
+# 🔎 Listar Entidades
+
+Este endpoint lista as entidades ativas da sua conta, **em ordem de cadastro**, em páginas de até **10.000 entidades**.
+
+Para saber apenas **quantas** entidades você tem, use [Contar Entidades](./contar-entidades) — é bem mais leve que percorrer a listagem.
+
+---
+
+## 🔗 Endpoint
+
+```
+GET https://api.predictus.com.br/predictus-api/monitoramento/entidades
+```
+
+---
+
+## 📚 Parâmetros
+
+| Parâmetro | Obrigatório | Descrição |
+|-----------|-------------|-----------|
+| `cursor` | Não | Valor de `proximoCursor` da página anterior. Omita na primeira página |
+| `clienteFinal` | Não | Só entidades com este `clienteFinal` (valor exato) |
+| `referenciaExterna` | Não | Só entidades com esta `referenciaExterna` (valor exato) |
+| `situacao` | Não | `ACOMPANHANDO` ou `AGUARDANDO_CAPTURA`. Restringe a entidades `PROCESSO` naquela situação |
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/entidades?clienteFinal=escritorio-0042' \
+--header 'Authorization: Bearer {accessToken}'
+```
+
+Próxima página:
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/entidades?clienteFinal=escritorio-0042&cursor=eyJpZCI6MTAwMDB9' \
+--header 'Authorization: Bearer {accessToken}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+{
+  "entidades": [
+    {
+      "entidadeId": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80",
+      "tipo": "EMPRESA",
+      "clienteFinal": "escritorio-0042",
+      "referenciaExterna": "contrato-31",
+      "operacao": "ATUALIZACOES",
+      "origensDocumento": ["TRIBUNAL", "CATALOGO", "AGREGADO"],
+      "raizCnpj": "12345678",
+      "nomes": ["ACME COMERCIO DE ALIMENTOS LTDA"],
+      "criadoEm": "2026-11-03T14:02:11Z",
+      "alteradoEm": null
+    },
+    {
+      "entidadeId": "0a9b8c7d-6e5f-4a3b-2c1d-0e9f8a7b6c5d",
+      "tipo": "PROCESSO",
+      "clienteFinal": "escritorio-0042",
+      "referenciaExterna": "pasta-778",
+      "operacao": "ATUALIZACOES",
+      "numeroProcessoUnico": "00012340320268260100",
+      "situacao": "ACOMPANHANDO",
+      "encontradoEm": "2026-11-04T03:10:00Z",
+      "criadoEm": "2026-11-03T14:02:11Z",
+      "alteradoEm": null
+    }
+  ],
+  "proximoCursor": "eyJpZCI6MTAwMDB9"
+}
+```
+
+| Campo | Descrição |
+|-------|-----------|
+| `entidades` | Entidades da página. Campos em [Estrutura da Entidade](../estrutura) |
+| `proximoCursor` | Cursor da próxima página. `null` = não há mais páginas |
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Página retornada (pode vir vazia) |
+| `400` | Cursor ou `situacao` inválidos |
+| `401` | Token inválido ou expirado |
+| `403` | Conta sem a permissão `MONITORAMENTO_V2` |
+
+---
+
+## 💡 Dica
+
+> O cursor é opaco: use exatamente o valor recebido, sem montá-lo. Entidades cadastradas durante a paginação aparecem nas últimas páginas.
+
+> Use `situacao=AGUARDANDO_CAPTURA` para ver quais processos cadastrados ainda não estão na base da Predictus.

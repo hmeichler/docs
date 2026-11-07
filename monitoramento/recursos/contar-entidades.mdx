@@ -1,0 +1,72 @@
+---
+title: "Contar Entidades"
+description: "Consulte quantas entidades ativas você monitora, por tipo e por situação dos processos."
+---
+
+# 🔎 Contar Entidades
+
+Este endpoint retorna quantas entidades ativas a sua conta tem, no total e por tipo — opcionalmente só de um `clienteFinal` ou de uma `referenciaExterna`.
+
+Para a contagem de todos os clientes finais de uma vez, use [Contar por Cliente Final](./contar-por-cliente-final).
+
+---
+
+## 🔗 Endpoint
+
+```
+GET https://api.predictus.com.br/predictus-api/monitoramento/contagem
+```
+
+---
+
+## 📚 Parâmetros
+
+| Parâmetro | Obrigatório | Descrição |
+|-----------|-------------|-----------|
+| `clienteFinal` | Não | Conta só as entidades com este `clienteFinal` (valor exato) |
+| `referenciaExterna` | Não | Conta só as entidades com esta `referenciaExterna` (valor exato) |
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/contagem?clienteFinal=escritorio-0042' \
+--header 'Authorization: Bearer {accessToken}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+{
+  "total": 15230,
+  "porTipo": { "EMPRESA": 1200, "PESSOA": 9800, "ADVOGADO": 30, "PROCESSO": 4200 },
+  "processosPorSituacao": { "ACOMPANHANDO": 4050, "AGUARDANDO_CAPTURA": 150 }
+}
+```
+
+| Campo | Descrição |
+|-------|-----------|
+| `total` | Total de entidades ativas |
+| `porTipo` | Quantidade por tipo de entidade |
+| `processosPorSituacao` | Entidades `PROCESSO` por situação: `ACOMPANHANDO` (na base) e `AGUARDANDO_CAPTURA` (ainda não) |
+
+Todas as chaves de `porTipo` e `processosPorSituacao` sempre aparecem, com `0` quando não há entidades.
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Contagem retornada |
+| `401` | Token inválido ou expirado |
+| `403` | Conta sem a permissão `MONITORAMENTO_V2` |
+
+---
+
+## 💡 Dica
+
+> Use `total` com `?clienteFinal=` como `quantidadeEsperada` na [remoção por cliente final](./remover-entidades).

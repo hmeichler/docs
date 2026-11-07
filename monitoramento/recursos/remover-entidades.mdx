@@ -1,0 +1,108 @@
+---
+title: "Remover Entidades"
+description: "Remova entidades monitoradas por lista de ids ou todas as entidades de um cliente final."
+---
+
+# 🔎 Remover Entidades
+
+Este endpoint remove entidades de duas formas:
+
+- **Por ids** — de 1 a 1.000 entidades, tudo ou nada.
+- **Por cliente final** — todas as entidades ativas de um `clienteFinal`, com uma trava de quantidade.
+
+A entidade removida para de gerar eventos na hora. Cadastrá-la de novo recomeça o monitoramento do zero: o que aconteceu enquanto ela esteve removida não é notificado.
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/monitoramento/remocoes
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+**Por ids:**
+
+```json
+{
+  "entidadeIds": [
+    "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80",
+    "0a9b8c7d-6e5f-4a3b-2c1d-0e9f8a7b6c5d"
+  ]
+}
+```
+
+**Por cliente final:**
+
+```json
+{
+  "clienteFinal": "escritorio-0042",
+  "quantidadeEsperada": 318
+}
+```
+
+---
+
+## 📚 Campos
+
+Informe **uma** das duas formas, nunca as duas.
+
+| Campo | Forma | Descrição |
+|-------|-------|-----------|
+| `entidadeIds` | por ids | Lista de 1 a 1.000 `entidadeId`, sem repetição |
+| `clienteFinal` | por cliente final | Valor exato do `clienteFinal` |
+| `quantidadeEsperada` | por cliente final | Quantas entidades ativas o cliente final tem hoje (de 1 a 10.000). Obtenha em [Contar Entidades](./contar-entidades) com `?clienteFinal=` |
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/remocoes' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "clienteFinal": "escritorio-0042",
+  "quantidadeEsperada": 318
+}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+```json
+{ "removidas": 318 }
+```
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Remoção concluída |
+| `400` | Corpo inválido, ou id inexistente / de outra conta na remoção por ids (com `invalidos`). Nada foi removido |
+| `401` | Token inválido ou expirado |
+| `403` | Conta sem a permissão `MONITORAMENTO_V2` |
+| `409` | O cliente final não tem exatamente `quantidadeEsperada` entidades ativas. Nada foi removido |
+| `422` | `quantidadeEsperada` acima de 10.000: remova em lotes de `entidadeIds` |
+
+Exemplo de `409`:
+
+```json
+{ "erro": "O cliente final tem 412 entidades ativas, não 318. Nada foi removido." }
+```
+
+---
+
+## 🛡️ Validações
+
+- **Por ids:** tudo ou nada. Id **já removido** conta como sucesso, então repetir a chamada após um timeout é seguro.
+- **Por cliente final:** remove somente se a quantidade atual for **exatamente** `quantidadeEsperada`. Um `clienteFinal` digitado errado não remove nada.
+- **Por cliente final** sem nenhuma entidade ativa retorna `200 { "removidas": 0 }`.
+- Entidades **sem** `clienteFinal` só podem ser removidas por ids.
+- Não existe remoção de todas as entidades da conta de uma vez.
