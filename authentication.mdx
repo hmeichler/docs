@@ -113,6 +113,8 @@ O próprio cliente pode trocar a senha da sua credencial, usando um token válid
 
 > Depois da troca, **todos os tokens emitidos antes dela deixam de valer** (em até 10 minutos), inclusive o usado na troca. Se a mesma credencial é usada em mais de um sistema, atualize a senha em todos: os que continuarem com a senha antiga deixam de autenticar.
 
+> ⚠️ Trocar a senha da credencial remove o webhook do Monitoramento. Os eventos continuam disponíveis na leitura; [configure o webhook](./monitoramento/recursos/configurar-webhook) de novo para voltar a recebê-los.
+
 ### 🔗 Endpoint
 
 ```

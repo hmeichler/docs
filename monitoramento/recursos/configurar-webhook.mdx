@@ -9,6 +9,8 @@ Este endpoint cadastra a URL do webhook da sua conta, ou troca a URL já cadastr
 
 Na **primeira configuração** (ou depois de [remover o webhook](./remover-webhook)), a resposta traz o **segredo** usado para [assinar as entregas](../webhook). Ele é exibido **uma única vez** — guarde-o com segurança. Trocar a URL mantém o segredo atual; para trocar o segredo, use [Girar Segredo](./girar-segredo).
 
+> ⚠️ Trocar a senha da credencial remove o webhook; configure-o de novo para voltar a receber (a resposta traz um novo segredo).
+
 ---
 
 ## 🔗 Endpoint
@@ -76,6 +78,7 @@ Troca de URL: o mesmo objeto, **sem** `segredo`. Campos descritos em [Consultar 
 | `401` | Token inválido ou expirado |
 | `403` | Conta sem a permissão `MONITORAMENTO_V2` |
 | `422` | URL recusada. A mensagem informa o motivo |
+| `429` | Mais de 20 alterações do webhook na última hora. Aguarde o tempo do cabeçalho `Retry-After` |
 
 Exemplo de `422`:
 
