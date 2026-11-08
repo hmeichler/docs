@@ -25,245 +25,278 @@
             ]
           },
           {
-            "group": "Dossiê Jurídico",
-            "pages": [
-              "dossie-juridico/overview",
-              "dossie-juridico/estrutura"
-            ]
-          },
-          {
-            "group": "Dossiê Jurídico - Recursos",
-            "pages": [
-              "dossie-juridico/recursos/buscar-movimentacoes-simplificado",
-              "dossie-juridico/recursos/buscar-movimentacoes",
-              "dossie-juridico/recursos/buscar-parte-por-cpf",
-              "dossie-juridico/recursos/buscar-parte-por-cnpj",
-              "dossie-juridico/recursos/buscar-parte-por-raiz-cnpj",
-              "dossie-juridico/recursos/buscar-parte-por-nome",
-              "dossie-juridico/recursos/buscar-parte-por-nome-exato",
-              "dossie-juridico/recursos/buscar-advogado-por-cpf",
-              "dossie-juridico/recursos/buscar-advogado-por-oab",
-              "dossie-juridico/recursos/buscar-advogado-por-nome",
-              "dossie-juridico/recursos/buscar-advogado-por-nome-exato",
-              "dossie-juridico/recursos/buscar-por-parametros",
-              "dossie-juridico/recursos/buscar-conflito-partes"
-            ]
-          },
-          {
-            "group": "Resume AI",
-            "pages": [
-              "resume-ai/overview"
-            ]
-          },
-          {
-            "group": "Resume AI - Recursos",
-            "pages": [
-              "resume-ai/recursos/buscar-por-numero-cnj"
-            ]
-          },
-          {
-            "group": "Raio-X",
-            "pages": [
-              "raio-x/overview"
-            ]
-          },
-          {
-            "group": "Raio-X - Recursos",
-            "pages": [
-              "raio-x/recursos/buscar-por-cpf-parte",
-              "raio-x/recursos/buscar-por-cnpj-parte",
-              "raio-x/recursos/buscar-por-raiz-cnpj-parte",
-              "raio-x/recursos/buscar-por-oab",
-              "raio-x/recursos/buscar-por-cpf-advogado"
-            ]
-          },
-          {
-            "group": "Sumário Jurídico",
-            "pages": [
-              "sumario-juridico/overview"
-            ]
-          },
-          {
-            "group": "Sumário Jurídico - Recursos",
-            "pages": [
-              "sumario-juridico/recursos/sumario-parte-por-cpf",
-              "sumario-juridico/recursos/sumario-parte-por-cnpj",
-              "sumario-juridico/recursos/sumario-parte-por-nome",
-              "sumario-juridico/recursos/sumario-parte-por-nome-exato",
-              "sumario-juridico/recursos/sumario-advogado-por-cpf",
-              "sumario-juridico/recursos/sumario-advogado-por-oab",
-              "sumario-juridico/recursos/sumario-advogado-por-nome",
-              "sumario-juridico/recursos/sumario-advogado-por-nome-exato"
-            ]
-          },
-          {
-            "group": "Dossiê Recuperação Judicial",
-            "pages": [
-              "dossie-rj/overview"
-            ]
-          },
-          {
-            "group": "Dossiê Recuperação Judicial - Recursos",
-            "pages": [
-              "dossie-rj/recursos/buscar-rj-por-data",
-              "dossie-rj/recursos/buscar-rj-por-cnpj"
-            ]
-          },
-          {
-            "group": "Jurimetria",
-            "pages": [
-              "jurimetria/overview"
-            ]
-          },
-          {
-            "group": "Jurimetria - Recursos",
-            "pages": [
-              "jurimetria/recursos/buscar-por-numero-cnj"
-            ]
-          },
-          {
-            "group": "Autos Processuais",
-            "pages": [
-              "docket/overview"
-            ]
-          },
-          {
-            "group": "Autos Processuais - Recursos",
-            "pages": [
-              "docket/recursos/buscar-autos",
-              "docket/recursos/buscar-resultado"
-            ]
-          },
-          {
-            "group": "Diário Oficial",
-            "pages": [
-              "diario-oficial/overview"
-            ]
-          },
-          {
-            "group": "Diário Oficial - Recursos",
-            "pages": [
-              "diario-oficial/recursos/buscar-por-termos",
-              "diario-oficial/recursos/buscar-por-diario"
-            ]
-          },
-          {
-            "group": "Mandado de Prisão",
-            "pages": [
-              "bnmp/overview"
-            ]
-          },
-          {
-            "group": "Mandado de Prisão - Recursos",
-            "pages": [
-              "bnmp/recursos/buscar-por-cpf"
-            ]
-          },
-          {
-            "group": "Dossiê Financeiro",
-            "pages": [
-              "dossie-financeiro/overview",
-              "dossie-financeiro/estrutura-pf",
-              "dossie-financeiro/estrutura-pj"
-            ]
-          },
-          {
-            "group": "Dossiê Financeiro - Recursos",
-            "pages": [
-              "dossie-financeiro/recursos/buscar-dossie-por-cpf",
-              "dossie-financeiro/recursos/buscar-dossie-por-cnpj"
-            ]
-          },
-          {
-            "group": "Dossiê Cadastral",
-            "pages": [
-              "dossie-cadastral/overview",
-              "dossie-cadastral/estrutura-pf",
-              "dossie-cadastral/estrutura-pj"
-            ]
-          },
-          {
-            "group": "Dossiê Cadastral - Recursos",
-            "pages": [
-              "dossie-cadastral/recursos/buscar-dados-cadastrais-pf",
-              "dossie-cadastral/recursos/buscar-dados-cadastrais-pj"
-            ]
-          },
-          {
-            "group": "Exposição a Organizações Criminosas",
-            "pages": [
-              "exposicao/overview"
-            ]
-          },
-          {
-            "group": "Exposição a Organizações Criminosas - Recursos",
-            "pages": [
-              "exposicao/recursos/check",
-              "exposicao/recursos/dossie"
-            ]
-          },
-          {
-            "group": "Monitoramento",
-            "pages": [
-              "monitoramento/comece-aqui",
-              "monitoramento/overview",
-              "monitoramento/estrutura",
-              "monitoramento/webhook"
-            ]
-          },
-          {
-            "group": "Monitoramento - Recursos",
+            "group": "Produtos",
             "pages": [
               {
-                "group": "Entidades",
-                "expanded": true,
-                "pages": [
-                  "monitoramento/recursos/cadastrar-entidades",
-                  "monitoramento/recursos/listar-entidades",
-                  "monitoramento/recursos/consultar-entidade",
-                  "monitoramento/recursos/alterar-entidade",
-                  "monitoramento/recursos/remover-entidades"
-                ]
-              },
-              {
-                "group": "Eventos",
-                "expanded": true,
-                "pages": [
-                  "monitoramento/recursos/ler-eventos",
-                  "monitoramento/recursos/confirmar-eventos"
-                ]
-              },
-              {
-                "group": "Webhook (opcional)",
-                "expanded": true,
-                "pages": [
-                  "monitoramento/recursos/configurar-webhook",
-                  "monitoramento/recursos/testar-webhook",
-                  "monitoramento/recursos/remover-webhook"
-                ]
-              },
-              {
-                "group": "Avançado",
+                "group": "Dossiê Jurídico",
                 "expanded": false,
                 "pages": [
-                  "monitoramento/recursos/contar-entidades",
-                  "monitoramento/recursos/consultar-webhook",
-                  "monitoramento/recursos/girar-segredo",
-                  "monitoramento/recursos/historico-entregas"
+                  "dossie-juridico/overview",
+                  "dossie-juridico/estrutura",
+                  {
+                    "group": "Recursos",
+                    "expanded": true,
+                    "pages": [
+                      "dossie-juridico/recursos/buscar-movimentacoes-simplificado",
+                      "dossie-juridico/recursos/buscar-movimentacoes",
+                      "dossie-juridico/recursos/buscar-parte-por-cpf",
+                      "dossie-juridico/recursos/buscar-parte-por-cnpj",
+                      "dossie-juridico/recursos/buscar-parte-por-raiz-cnpj",
+                      "dossie-juridico/recursos/buscar-parte-por-nome",
+                      "dossie-juridico/recursos/buscar-parte-por-nome-exato",
+                      "dossie-juridico/recursos/buscar-advogado-por-cpf",
+                      "dossie-juridico/recursos/buscar-advogado-por-oab",
+                      "dossie-juridico/recursos/buscar-advogado-por-nome",
+                      "dossie-juridico/recursos/buscar-advogado-por-nome-exato",
+                      "dossie-juridico/recursos/buscar-por-parametros",
+                      "dossie-juridico/recursos/buscar-conflito-partes"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Resume AI",
+                "expanded": false,
+                "pages": [
+                  "resume-ai/overview",
+                  {
+                    "group": "Recursos",
+                    "expanded": true,
+                    "pages": [
+                      "resume-ai/recursos/buscar-por-numero-cnj"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Raio-X",
+                "expanded": false,
+                "pages": [
+                  "raio-x/overview",
+                  {
+                    "group": "Recursos",
+                    "expanded": true,
+                    "pages": [
+                      "raio-x/recursos/buscar-por-cpf-parte",
+                      "raio-x/recursos/buscar-por-cnpj-parte",
+                      "raio-x/recursos/buscar-por-raiz-cnpj-parte",
+                      "raio-x/recursos/buscar-por-oab",
+                      "raio-x/recursos/buscar-por-cpf-advogado"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Sumário Jurídico",
+                "expanded": false,
+                "pages": [
+                  "sumario-juridico/overview",
+                  {
+                    "group": "Recursos",
+                    "expanded": true,
+                    "pages": [
+                      "sumario-juridico/recursos/sumario-parte-por-cpf",
+                      "sumario-juridico/recursos/sumario-parte-por-cnpj",
+                      "sumario-juridico/recursos/sumario-parte-por-nome",
+                      "sumario-juridico/recursos/sumario-parte-por-nome-exato",
+                      "sumario-juridico/recursos/sumario-advogado-por-cpf",
+                      "sumario-juridico/recursos/sumario-advogado-por-oab",
+                      "sumario-juridico/recursos/sumario-advogado-por-nome",
+                      "sumario-juridico/recursos/sumario-advogado-por-nome-exato"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Dossiê Recuperação Judicial",
+                "expanded": false,
+                "pages": [
+                  "dossie-rj/overview",
+                  {
+                    "group": "Recursos",
+                    "expanded": true,
+                    "pages": [
+                      "dossie-rj/recursos/buscar-rj-por-data",
+                      "dossie-rj/recursos/buscar-rj-por-cnpj"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Jurimetria",
+                "expanded": false,
+                "pages": [
+                  "jurimetria/overview",
+                  {
+                    "group": "Recursos",
+                    "expanded": true,
+                    "pages": [
+                      "jurimetria/recursos/buscar-por-numero-cnj"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Autos Processuais",
+                "expanded": false,
+                "pages": [
+                  "docket/overview",
+                  {
+                    "group": "Recursos",
+                    "expanded": true,
+                    "pages": [
+                      "docket/recursos/buscar-autos",
+                      "docket/recursos/buscar-resultado"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Diário Oficial",
+                "expanded": false,
+                "pages": [
+                  "diario-oficial/overview",
+                  {
+                    "group": "Recursos",
+                    "expanded": true,
+                    "pages": [
+                      "diario-oficial/recursos/buscar-por-termos",
+                      "diario-oficial/recursos/buscar-por-diario"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Mandado de Prisão",
+                "expanded": false,
+                "pages": [
+                  "bnmp/overview",
+                  {
+                    "group": "Recursos",
+                    "expanded": true,
+                    "pages": [
+                      "bnmp/recursos/buscar-por-cpf"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Dossiê Financeiro",
+                "expanded": false,
+                "pages": [
+                  "dossie-financeiro/overview",
+                  "dossie-financeiro/estrutura-pf",
+                  "dossie-financeiro/estrutura-pj",
+                  {
+                    "group": "Recursos",
+                    "expanded": true,
+                    "pages": [
+                      "dossie-financeiro/recursos/buscar-dossie-por-cpf",
+                      "dossie-financeiro/recursos/buscar-dossie-por-cnpj"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Dossiê Cadastral",
+                "expanded": false,
+                "pages": [
+                  "dossie-cadastral/overview",
+                  "dossie-cadastral/estrutura-pf",
+                  "dossie-cadastral/estrutura-pj",
+                  {
+                    "group": "Recursos",
+                    "expanded": true,
+                    "pages": [
+                      "dossie-cadastral/recursos/buscar-dados-cadastrais-pf",
+                      "dossie-cadastral/recursos/buscar-dados-cadastrais-pj"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Exposição a Organizações Criminosas",
+                "expanded": false,
+                "pages": [
+                  "exposicao/overview",
+                  {
+                    "group": "Recursos",
+                    "expanded": true,
+                    "pages": [
+                      "exposicao/recursos/check",
+                      "exposicao/recursos/dossie"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Monitoramento",
+                "expanded": false,
+                "pages": [
+                  "monitoramento/comece-aqui",
+                  "monitoramento/overview",
+                  "monitoramento/estrutura",
+                  "monitoramento/webhook",
+                  {
+                    "group": "Recursos",
+                    "expanded": true,
+                    "pages": [
+                      {
+                        "group": "Entidades",
+                        "expanded": true,
+                        "pages": [
+                          "monitoramento/recursos/cadastrar-entidades",
+                          "monitoramento/recursos/listar-entidades",
+                          "monitoramento/recursos/consultar-entidade",
+                          "monitoramento/recursos/alterar-entidade",
+                          "monitoramento/recursos/remover-entidades"
+                        ]
+                      },
+                      {
+                        "group": "Eventos",
+                        "expanded": true,
+                        "pages": [
+                          "monitoramento/recursos/ler-eventos",
+                          "monitoramento/recursos/confirmar-eventos"
+                        ]
+                      },
+                      {
+                        "group": "Webhook (opcional)",
+                        "expanded": true,
+                        "pages": [
+                          "monitoramento/recursos/configurar-webhook",
+                          "monitoramento/recursos/testar-webhook",
+                          "monitoramento/recursos/remover-webhook"
+                        ]
+                      },
+                      {
+                        "group": "Avançado",
+                        "expanded": false,
+                        "pages": [
+                          "monitoramento/recursos/contar-entidades",
+                          "monitoramento/recursos/consultar-webhook",
+                          "monitoramento/recursos/girar-segredo",
+                          "monitoramento/recursos/historico-entregas"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Logs de Consumo",
+                "expanded": false,
+                "pages": [
+                  "consumo/overview",
+                  {
+                    "group": "Recursos",
+                    "expanded": true,
+                    "pages": [
+                      "consumo/recursos/consultar-consumo-resumo"
+                    ]
+                  }
                 ]
               }
-            ]
-          },
-          {
-            "group": "Logs de Consumo",
-            "pages": [
-              "consumo/overview"
-            ]
-          },
-          {
-            "group": "Logs de Consumo - Recursos",
-            "pages": [
-              "consumo/recursos/consultar-consumo-resumo"
             ]
           },
           {
