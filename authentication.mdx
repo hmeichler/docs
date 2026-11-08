@@ -23,7 +23,7 @@ sequenceDiagram
     S->>P: POST /auth (username e password)
     P-->>S: accessToken (válido por 30 minutos)
     loop enquanto o token for válido
-        S->>P: chamada com Authorization: Bearer {accessToken}
+        S->>P: chamada com o header Authorization: Bearer + token
         P-->>S: resposta
     end
     Note over S,P: token expirado responde 401, sem refresh token
