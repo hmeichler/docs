@@ -33,7 +33,14 @@ GET https://api.predictus.com.br/predictus-api/monitoramento/entidades
 ## 📥 Exemplo de cURL
 
 ```bash
-curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/entidades?clienteFinal=escritorio-0042' \
+curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/entidades?clienteFinal=escritorio-0042&referenciaExterna=pasta-778&situacao=ACOMPANHANDO' \
+--header 'Authorization: Bearer {accessToken}'
+```
+
+Mínimo (primeira página, sem filtros):
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/entidades' \
 --header 'Authorization: Bearer {accessToken}'
 ```
 
@@ -55,11 +62,12 @@ curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/entida
       "entidadeId": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80",
       "tipo": "EMPRESA",
       "clienteFinal": "escritorio-0042",
-      "referenciaExterna": "contrato-31",
+      "referenciaExterna": "pasta-778",
       "operacao": "ATUALIZACOES",
-      "origensDocumento": ["TRIBUNAL", "CATALOGO", "AGREGADO"],
+      "origensDocumento": ["CATALOGO", "TRIBUNAL"],
       "raizCnpj": "12345678",
       "nomes": ["ACME COMERCIO DE ALIMENTOS LTDA"],
+      "filtros": { "polos": ["PASSIVO"], "ufs": ["SP", "RJ"] },
       "criadoEm": "2026-11-03T14:02:11Z",
       "alteradoEm": null
     },
@@ -67,8 +75,7 @@ curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/entida
       "entidadeId": "0a9b8c7d-6e5f-4a3b-2c1d-0e9f8a7b6c5d",
       "tipo": "PROCESSO",
       "clienteFinal": "escritorio-0042",
-      "referenciaExterna": "pasta-778",
-      "operacao": "ATUALIZACOES",
+      "referenciaExterna": "pasta-779",
       "numeroProcessoUnico": "00012340320268260100",
       "situacao": "ACOMPANHANDO",
       "encontradoEm": "2026-11-04T03:10:00Z",

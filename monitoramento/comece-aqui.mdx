@@ -19,7 +19,7 @@ Todas as chamadas usam o `accessToken` obtido em [Autenticação](../authenticat
 
 ## 1️⃣ Cadastre uma empresa
 
-Monitore todos os processos de uma empresa pela raiz do CNPJ (os 8 primeiros caracteres):
+Monitore todos os processos de uma empresa pela raiz do CNPJ (os 8 primeiros caracteres). Exemplo com todos os campos que a entidade aceita:
 
 ```bash
 curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/entidades' \
@@ -27,9 +27,29 @@ curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/entida
 --header 'Authorization: Bearer {accessToken}' \
 --data '{
   "entidades": [
-    { "tipo": "EMPRESA", "raizCnpj": "12345678" }
+    {
+      "tipo": "EMPRESA",
+      "clienteFinal": "escritorio-0042",
+      "referenciaExterna": "pasta-778",
+      "operacao": "ATUALIZACOES",
+      "origensDocumento": ["TRIBUNAL", "CATALOGO"],
+      "raizCnpj": "12345678",
+      "nomes": ["ACME COMERCIO DE ALIMENTOS LTDA", "ACME COMERCIO DE ALIMENTOS LTDA."],
+      "filtros": { "polos": ["PASSIVO"], "ufs": ["SP", "RJ"], "valorCausa": { "maiorIgualQue": 50000 } }
+    }
   ]
 }'
+```
+
+- `operacao` (**obrigatório**): `NOVOS` (só processos e recursos novos) ou `ATUALIZACOES` (novos **e** novidades nos processos).
+- `origensDocumento` (**obrigatório**): de onde pode vir o documento que casa com a empresa (`TRIBUNAL`, `CATALOGO`, `AGREGADO`).
+- `clienteFinal` e `referenciaExterna` (opcionais): **de quem** é a entidade e **qual registro** do seu sistema ela representa. Voltam em todo evento — veja [Estrutura](./estrutura).
+- `nomes` e `filtros` (opcionais): veja [Estrutura](./estrutura).
+
+Mínimo:
+
+```json
+{ "entidades": [ { "tipo": "EMPRESA", "operacao": "ATUALIZACOES", "origensDocumento": ["TRIBUNAL"], "raizCnpj": "12345678" } ] }
 ```
 
 Resposta:
@@ -37,7 +57,7 @@ Resposta:
 ```json
 {
   "entidades": [
-    { "indice": 0, "entidadeId": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80", "clienteFinal": null, "referenciaExterna": null }
+    { "indice": 0, "entidadeId": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80", "clienteFinal": "escritorio-0042", "referenciaExterna": "pasta-778" }
   ]
 }
 ```
@@ -63,20 +83,22 @@ Resposta:
     {
       "eventoId": "2b0e8f4a-7c1d-5e3f-9a2b-4c6d8e0f1a2b",
       "entidadeId": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80",
-      "clienteFinal": null,
-      "referenciaExterna": null,
+      "clienteFinal": "escritorio-0042",
+      "referenciaExterna": "pasta-778",
       "tipoNotificacao": "PROCESSO_NOVO",
       "numeroProcessoUnico": "00012340320268260100",
-      "instancia": { "tribunal": "TJ-SP", "grau": 1, "classeProcessual": "PROCEDIMENTO COMUM CIVEL", "dataDistribuicao": "2026-11-02" },
-      "casouPor": { "tipo": "CNPJ_RAIZ", "valor": "12345678", "origem": "TRIBUNAL" },
-      "dataCaptura": "2026-11-03T03:14:00Z",
-      "sequencia": 1
+      "tribunal": "TJ-SP",
+      "grauProcesso": 1,
+      "classeProcessual": { "nome": "PROCEDIMENTO COMUM CIVEL", "codigoCNJ": "7" },
+      "dataDistribuicao": "2026-11-02",
+      "casouPor": { "tipo": "RAIZ_CNPJ", "valor": "12345678", "origem": "TRIBUNAL" },
+      "dataProcessamento": "2026-11-03T03:14:00Z"
     }
   ]
 }
 ```
 
-Cada evento diz **qual processo** (`numeroProcessoUnico`) e **de qual entidade** (`entidadeId`). Para ver o conteúdo do processo, consulte-o pelo número em [Buscar por Número CNJ (Capa)](https://docs.predictus.inf.br/dossie-juridico/recursos/buscar-movimentacoes-simplificado).
+Cada evento diz **qual processo** (`numeroProcessoUnico`), **de qual entidade** (`entidadeId`, com a sua `referenciaExterna`) e **o tipo** (`PROCESSO_NOVO`, `RECURSO_NOVO` ou `ATUALIZACAO`). Para ver o conteúdo do processo, consulte-o pelo número em [Buscar por Número CNJ (Capa)](https://docs.predictus.inf.br/dossie-juridico/recursos/buscar-movimentacoes-simplificado).
 
 Se a lista vier vazia (`"eventos": []`), não há nada novo — tente de novo mais tarde.
 

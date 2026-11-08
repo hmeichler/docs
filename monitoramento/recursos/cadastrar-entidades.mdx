@@ -21,35 +21,71 @@ POST https://api.predictus.com.br/predictus-api/monitoramento/entidades
 
 ## 🧾 Corpo da requisição
 
+Exemplo com todos os campos de cada tipo:
+
 ```json
 {
   "entidades": [
     {
       "tipo": "EMPRESA",
       "clienteFinal": "escritorio-0042",
-      "referenciaExterna": "contrato-31",
+      "referenciaExterna": "pasta-778",
+      "operacao": "ATUALIZACOES",
+      "origensDocumento": ["TRIBUNAL", "CATALOGO"],
       "raizCnpj": "12345678",
       "nomes": ["ACME COMERCIO DE ALIMENTOS LTDA", "ACME COMERCIO DE ALIMENTOS LTDA.", "ACME ALIMENTOS S.A."],
-      "filtros": { "ufs": ["SP", "RJ"], "valorCausa": { "maiorIgualQue": 50000 } }
+      "filtros": { "polos": ["PASSIVO"], "ufs": ["SP", "RJ"], "valorCausa": { "maiorIgualQue": 50000 } }
+    },
+    {
+      "tipo": "EMPRESA",
+      "clienteFinal": "escritorio-0042",
+      "referenciaExterna": "pasta-780",
+      "operacao": "NOVOS",
+      "origensDocumento": ["TRIBUNAL"],
+      "cnpj": "12345678000276",
+      "nomes": ["ACME COMERCIO DE ALIMENTOS LTDA - FILIAL CAMPINAS"],
+      "filtros": { "tribunais": ["TJ-SP", "TRT-2"] }
     },
     {
       "tipo": "PESSOA",
+      "clienteFinal": "escritorio-0042",
+      "referenciaExterna": "cadastro-5521",
+      "operacao": "NOVOS",
+      "origensDocumento": ["TRIBUNAL", "CATALOGO", "AGREGADO"],
       "cpf": "12345678909",
       "nomes": ["MARIA DA SILVA", "MARIA DA SILVA SOUZA"],
-      "operacao": "NOVOS",
-      "origensDocumento": ["TRIBUNAL"]
+      "filtros": { "polos": ["PASSIVO"], "grausProcesso": [1, 2] }
     },
     {
       "tipo": "ADVOGADO",
+      "clienteFinal": "escritorio-0042",
+      "referenciaExterna": "advogado-12",
+      "operacao": "ATUALIZACOES",
+      "origensDocumento": ["TRIBUNAL"],
       "oabs": [{ "uf": "SP", "numero": 123456 }, { "uf": "RJ", "numero": 98765 }],
-      "nomes": ["JOAO PEREIRA"]
+      "cpf": "12345678909",
+      "nomes": ["JOAO PEREIRA"],
+      "filtros": { "ufs": ["SP", "RJ"] }
     },
     {
       "tipo": "PROCESSO",
-      "numeroProcessoUnico": "00012340320268260100",
       "clienteFinal": "escritorio-0042",
-      "referenciaExterna": "pasta-778"
+      "referenciaExterna": "pasta-779",
+      "numeroProcessoUnico": "00012340320268260100"
     }
+  ]
+}
+```
+
+Mínimo (um item de cada tipo):
+
+```json
+{
+  "entidades": [
+    { "tipo": "EMPRESA", "operacao": "ATUALIZACOES", "origensDocumento": ["TRIBUNAL"], "raizCnpj": "12345678" },
+    { "tipo": "PESSOA", "operacao": "NOVOS", "origensDocumento": ["TRIBUNAL"], "cpf": "12345678909" },
+    { "tipo": "ADVOGADO", "operacao": "ATUALIZACOES", "origensDocumento": ["TRIBUNAL"], "oabs": [{ "uf": "SP", "numero": 123456 }] },
+    { "tipo": "PROCESSO", "numeroProcessoUnico": "00012340320268260100" }
   ]
 }
 ```
@@ -58,23 +94,26 @@ POST https://api.predictus.com.br/predictus-api/monitoramento/entidades
 
 ## 📚 Campos
 
-- `entidades` (lista) — **obrigatório**, de 1 a 1.000 itens.
+| Campo | Tipo | Obrigatório | Descrição |
+|-------|------|-------------|-----------|
+| `entidades` | lista | Sim | De 1 a 1.000 itens, cada um um objeto **Entidade** |
 
-Cada item segue o objeto **Entidade**. Principais campos:
+Campos de cada entidade:
 
 | Campo | Obrigatório | Descrição |
 |-------|-------------|-----------|
-| `tipo` | **Sim** | `EMPRESA`, `PESSOA`, `ADVOGADO` ou `PROCESSO` |
-| `raizCnpj` / `cnpjs` | `EMPRESA`: um dos dois | Raiz de 8 caracteres, ou de 1 a 500 CNPJs da mesma raiz |
-| `cpf` | `PESSOA`: sim. `ADVOGADO`: este ou `oabs` | 11 dígitos |
-| `oabs` | `ADVOGADO`: este ou `cpf` | De 1 a 27 `{ "uf", "numero" }` |
-| `numeroProcessoUnico` | `PROCESSO`: sim | 20 dígitos, sem máscara |
-| `nomes` | Não | Até 10 (`EMPRESA`) ou 2 (`PESSOA`, `ADVOGADO`). Não aceito em `PROCESSO` |
-| `clienteFinal` | Não | Seu cliente dono da entidade (até 64 caracteres) |
-| `referenciaExterna` | Não | Código do registro no seu sistema (até 64 caracteres) |
-| `operacao` | Não | `NOVOS` ou `ATUALIZACOES` (padrão) |
-| `origensDocumento` | Não | `TRIBUNAL`, `CATALOGO`, `AGREGADO`. Ausente = todas |
-| `filtros` | Não | Filtros sobre o processo. Não aceito em `PROCESSO` |
+| `tipo` | Sim | `EMPRESA`, `PESSOA`, `ADVOGADO` ou `PROCESSO` |
+| `operacao` | Sim em `EMPRESA`, `PESSOA` e `ADVOGADO`; não aceito em `PROCESSO` | `NOVOS` ou `ATUALIZACOES` |
+| `origensDocumento` | Sim em `EMPRESA`, `PESSOA` e `ADVOGADO`; não aceito em `PROCESSO` | Uma ou mais de `TRIBUNAL`, `CATALOGO`, `AGREGADO` |
+| `raizCnpj` | `EMPRESA`: este **ou** `cnpj`, nunca os dois. Não aceito nos outros tipos | Raiz de 8 caracteres. Cobre todos os CNPJs da raiz |
+| `cnpj` | `EMPRESA`: este **ou** `raizCnpj`, nunca os dois. Não aceito nos outros tipos | Um CNPJ de 14 caracteres, de qualquer estabelecimento (matriz ou filial) |
+| `cpf` | Sim em `PESSOA`. Em `ADVOGADO`, este e/ou `oabs`. Não aceito em `EMPRESA` e `PROCESSO` | 11 dígitos |
+| `oabs` | Em `ADVOGADO`, este e/ou `cpf`. Não aceito nos outros tipos | De 1 a 27 `{ "uf", "numero" }` |
+| `numeroProcessoUnico` | Sim em `PROCESSO`. Não aceito nos outros tipos | 20 dígitos, sem máscara |
+| `clienteFinal` | Não | De quem é a entidade (até 64 caracteres) |
+| `referenciaExterna` | Não | Qual registro do seu sistema a entidade representa (até 64 caracteres). Volta em todo evento |
+| `nomes` | Não; não aceito em `PROCESSO` | Até 10 (`EMPRESA`) ou 2 (`PESSOA`, `ADVOGADO`) |
+| `filtros` | Não; não aceito em `PROCESSO` | Filtros sobre o processo |
 
 Descrição completa de cada campo, dos filtros e das regras em [Estrutura da Entidade e do Evento](../estrutura).
 
@@ -88,8 +127,22 @@ curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/entida
 --header 'Authorization: Bearer {accessToken}' \
 --data '{
   "entidades": [
-    { "tipo": "PESSOA", "cpf": "12345678909" },
-    { "tipo": "PROCESSO", "numeroProcessoUnico": "00012340320268260100" }
+    {
+      "tipo": "PESSOA",
+      "clienteFinal": "escritorio-0042",
+      "referenciaExterna": "cadastro-5521",
+      "operacao": "NOVOS",
+      "origensDocumento": ["TRIBUNAL", "CATALOGO"],
+      "cpf": "12345678909",
+      "nomes": ["MARIA DA SILVA"],
+      "filtros": { "polos": ["PASSIVO"] }
+    },
+    {
+      "tipo": "PROCESSO",
+      "clienteFinal": "escritorio-0042",
+      "referenciaExterna": "pasta-779",
+      "numeroProcessoUnico": "00012340320268260100"
+    }
   ]
 }'
 ```
@@ -103,8 +156,8 @@ Um item por entidade, **na mesma ordem do lote**:
 ```json
 {
   "entidades": [
-    { "indice": 0, "entidadeId": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80", "clienteFinal": null, "referenciaExterna": null },
-    { "indice": 1, "entidadeId": "0a9b8c7d-6e5f-4a3b-2c1d-0e9f8a7b6c5d", "clienteFinal": null, "referenciaExterna": null, "situacao": "AGUARDANDO_CAPTURA" }
+    { "indice": 0, "entidadeId": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80", "clienteFinal": "escritorio-0042", "referenciaExterna": "cadastro-5521" },
+    { "indice": 1, "entidadeId": "0a9b8c7d-6e5f-4a3b-2c1d-0e9f8a7b6c5d", "clienteFinal": "escritorio-0042", "referenciaExterna": "pasta-779", "situacao": "AGUARDANDO_CAPTURA" }
   ]
 }
 ```
@@ -133,7 +186,7 @@ Exemplo de `400`:
 {
   "erro": "Lote rejeitado: 2 entidades inválidas. Nada foi gravado.",
   "invalidos": [
-    { "indice": 1, "campo": "nomes[1]", "valor": "MARIA", "motivo": "Nome de pessoa precisa de ao menos 2 palavras" },
+    { "indice": 1, "campo": "operacao", "valor": null, "motivo": "O campo 'operacao' é obrigatório: NOVOS ou ATUALIZACOES." },
     { "indice": 3, "campo": "raizCnpj", "valor": "12345678", "motivo": "Já monitorada nesta conta", "entidadeIdExistente": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80" }
   ]
 }
@@ -146,11 +199,12 @@ Quando o limite de entidades do contrato é atingido, a resposta `400` não traz
 ## 🛡️ Validações
 
 - CPF, CNPJ e número do processo precisam ter **dígito verificador válido**. A raiz de CNPJ é validada só pelo formato.
-- Todos os `cnpjs` de uma entidade precisam ter a **mesma raiz**.
+- `EMPRESA` com `raizCnpj` e `cnpj` ao mesmo tempo é rejeitada.
+- `operacao` ou `origensDocumento` ausente em `EMPRESA`, `PESSOA` ou `ADVOGADO` é rejeitado, nomeando o campo.
 - UF da OAB entre as 27 seccionais; o par `uf` + `numero` não pode se repetir.
 - Nomes de `PESSOA` e `ADVOGADO` precisam de **ao menos 2 palavras**; nome vazio é rejeitado.
 - `ufs`, `tribunais`, `segmentos` e `ramosDoDireito` são validados contra as mesmas listas da busca; faixas precisam ter ao menos um limite, com o inferior menor ou igual ao superior.
-- `PROCESSO` com `operacao: "NOVOS"` é rejeitado.
+- `PROCESSO` com `operacao`, `origensDocumento`, `nomes` ou `filtros` é rejeitado.
 - Duplicidade com entidade viva do mesmo `clienteFinal` é rejeitada.
 - Campo desconhecido na entidade ou em `filtros` é rejeitado, nomeando o campo.
 

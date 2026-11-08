@@ -25,12 +25,12 @@ Cadastre empresas, pessoas, advogados ou processos e receba um **evento** quando
 
 | Tipo | O que monitora | Documento | Nomes |
 |------|----------------|-----------|-------|
-| `EMPRESA` | Processos em que a empresa é parte | uma raiz de CNPJ **ou** uma lista de CNPJs da mesma raiz | até 10 |
+| `EMPRESA` | Processos em que a empresa é parte | uma raiz de CNPJ **ou** um CNPJ | até 10 |
 | `PESSOA` | Processos em que a pessoa é parte | um CPF | até 2 |
 | `ADVOGADO` | Processos em que o advogado atua **como advogado** | até 27 OABs e/ou um CPF | até 2 |
 | `PROCESSO` | Um processo que você já conhece | um número de processo (CNJ) | — |
 
-- A **raiz de CNPJ** é o caminho recomendado para empresas: cobre todas as filiais, inclusive as abertas depois do cadastro.
+- A **raiz de CNPJ** é o caminho recomendado para empresas: cobre todas as filiais, inclusive as abertas depois do cadastro. Um `cnpj` monitora só aquele estabelecimento (matriz ou filial).
 - Os identificadores de uma entidade casam por **OR**: basta um deles aparecer no processo.
 - Um processo gera **um** evento por entidade, mesmo que vários identificadores dela apareçam nele (ex: matriz e filial).
 - `ADVOGADO` não casa quando a pessoa é **parte** do processo. Para isso, cadastre também uma `PESSOA` com o mesmo CPF.
@@ -40,16 +40,16 @@ Cadastre empresas, pessoas, advogados ou processos e receba um **evento** quando
 
 ## 🎚️ Níveis de notificação
 
-Cada entidade escolhe um nível no campo `operacao`:
+Cada `EMPRESA`, `PESSOA` e `ADVOGADO` escolhe um nível no campo `operacao`, que é **obrigatório**:
 
 | `operacao` | Você recebe |
 |------------|-------------|
 | `NOVOS` | Só `PROCESSO_NOVO` e `RECURSO_NOVO` — descoberta de ações e recursos recém-distribuídos |
-| `ATUALIZACOES` (padrão) | Tudo do nível `NOVOS` **e** as atualizações dos processos acompanhados |
+| `ATUALIZACOES` | Tudo do nível `NOVOS` **e** `ATUALIZACAO` dos processos acompanhados |
 
 - `ATUALIZACOES` contém `NOVOS`: não existe "só atualizações" para empresa, pessoa ou advogado. Para acompanhar apenas processos que você já conhece, cadastre-os como `PROCESSO`.
-- `PROCESSO` é sempre `ATUALIZACOES`.
-- No evento de atualização, `tipoNotificacao` vem **ausente**: o evento diz que o processo teve novidade; a consulta pelo número mostra qual.
+- `PROCESSO` não aceita `operacao`: é sempre acompanhado no nível de atualizações.
+- No evento de atualização, `tipoNotificacao` vem como `ATUALIZACAO`: o evento diz que o processo teve novidade; a consulta pelo número mostra qual.
 
 ---
 
@@ -78,7 +78,7 @@ Opcionais. **Nomes** ajudam a encontrar a parte quando o tribunal não registrou
 | **Webhook** (opcional) | Enviamos lotes de até 500 eventos por `POST` para a sua URL. Veja [Webhook](./webhook) |
 
 - **Um evento pode chegar mais de uma vez.** Deduplique pelo `eventoId`.
-- **Não há garantia de ordem.** Use `sequencia` para ordenar eventos da mesma entidade e instância.
+- **Não há garantia de ordem.** Se precisar, ordene pelo `dataProcessamento`.
 - Os dois canais podem ser usados juntos: cada evento chega por um deles e nunca se perde. A leitura também serve para recuperar eventos enquanto o seu webhook está fora do ar.
 - Um evento não entregue fica disponível por **14 dias**.
 
@@ -114,12 +114,10 @@ Em operações em lote (tudo ou nada), o erro lista os itens rejeitados:
 
 | Código | Quando |
 |--------|--------|
-| `400` | Corpo inválido ou regra de cadastro violada |
+| `400` | Corpo inválido, regra de cadastro violada, mudança de `tipo` na alteração ou URL de webhook recusada |
 | `401` | Token inválido ou expirado |
 | `403` | Conta sem a permissão `MONITORAMENTO_V2` |
 | `404` | Entidade inexistente, removida ou de outra conta |
-| `409` | Conflito (mudança de `tipo`, quantidade divergente na remoção por cliente final) |
-| `422` | URL de webhook recusada, ou remoção por cliente final acima do limite |
 | `429` | Limite de requisições; o cabeçalho `Retry-After` informa quantos segundos esperar |
 
 ---

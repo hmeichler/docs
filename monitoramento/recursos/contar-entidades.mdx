@@ -7,8 +7,6 @@ description: "Consulte quantas entidades ativas você monitora, por tipo e por s
 
 Este endpoint retorna quantas entidades ativas a sua conta tem, no total e por tipo — opcionalmente só de um `clienteFinal` ou de uma `referenciaExterna`.
 
-Para a contagem de todos os clientes finais de uma vez, use [Contar por Cliente Final](./contar-por-cliente-final).
-
 ---
 
 ## 🔗 Endpoint
@@ -31,7 +29,14 @@ GET https://api.predictus.com.br/predictus-api/monitoramento/contagem
 ## 📥 Exemplo de cURL
 
 ```bash
-curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/contagem?clienteFinal=escritorio-0042' \
+curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/contagem?clienteFinal=escritorio-0042&referenciaExterna=pasta-778' \
+--header 'Authorization: Bearer {accessToken}'
+```
+
+Mínimo (conta toda a conta):
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/contagem' \
 --header 'Authorization: Bearer {accessToken}'
 ```
 
@@ -65,8 +70,3 @@ Todas as chaves de `porTipo` e `processosPorSituacao` sempre aparecem, com `0` q
 | `401` | Token inválido ou expirado |
 | `403` | Conta sem a permissão `MONITORAMENTO_V2` |
 
----
-
-## 💡 Dica
-
-> Use `total` com `?clienteFinal=` como `quantidadeEsperada` na [remoção por cliente final](./remover-entidades).

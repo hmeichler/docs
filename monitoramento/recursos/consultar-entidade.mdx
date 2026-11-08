@@ -41,18 +41,34 @@ curl --location 'https://api.predictus.com.br/predictus-api/monitoramento/entida
   "entidadeId": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80",
   "tipo": "EMPRESA",
   "clienteFinal": "escritorio-0042",
-  "referenciaExterna": "contrato-31",
+  "referenciaExterna": "pasta-778",
   "operacao": "ATUALIZACOES",
-  "origensDocumento": ["TRIBUNAL", "CATALOGO", "AGREGADO"],
+  "origensDocumento": ["CATALOGO", "TRIBUNAL"],
   "raizCnpj": "12345678",
   "nomes": ["ACME COMERCIO DE ALIMENTOS LTDA", "ACME COMERCIO DE ALIMENTOS LTDA.", "ACME ALIMENTOS S.A."],
-  "filtros": { "ufs": ["SP", "RJ"], "valorCausa": { "maiorIgualQue": 50000 } },
+  "filtros": { "polos": ["PASSIVO"], "ufs": ["SP", "RJ"], "valorCausa": { "maiorIgualQue": 50000 } },
   "criadoEm": "2026-11-03T14:02:11Z",
   "alteradoEm": null
 }
 ```
 
-Campos em [Estrutura da Entidade](../estrutura).
+Entidade `PROCESSO` (sem `operacao` e `origensDocumento`, com `situacao` e `encontradoEm`):
+
+```json
+{
+  "entidadeId": "0a9b8c7d-6e5f-4a3b-2c1d-0e9f8a7b6c5d",
+  "tipo": "PROCESSO",
+  "clienteFinal": "escritorio-0042",
+  "referenciaExterna": "pasta-779",
+  "numeroProcessoUnico": "00012340320268260100",
+  "criadoEm": "2026-11-03T14:02:11Z",
+  "alteradoEm": null,
+  "situacao": "ACOMPANHANDO",
+  "encontradoEm": "2026-11-04T03:10:00Z"
+}
+```
+
+Campos, e quais aparecem em cada tipo, em [Estrutura da Entidade](../estrutura).
 
 ---
 

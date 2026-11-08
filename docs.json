@@ -247,7 +247,6 @@
                 "expanded": false,
                 "pages": [
                   "monitoramento/recursos/contar-entidades",
-                  "monitoramento/recursos/contar-por-cliente-final",
                   "monitoramento/recursos/consultar-webhook",
                   "monitoramento/recursos/girar-segredo",
                   "monitoramento/recursos/historico-entregas"

@@ -7,7 +7,7 @@ description: "Substitua por inteiro os documentos, nomes e configurações de um
 
 Este endpoint **substitui a entidade inteira** pelo corpo enviado: documentos, nomes, filtros e demais configurações. Campos omitidos são removidos — envie sempre a entidade completa, como no cadastro.
 
-Use para incluir ou remover nomes, CNPJs ou OABs, mudar filtros e nível de notificação, ou trocar raiz de CNPJ por lista de CNPJs (e vice-versa) em uma única chamada.
+Use para incluir ou remover nomes ou OABs, mudar filtros, nível de notificação e origens de documento, ou trocar raiz de CNPJ por um CNPJ (e vice-versa) em uma única chamada.
 
 ---
 
@@ -21,27 +21,36 @@ PUT https://api.predictus.com.br/predictus-api/monitoramento/entidades/{entidade
 
 ## 🧾 Corpo da requisição
 
-O mesmo objeto de um item do [cadastro](./cadastrar-entidades). O `tipo` precisa ser o mesmo da entidade.
+O mesmo objeto de um item do [cadastro](./cadastrar-entidades), com todos os campos que a entidade deve ter. O `tipo` precisa ser o mesmo da entidade.
 
 ```json
 {
   "tipo": "EMPRESA",
   "clienteFinal": "escritorio-0042",
-  "referenciaExterna": "contrato-31",
-  "cnpjs": ["12345678000195", "12345678000276"],
+  "referenciaExterna": "pasta-778",
+  "operacao": "ATUALIZACOES",
+  "origensDocumento": ["TRIBUNAL", "CATALOGO"],
+  "cnpj": "12345678000195",
   "nomes": ["ACME COMERCIO DE ALIMENTOS LTDA", "ACME COMERCIO DE ALIMENTOS LTDA."],
-  "filtros": { "ufs": ["SP", "RJ", "MG"] }
+  "filtros": { "polos": ["PASSIVO"], "ufs": ["SP", "RJ", "MG"] }
 }
+```
+
+Mínimo (o que ficar de fora é removido da entidade):
+
+```json
+{ "tipo": "EMPRESA", "operacao": "ATUALIZACOES", "origensDocumento": ["TRIBUNAL"], "cnpj": "12345678000195" }
 ```
 
 ---
 
 ## 📚 Campos
 
-Os mesmos do cadastro. Descrição completa em [Estrutura da Entidade](../estrutura).
-
-- `entidadeId` (path) — **obrigatório**.
-- `tipo` — **obrigatório** e igual ao atual. Para mudar o tipo, remova a entidade e cadastre de novo.
+| Campo | Obrigatório | Descrição |
+|-------|-------------|-----------|
+| `entidadeId` (path) | Sim | Identificador da entidade |
+| `tipo` | Sim | Igual ao atual. Para mudar o tipo, remova a entidade e cadastre de novo |
+| Demais campos | Como no [cadastro](./cadastrar-entidades): `operacao` e `origensDocumento` obrigatórios em `EMPRESA`, `PESSOA` e `ADVOGADO` | Descrição completa em [Estrutura da Entidade](../estrutura) |
 
 ---
 
@@ -54,10 +63,12 @@ curl --location --request PUT 'https://api.predictus.com.br/predictus-api/monito
 --data '{
   "tipo": "EMPRESA",
   "clienteFinal": "escritorio-0042",
-  "referenciaExterna": "contrato-31",
-  "cnpjs": ["12345678000195", "12345678000276"],
+  "referenciaExterna": "pasta-778",
+  "operacao": "ATUALIZACOES",
+  "origensDocumento": ["TRIBUNAL", "CATALOGO"],
+  "cnpj": "12345678000195",
   "nomes": ["ACME COMERCIO DE ALIMENTOS LTDA", "ACME COMERCIO DE ALIMENTOS LTDA."],
-  "filtros": { "ufs": ["SP", "RJ", "MG"] }
+  "filtros": { "polos": ["PASSIVO"], "ufs": ["SP", "RJ", "MG"] }
 }'
 ```
 
@@ -72,12 +83,12 @@ A entidade já alterada:
   "entidadeId": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80",
   "tipo": "EMPRESA",
   "clienteFinal": "escritorio-0042",
-  "referenciaExterna": "contrato-31",
+  "referenciaExterna": "pasta-778",
   "operacao": "ATUALIZACOES",
-  "origensDocumento": ["TRIBUNAL", "CATALOGO", "AGREGADO"],
-  "cnpjs": ["12345678000195", "12345678000276"],
+  "origensDocumento": ["CATALOGO", "TRIBUNAL"],
+  "cnpj": "12345678000195",
   "nomes": ["ACME COMERCIO DE ALIMENTOS LTDA", "ACME COMERCIO DE ALIMENTOS LTDA."],
-  "filtros": { "ufs": ["SP", "RJ", "MG"] },
+  "filtros": { "polos": ["PASSIVO"], "ufs": ["SP", "RJ", "MG"] },
   "criadoEm": "2026-11-03T14:02:11Z",
   "alteradoEm": "2026-11-05T10:20:00Z"
 }
@@ -90,11 +101,10 @@ A entidade já alterada:
 | Código | Significado |
 |--------|-------------|
 | `200` | Entidade alterada |
-| `400` | Corpo inválido ou regra de cadastro violada (com `invalidos`) |
+| `400` | Corpo inválido, regra de cadastro violada (com `invalidos`) ou `tipo` diferente do da entidade |
 | `401` | Token inválido ou expirado |
 | `403` | Conta sem a permissão `MONITORAMENTO_V2` |
 | `404` | Entidade inexistente, removida ou de outra conta |
-| `409` | `tipo` diferente do da entidade |
 
 ---
 

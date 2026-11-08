@@ -38,24 +38,29 @@ X-Predictus-Assinatura: t=1762178531,v1=5f2b9c...
       "eventoId": "2b0e8f4a-7c1d-5e3f-9a2b-4c6d8e0f1a2b",
       "entidadeId": "6f1c2a9e-0b7d-4c1e-9f3a-2d4b5c6e7f80",
       "clienteFinal": "escritorio-0042",
-      "referenciaExterna": "contrato-31",
+      "referenciaExterna": "pasta-778",
       "tipoNotificacao": "PROCESSO_NOVO",
       "numeroProcessoUnico": "00012340320268260100",
-      "instancia": { "tribunal": "TJ-SP", "grau": 1, "classeProcessual": "PROCEDIMENTO COMUM CIVEL", "dataDistribuicao": "2026-11-02" },
-      "casouPor": { "tipo": "CNPJ_RAIZ", "valor": "12345678", "origem": "TRIBUNAL" },
-      "dataCaptura": "2026-11-03T03:14:00Z",
-      "sequencia": 1
+      "tribunal": "TJ-SP",
+      "grauProcesso": 1,
+      "classeProcessual": { "nome": "PROCEDIMENTO COMUM CIVEL", "codigoCNJ": "7" },
+      "dataDistribuicao": "2026-11-02",
+      "casouPor": { "tipo": "RAIZ_CNPJ", "valor": "12345678", "origem": "TRIBUNAL" },
+      "dataProcessamento": "2026-11-03T03:14:00Z"
     },
     {
       "eventoId": "9c41d2e3-4f5a-5b6c-8d7e-9f0a1b2c3d4e",
       "entidadeId": "0a9b8c7d-6e5f-4a3b-2c1d-0e9f8a7b6c5d",
       "clienteFinal": "escritorio-0042",
-      "referenciaExterna": "pasta-778",
+      "referenciaExterna": "pasta-779",
+      "tipoNotificacao": "ATUALIZACAO",
       "numeroProcessoUnico": "50012349320258210001",
-      "instancia": { "tribunal": "TJ-RS", "grau": 2, "classeProcessual": "APELACAO CIVEL", "dataDistribuicao": "2026-05-14" },
-      "casouPor": { "tipo": "NPU", "valor": "50012349320258210001", "origem": null },
-      "dataCaptura": "2026-11-03T03:14:00Z",
-      "sequencia": 7
+      "tribunal": "TJ-RS",
+      "grauProcesso": 2,
+      "classeProcessual": { "nome": "APELACAO CIVEL", "codigoCNJ": "198" },
+      "dataDistribuicao": "2026-05-14",
+      "casouPor": { "tipo": "NUMERO_PROCESSO_UNICO", "valor": "50012349320258210001", "origem": null },
+      "dataProcessamento": "2026-11-03T03:14:00Z"
     }
   ]
 }
@@ -82,7 +87,7 @@ X-Predictus-Assinatura: t=1762178531,v1=5f2b9c...
 ## 🔁 Duplicidade e ordem
 
 - **Um evento pode chegar mais de uma vez** — por exemplo, se a sua resposta não chegar até nós a tempo. Deduplique pelo `eventoId`.
-- **Não há garantia de ordem.** Use `sequencia` para ordenar eventos da mesma entidade e instância.
+- **Não há garantia de ordem.** Se precisar, ordene pelo `dataProcessamento`.
 - A [leitura de eventos](./recursos/ler-eventos) continua disponível com o webhook ativo. Os dois canais disputam os mesmos eventos: cada evento sai por um deles, não pelos dois.
 
 ---
@@ -94,7 +99,7 @@ X-Predictus-Assinatura: t=1762178531,v1=5f2b9c...
 - O endereço não pode resolver para IP privado ou interno.
 - Até 2.048 caracteres.
 
-URLs fora dessas regras são recusadas com `422`.
+URLs fora dessas regras são recusadas com `400`.
 
 ### 🌐 IPs de origem
 

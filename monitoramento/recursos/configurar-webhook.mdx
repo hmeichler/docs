@@ -33,7 +33,9 @@ PUT https://api.predictus.com.br/predictus-api/monitoramento/webhook
 
 ## 📚 Campos
 
-- `url` (string) — **obrigatório**. URL `https` na porta 443, até 2.048 caracteres. Veja os [requisitos da URL](../webhook).
+| Campo | Tipo | Obrigatório | Descrição |
+|-------|------|-------------|-----------|
+| `url` | string | Sim | URL `https` na porta 443, até 2.048 caracteres. Veja os [requisitos da URL](../webhook) |
 
 ---
 
@@ -74,16 +76,15 @@ Troca de URL: o mesmo objeto, **sem** `segredo`. Campos descritos em [Consultar 
 | Código | Significado |
 |--------|-------------|
 | `200` | Webhook configurado |
-| `400` | `url` ausente |
+| `400` | `url` ausente, ou URL recusada (a mensagem informa o motivo) |
 | `401` | Token inválido ou expirado |
 | `403` | Conta sem a permissão `MONITORAMENTO_V2` |
-| `422` | URL recusada. A mensagem informa o motivo |
 | `429` | Mais de 20 alterações do webhook na última hora. Aguarde o tempo do cabeçalho `Retry-After` |
 
-Exemplo de `422`:
+Exemplo de URL recusada (`400`):
 
 ```json
-{ "erro": "O endereço resolve para uma rede privada." }
+{ "erro": "O domínio da URL do webhook precisa resolver para um endereço público." }
 ```
 
 ---
