@@ -55,33 +55,55 @@
                 ]
               },
               {
-                "group": "Resume AI",
+                "group": "Monitoramento",
                 "expanded": false,
                 "pages": [
-                  "resume-ai/overview",
+                  "monitoramento/comece-aqui",
+                  "monitoramento/overview",
+                  "monitoramento/estrutura",
+                  "monitoramento/webhook",
                   {
                     "group": "Recursos",
                     "expanded": true,
                     "pages": [
-                      "resume-ai/recursos/buscar-por-numero-cnj"
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "Raio-X",
-                "expanded": false,
-                "pages": [
-                  "raio-x/overview",
-                  {
-                    "group": "Recursos",
-                    "expanded": true,
-                    "pages": [
-                      "raio-x/recursos/buscar-por-cpf-parte",
-                      "raio-x/recursos/buscar-por-cnpj-parte",
-                      "raio-x/recursos/buscar-por-raiz-cnpj-parte",
-                      "raio-x/recursos/buscar-por-oab",
-                      "raio-x/recursos/buscar-por-cpf-advogado"
+                      {
+                        "group": "Entidades",
+                        "expanded": true,
+                        "pages": [
+                          "monitoramento/recursos/cadastrar-entidades",
+                          "monitoramento/recursos/listar-entidades",
+                          "monitoramento/recursos/consultar-entidade",
+                          "monitoramento/recursos/alterar-entidade",
+                          "monitoramento/recursos/remover-entidades"
+                        ]
+                      },
+                      {
+                        "group": "Eventos",
+                        "expanded": true,
+                        "pages": [
+                          "monitoramento/recursos/ler-eventos",
+                          "monitoramento/recursos/confirmar-eventos"
+                        ]
+                      },
+                      {
+                        "group": "Webhook (opcional)",
+                        "expanded": true,
+                        "pages": [
+                          "monitoramento/recursos/configurar-webhook",
+                          "monitoramento/recursos/testar-webhook",
+                          "monitoramento/recursos/remover-webhook"
+                        ]
+                      },
+                      {
+                        "group": "Avançado",
+                        "expanded": false,
+                        "pages": [
+                          "monitoramento/recursos/contar-entidades",
+                          "monitoramento/recursos/consultar-webhook",
+                          "monitoramento/recursos/girar-segredo",
+                          "monitoramento/recursos/historico-entregas"
+                        ]
+                      }
                     ]
                   }
                 ]
@@ -108,16 +130,33 @@
                 ]
               },
               {
-                "group": "Dossiê Recuperação Judicial",
+                "group": "Raio-X",
                 "expanded": false,
                 "pages": [
-                  "dossie-rj/overview",
+                  "raio-x/overview",
                   {
                     "group": "Recursos",
                     "expanded": true,
                     "pages": [
-                      "dossie-rj/recursos/buscar-rj-por-data",
-                      "dossie-rj/recursos/buscar-rj-por-cnpj"
+                      "raio-x/recursos/buscar-por-cpf-parte",
+                      "raio-x/recursos/buscar-por-cnpj-parte",
+                      "raio-x/recursos/buscar-por-raiz-cnpj-parte",
+                      "raio-x/recursos/buscar-por-oab",
+                      "raio-x/recursos/buscar-por-cpf-advogado"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Resume AI",
+                "expanded": false,
+                "pages": [
+                  "resume-ai/overview",
+                  {
+                    "group": "Recursos",
+                    "expanded": true,
+                    "pages": [
+                      "resume-ai/recursos/buscar-por-numero-cnj"
                     ]
                   }
                 ]
@@ -132,6 +171,21 @@
                     "expanded": true,
                     "pages": [
                       "jurimetria/recursos/buscar-por-numero-cnj"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Dossiê Recuperação Judicial",
+                "expanded": false,
+                "pages": [
+                  "dossie-rj/overview",
+                  {
+                    "group": "Recursos",
+                    "expanded": true,
+                    "pages": [
+                      "dossie-rj/recursos/buscar-rj-por-data",
+                      "dossie-rj/recursos/buscar-rj-por-cnpj"
                     ]
                   }
                 ]
@@ -181,40 +235,6 @@
                 ]
               },
               {
-                "group": "Dossiê Financeiro",
-                "expanded": false,
-                "pages": [
-                  "dossie-financeiro/overview",
-                  "dossie-financeiro/estrutura-pf",
-                  "dossie-financeiro/estrutura-pj",
-                  {
-                    "group": "Recursos",
-                    "expanded": true,
-                    "pages": [
-                      "dossie-financeiro/recursos/buscar-dossie-por-cpf",
-                      "dossie-financeiro/recursos/buscar-dossie-por-cnpj"
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "Dossiê Cadastral",
-                "expanded": false,
-                "pages": [
-                  "dossie-cadastral/overview",
-                  "dossie-cadastral/estrutura-pf",
-                  "dossie-cadastral/estrutura-pj",
-                  {
-                    "group": "Recursos",
-                    "expanded": true,
-                    "pages": [
-                      "dossie-cadastral/recursos/buscar-dados-cadastrais-pf",
-                      "dossie-cadastral/recursos/buscar-dados-cadastrais-pj"
-                    ]
-                  }
-                ]
-              },
-              {
                 "group": "Exposição a Organizações Criminosas",
                 "expanded": false,
                 "pages": [
@@ -230,53 +250,39 @@
                 ]
               },
               {
-                "group": "Monitoramento",
+                "group": "Dados Complementares",
                 "expanded": false,
                 "pages": [
-                  "monitoramento/comece-aqui",
-                  "monitoramento/overview",
-                  "monitoramento/estrutura",
-                  "monitoramento/webhook",
                   {
-                    "group": "Recursos",
-                    "expanded": true,
+                    "group": "Dossiê Financeiro",
+                    "expanded": false,
                     "pages": [
+                      "dossie-financeiro/overview",
+                      "dossie-financeiro/estrutura-pf",
+                      "dossie-financeiro/estrutura-pj",
                       {
-                        "group": "Entidades",
+                        "group": "Recursos",
                         "expanded": true,
                         "pages": [
-                          "monitoramento/recursos/cadastrar-entidades",
-                          "monitoramento/recursos/listar-entidades",
-                          "monitoramento/recursos/consultar-entidade",
-                          "monitoramento/recursos/alterar-entidade",
-                          "monitoramento/recursos/remover-entidades"
+                          "dossie-financeiro/recursos/buscar-dossie-por-cpf",
+                          "dossie-financeiro/recursos/buscar-dossie-por-cnpj"
                         ]
-                      },
+                      }
+                    ]
+                  },
+                  {
+                    "group": "Dossiê Cadastral",
+                    "expanded": false,
+                    "pages": [
+                      "dossie-cadastral/overview",
+                      "dossie-cadastral/estrutura-pf",
+                      "dossie-cadastral/estrutura-pj",
                       {
-                        "group": "Eventos",
+                        "group": "Recursos",
                         "expanded": true,
                         "pages": [
-                          "monitoramento/recursos/ler-eventos",
-                          "monitoramento/recursos/confirmar-eventos"
-                        ]
-                      },
-                      {
-                        "group": "Webhook (opcional)",
-                        "expanded": true,
-                        "pages": [
-                          "monitoramento/recursos/configurar-webhook",
-                          "monitoramento/recursos/testar-webhook",
-                          "monitoramento/recursos/remover-webhook"
-                        ]
-                      },
-                      {
-                        "group": "Avançado",
-                        "expanded": false,
-                        "pages": [
-                          "monitoramento/recursos/contar-entidades",
-                          "monitoramento/recursos/consultar-webhook",
-                          "monitoramento/recursos/girar-segredo",
-                          "monitoramento/recursos/historico-entregas"
+                          "dossie-cadastral/recursos/buscar-dados-cadastrais-pf",
+                          "dossie-cadastral/recursos/buscar-dados-cadastrais-pj"
                         ]
                       }
                     ]

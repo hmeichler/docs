@@ -5,117 +5,177 @@ description: "Predictus. Inteligência jurídica à altura das suas decisões."
 
 ## 🔍 API Judicial Predictus: velocidade, profundidade e inteligência em cada consulta
 
-A Predictus é a maior referência em Inteligência Jurídica por trás das melhores decisões, com a maior base de processos judiciais do Brasil.
+A Predictus é a maior referência em Inteligência Jurídica por trás das melhores decisões, com a maior base de processos judiciais do Brasil: mais de **790 milhões de processos**, capturados diretamente de todos os tribunais do país, estruturados e atualizados.
 
-Com a API Judicial mais rápida do mercado, seus sistemas acessam, em menos de 3 segundos, informações de uma base com mais de **790 milhões de processos judiciais**, estruturados, atualizados e tratados para apoiar decisões críticas.
-
-Nossa tecnologia permite integrar inteligência jurídica diretamente às suas operações, identificar riscos, compreender históricos e ampliar a visibilidade sobre pessoas e empresas com velocidade, precisão e escala.
+Com a API Judicial mais rápida do mercado, seus sistemas consultam essa base em menos de 3 segundos para identificar riscos, compreender históricos e ampliar a visibilidade sobre pessoas e empresas.
 
 > 🎯 **Predictus. Para decisões que exigem mais.**
 
 ---
 
-## 🧠 O que fazemos
+## 🚀 Comece em 4 passos
 
-- Capturamos dados diretamente de todos os tribunais do país;
-- Estruturamos informações despadronizadas em um formato limpo, coeso e fácil de integrar;
-- Entregamos via API e Plataforma Web, com resposta rápida, confiável e cobertura nacional.
+<Steps>
+  <Step title="Gere o seu token">
+    Envie usuário e senha para `POST https://api.predictus.com.br/auth` e receba o `accessToken`, válido por 30 minutos. Veja [Autenticação](./authentication).
+  </Step>
+  <Step title="Escolha o produto">
+    Veja os produtos jurídicos logo abaixo, ou a tabela "Qual produto usar?".
+  </Step>
+  <Step title="Faça a primeira chamada">
+    Por exemplo, todos os processos de um CPF:
 
-> São mais de **790 milhões de processos** já coletados — e crescendo.
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorCPFParte' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{ "cpf": "12345678909" }'
+```
+  </Step>
+  <Step title="Acompanhe o consumo">
+    Toda chamada conta para a cota da sua credencial. Veja os limites em [Autenticação](./authentication) e o uso em [Logs de Consumo](./consumo/overview).
+  </Step>
+</Steps>
 
 ---
 
-## ⚙️ Visão Geral da API
+## ⚖️ Produtos jurídicos
 
-A API Predictus permite:
+### Encontrar processos
 
 <CardGroup cols={2}>
-  <Card title="Consulta de Histórico Judicial" icon="magnifying-glass">
-    Encontre todos os processos relacionados a um CPF, CNPJ, nome ou OAB — organizados por polo, ramo do direito e status.
+  <Card title="Dossiê Jurídico" icon="magnifying-glass" href="./dossie-juridico/overview">
+    **O produto principal.** Todos os processos de um CPF, CNPJ, raiz de CNPJ, nome ou advogado, e a consulta completa de um processo pelo número.
   </Card>
-  <Card title="Jurimetria em Tempo Real" icon="chart-line">
-    Gere estatísticas com base em milhares de processos similares: probabilidades, valores médios, tempo até julgamento.
+  <Card title="Dossiê Recuperação Judicial" icon="building-circle-exclamation" href="./dossie-rj/overview">
+    Processos de recuperação judicial de uma empresa ou distribuídos em uma data.
   </Card>
-  <Card title="Busca Detalhada por Processo" icon="file-lines">
-    Consulte qualquer NPU (número de processo) e receba movimentações, sentenças, decisões e anexos públicos.
+  <Card title="Diário Oficial" icon="newspaper" href="./diario-oficial/overview">
+    Busque termos nos diários oficiais dos tribunais e acesse a página completa.
   </Card>
-  <Card title="Resultados Estruturados" icon="table-cells-large">
-    Dados padronizados com status próprio (StatusPredictus), polo das partes, ramo do direito e julgamento interpretado.
+</CardGroup>
+
+### Entender e resumir
+
+<CardGroup cols={2}>
+  <Card title="Sumário Jurídico" icon="chart-pie" href="./sumario-juridico/overview">
+    Estatísticas do perfil judicial de uma pessoa, empresa ou advogado.
+  </Card>
+  <Card title="Raio-X" icon="x-ray" href="./raio-x/overview">
+    Um panorama em texto da vida judicial de uma pessoa, empresa ou advogado.
+  </Card>
+  <Card title="Resume AI" icon="wand-magic-sparkles" href="./resume-ai/overview">
+    Resumo de um processo gerado por IA: fatos, pedidos, decisões e linha do tempo.
+  </Card>
+  <Card title="Jurimetria" icon="chart-line" href="./jurimetria/overview">
+    Padrões de julgamento e resultados de processos semelhantes.
+  </Card>
+</CardGroup>
+
+### Acompanhar e obter documentos
+
+<CardGroup cols={2}>
+  <Card title="Monitoramento" icon="bell" href="./monitoramento/overview">
+    Receba um aviso quando surgir processo novo ou houver novidade em um processo de empresas, pessoas, advogados ou processos acompanhados.
+  </Card>
+  <Card title="Autos Processuais" icon="folder-open" href="./docket/overview">
+    Documentos de processos sigilosos, com login de advogado.
+  </Card>
+</CardGroup>
+
+### Risco criminal
+
+<CardGroup cols={2}>
+  <Card title="Mandado de Prisão" icon="handcuffs" href="./bnmp/overview">
+    Mandados de prisão associados a um CPF.
+  </Card>
+  <Card title="Exposição a Organizações Criminosas" icon="user-secret" href="./exposicao/overview">
+    Se um CPF ou CNPJ aparece em processos que citam organizações criminosas, com o trecho como prova.
   </Card>
 </CardGroup>
 
 ---
 
-## 🎯 Casos de Uso Reais
+## 🧭 Qual produto usar?
 
-A API é utilizada por empresas que precisam tomar decisões críticas com base no histórico judicial.
+| Você tem | E quer | Use |
+|----------|--------|-----|
+| CPF, CNPJ, raiz de CNPJ ou nome | A lista de processos da parte | [Dossiê Jurídico](./dossie-juridico/overview) |
+| CPF, CNPJ, nome ou OAB | Números agregados do perfil judicial | [Sumário Jurídico](./sumario-juridico/overview) |
+| CPF, CNPJ, raiz de CNPJ ou OAB | Um panorama em texto | [Raio-X](./raio-x/overview) |
+| OAB, CPF ou nome do advogado | A carteira de processos do advogado | [Dossiê Jurídico](./dossie-juridico/overview) |
+| Número do processo (CNJ) | Capa e movimentações | [Dossiê Jurídico](./dossie-juridico/overview) |
+| Número do processo (CNJ) | Um resumo em linguagem clara | [Resume AI](./resume-ai/overview) |
+| Número do processo (CNJ) | Os documentos de um processo sigiloso | [Autos Processuais](./docket/overview) |
+| CNPJ ou uma data | Recuperações judiciais | [Dossiê Recuperação Judicial](./dossie-rj/overview) |
+| Empresas, pessoas, advogados ou processos | Ser avisado de processos novos e novidades | [Monitoramento](./monitoramento/overview) |
+| Um termo de busca ou um diário | Publicações em diário oficial | [Diário Oficial](./diario-oficial/overview) |
+| CPF | Mandados de prisão | [Mandado de Prisão](./bnmp/overview) |
+| CPF ou CNPJ | Ligação com organizações criminosas | [Exposição a Organizações Criminosas](./exposicao/overview) |
+
+---
+
+## 🎯 Casos de uso
 
 <CardGroup cols={2}>
-
   <Card title="Análise de Crédito e PLD/Compliance" icon="building-columns">
-    Evite inadimplência, fraude e exposição a riscos regulatórios analisando o perfil judicial do cliente.
+    Evite inadimplência, fraude e risco regulatório com o perfil judicial do cliente: [Dossiê Jurídico](./dossie-juridico/overview), [Sumário Jurídico](./sumario-juridico/overview) e [Exposição a Organizações Criminosas](./exposicao/overview).
   </Card>
-
   <Card title="Recuperação de Ativos e NPLs" icon="coins">
-    Avalie riscos e oportunidades em carteiras inadimplidas com dados de ações cíveis, trabalhistas, execuções e sentenças.
+    Avalie carteiras inadimplidas com ações cíveis, trabalhistas, execuções e recuperações judiciais: [Dossiê Jurídico](./dossie-juridico/overview) e [Dossiê Recuperação Judicial](./dossie-rj/overview).
   </Card>
-
   <Card title="Garantidoras e Imobiliárias" icon="house-chimney">
-    Filtre inquilinos com histórico limpo e evite ações de despejo e inadimplência judicial recorrente.
+    Identifique ações de despejo e inadimplência judicial recorrente antes de aprovar um inquilino: [Dossiê Jurídico](./dossie-juridico/overview) e [Sumário Jurídico](./sumario-juridico/overview).
   </Card>
-
   <Card title="Recursos Humanos e Background Check" icon="user-tie">
-    Consulte candidatos e colaboradores antes da contratação — automatize compliance com idoneidade judicial.
+    Consulte candidatos antes da contratação: [Raio-X](./raio-x/overview) e [Mandado de Prisão](./bnmp/overview).
   </Card>
-
   <Card title="Legaltechs e Softwares Jurídicos" icon="laptop-code">
-    Enriqueça seu sistema com dados de alta qualidade, prontos para automatizar análises e visualizações.
+    Enriqueça seu sistema com dados estruturados e avisos de novidades: [Dossiê Jurídico](./dossie-juridico/overview) e [Monitoramento](./monitoramento/overview).
   </Card>
-
   <Card title="Compliance e Due Diligence" icon="shield-halved">
-    Investigue sócios, fornecedores e parceiros com rastreabilidade judicial e agregação de CPF/CNPJ.
+    Investigue sócios, fornecedores e parceiros: [Dossiê Jurídico](./dossie-juridico/overview), [Exposição a Organizações Criminosas](./exposicao/overview) e [Mandado de Prisão](./bnmp/overview).
   </Card>
-
   <Card title="Gerenciamento de Risco e Logística" icon="truck">
-    Avalie histórico criminal e cível de motoristas e transportadores antes de liberar seguro ou carga.
+    Avalie o histórico criminal e cível de motoristas e transportadores: [Mandado de Prisão](./bnmp/overview) e [Raio-X](./raio-x/overview).
   </Card>
-
   <Card title="Escritórios e Consultorias Jurídicas" icon="scale-balanced">
-    Visualize carteiras processuais por parte, advogado ou classe. Acompanhe todos os processos do seu cliente.
+    Veja a carteira de um cliente ou advogado e acompanhe cada processo: [Dossiê Jurídico](./dossie-juridico/overview), [Monitoramento](./monitoramento/overview) e [Resume AI](./resume-ai/overview).
   </Card>
-
 </CardGroup>
 
 ---
 
-## 🧩 Tipos de Pesquisa
+## ➕ Dados complementares
 
-A API Predictus aceita múltiplos tipos de input:
+Para completar a análise com informações além do judicial:
 
-- **CPF/CNPJ**
-- **Nome/Razão Social**
-- **Número do Processo (CNJ)**
-- **Nome, CPF ou OAB do advogado**
-- **Filtros customizados por classe, assunto, valor, tribunal e data**
-- **Temas especiais (ex: Recuperação Judicial do dia)**
-
----
-
-## 📘 Glossário Rápido
-
-| Termo             | Significado                                                                 |
-|-------------------|------------------------------------------------------------------------------|
-| **NPU**           | Número único do processo (formato CNJ)                                       |
-| **Polo Ativo**    | Parte autora (quem entrou com a ação)                                        |
-| **Polo Passivo**  | Parte ré (quem está sendo processado)                                       |
-| **StatusPredictus** | Status interpretado com base nas movimentações: tramitação, recurso, arquivado, etc. |
-| **Ramo do Direito** | Classificação padronizada (ex: cível, trabalhista, penal...)               |
-| **Valor de Execução** | Valor final da condenação ou sentença monetária                          |
+<CardGroup cols={2}>
+  <Card title="Dossiê Financeiro" icon="wallet" href="./dossie-financeiro/overview">
+    Pendências, protestos, score e dívida ativa.
+  </Card>
+  <Card title="Dossiê Cadastral" icon="address-card" href="./dossie-cadastral/overview">
+    Identidade, contatos, endereços e vínculos societários.
+  </Card>
+</CardGroup>
 
 ---
 
-## 🚀 Comece Agora
+## 📘 Glossário rápido
 
-Acesse [Autenticação](authentication) para gerar seu token e iniciar sua integração com a maior base judicial do Brasil.
+| Termo | Significado |
+|-------|-------------|
+| **Número do processo (`numeroProcessoUnico`)** | Número único do processo no formato CNJ, 20 dígitos sem máscara |
+| **Polo Ativo** | Parte autora (quem entrou com a ação) |
+| **Polo Passivo** | Parte ré (quem está sendo processado) |
+| **StatusPredictus** | Status interpretado a partir das movimentações: tramitação, recurso, arquivado etc. |
+| **Ramo do Direito** | Classificação padronizada (ex: cível, trabalhista, penal) |
 
-> Dúvidas? Fale com nosso time: **contato@predictus.inf.br**
+Tabelas de valores aceitos (tribunais, classes, assuntos, status) em [Referências](./referencias/tribunais).
+
+---
+
+## 💬 Ajuda
+
+- **Suporte técnico:** pelo [portal de suporte](https://predictus.atlassian.net/servicedesk/customer/portals), também no menu do topo.
+- **Assuntos comerciais e dúvidas gerais:** **contato@predictus.inf.br**
