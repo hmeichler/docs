@@ -117,6 +117,7 @@ As entregas saem **sempre** destes IPs. Libere-os no firewall do seu endpoint:
 ## ⏳ Novas tentativas e suspensão
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'fontFamily': 'Inter, sans-serif', 'primaryColor': '#00A87E', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#00735B', 'lineColor': '#00735B', 'textColor': '#1F2937', 'actorBkg': '#00A87E', 'actorBorder': '#00735B', 'actorTextColor': '#FFFFFF', 'actorLineColor': '#6FE3C1', 'signalColor': '#00735B', 'signalTextColor': '#1F2937', 'labelBoxBkgColor': '#E6F7F2', 'labelBoxBorderColor': '#00A87E', 'labelTextColor': '#00735B', 'loopTextColor': '#00735B', 'noteBkgColor': '#E6F7F2', 'noteBorderColor': '#6FE3C1', 'noteTextColor': '#1F2937', 'transitionColor': '#00735B', 'transitionLabelColor': '#1F2937'}}}%%
 stateDiagram-v2
     direction LR
     [*] --> ATIVO: Configurar Webhook
@@ -124,6 +125,8 @@ stateDiagram-v2
     ATIVO --> ATIVO: falha, nova tentativa em 1 min, 5 min, 30 min, 2 h, 6 h, 12 h e a cada 24 h
     ATIVO --> SUSPENSO: 24 h falhando sem nenhum sucesso
     SUSPENSO --> ATIVO: Testar Webhook com sucesso
+    classDef suspenso fill:#FFFFFF,stroke:#00735B,color:#00735B
+    class SUSPENSO suspenso
 ```
 
 Um lote que falha volta a ser enviado depois de **1 min, 5 min, 30 min, 2 h, 6 h e 12 h**, e depois a cada **24 h**, com uma pequena variação aleatória. Eventos não entregues ficam disponíveis por **14 dias**.
