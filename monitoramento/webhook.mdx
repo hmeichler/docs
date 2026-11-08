@@ -116,6 +116,16 @@ As entregas saem **sempre** destes IPs. Libere-os no firewall do seu endpoint:
 
 ## ⏳ Novas tentativas e suspensão
 
+```mermaid
+stateDiagram-v2
+    direction LR
+    [*] --> ATIVO: Configurar Webhook
+    ATIVO --> ATIVO: entrega com 2xx
+    ATIVO --> ATIVO: falha, nova tentativa em 1 min, 5 min, 30 min, 2 h, 6 h, 12 h e a cada 24 h
+    ATIVO --> SUSPENSO: 24 h falhando sem nenhum sucesso
+    SUSPENSO --> ATIVO: Testar Webhook com sucesso
+```
+
 Um lote que falha volta a ser enviado depois de **1 min, 5 min, 30 min, 2 h, 6 h e 12 h**, e depois a cada **24 h**, com uma pequena variação aleatória. Eventos não entregues ficam disponíveis por **14 dias**.
 
 - O intervalo vale para o lote inteiro: um evento que caiu no mesmo lote de um evento já retentado espera junto com ele. Eventos de outros lotes seguem normalmente.

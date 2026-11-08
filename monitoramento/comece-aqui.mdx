@@ -129,6 +129,20 @@ Eventos confirmados não voltam. Eventos lidos e **não** confirmados voltam a a
 
 ## 🔁 O laço completo
 
+```mermaid
+sequenceDiagram
+    participant S as Seu sistema
+    participant P as API Predictus
+    loop a cada 15 minutos
+        S->>P: GET /monitoramento/eventos
+        P-->>S: até 1.000 eventos (ou lista vazia)
+        Note over S: grava os eventos, ignorando eventoId repetido
+        S->>P: POST /monitoramento/eventos/confirmarRecebimento
+        P-->>S: confirmados
+    end
+    Note over P: evento lido e não confirmado volta em 5 minutos
+```
+
 ```
 a cada 15 minutos:
   repetir:

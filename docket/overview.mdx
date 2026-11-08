@@ -35,6 +35,21 @@ Essa operação é feita com **autenticação direta nos portais oficiais dos tr
 3. Será gerado um `id` de solicitação — aguarde o processamento
 4. **Busque o resultado** com esse `id` para obter os documentos (normalmente disponíveis em poucos segundos)
 
+```mermaid
+sequenceDiagram
+    participant S as Seu sistema
+    participant P as API Predictus
+    participant T as Portal do tribunal
+    S->>P: POST /autos/buscarPorNumeroCNJ (processo + login do advogado)
+    P-->>S: id da solicitação
+    P->>T: login (com 2FA, se exigido) e coleta dos documentos
+    loop até sair de PROCESSING
+        S->>P: POST /autos/buscarResultado (id)
+        P-->>S: status
+    end
+    Note over S,P: OK traz os links dos documentos, válidos por 24 horas
+```
+
 ---
 
 ## 🖥️ Sistemas suportados
