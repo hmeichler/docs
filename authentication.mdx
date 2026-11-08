@@ -15,6 +15,22 @@ A autenticação segue o padrão **Bearer Token** via HTTP Header.
 Envie uma requisição `POST` para o endpoint `/auth` com seu `username` e `password`.\
 Se as credenciais estiverem corretas, você receberá um `accessToken` válido por 30 minutos (1800 segundos).
 
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'fontFamily': 'Inter, sans-serif', 'primaryColor': '#00A87E', 'primaryTextColor': '#FFFFFF', 'primaryBorderColor': '#00735B', 'lineColor': '#00735B', 'textColor': '#1F2937', 'actorBkg': '#00A87E', 'actorBorder': '#00735B', 'actorTextColor': '#FFFFFF', 'actorLineColor': '#6FE3C1', 'signalColor': '#00735B', 'signalTextColor': '#1F2937', 'labelBoxBkgColor': '#E6F7F2', 'labelBoxBorderColor': '#00A87E', 'labelTextColor': '#00735B', 'loopTextColor': '#00735B', 'noteBkgColor': '#E6F7F2', 'noteBorderColor': '#6FE3C1', 'noteTextColor': '#1F2937', 'transitionColor': '#00735B', 'transitionLabelColor': '#1F2937'}}}%%
+sequenceDiagram
+    participant S as Seu sistema
+    participant P as API Predictus
+    S->>P: POST /auth (username e password)
+    P-->>S: accessToken (válido por 30 minutos)
+    loop enquanto o token for válido
+        S->>P: chamada com Authorization: Bearer {accessToken}
+        P-->>S: resposta
+    end
+    Note over S,P: token expirado responde 401, sem refresh token
+    S->>P: POST /auth de novo
+    P-->>S: novo accessToken
+```
+
 ---
 
 ### 🔄 Endpoint
