@@ -302,13 +302,19 @@
           {
             "group": "Referências",
             "pages": [
-              "referencias/assuntos",
-              "referencias/classes-processuais",
-              "referencias/julgamentos",
-              "referencias/ramos-direito",
-              "referencias/segmentos",
-              "referencias/status-processuais",
-              "referencias/tribunais"
+              {
+                "group": "Tabelas de referência",
+                "expanded": false,
+                "pages": [
+                  "referencias/assuntos",
+                  "referencias/classes-processuais",
+                  "referencias/julgamentos",
+                  "referencias/ramos-direito",
+                  "referencias/segmentos",
+                  "referencias/status-processuais",
+                  "referencias/tribunais"
+                ]
+              }
             ]
           }
         ]
