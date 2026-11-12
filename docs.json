@@ -282,6 +282,7 @@
                         "expanded": true,
                         "pages": [
                           "dossie-cadastral/recursos/buscar-dados-cadastrais-pf",
+                          "dossie-cadastral/recursos/buscar-parentes-por-cpf",
                           "dossie-cadastral/recursos/buscar-dados-cadastrais-pj"
                         ]
                       }

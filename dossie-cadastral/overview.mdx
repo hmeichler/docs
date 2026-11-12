@@ -18,6 +18,7 @@ Use este módulo quando você quiser:
 - **Validar identidade** de uma pessoa física antes de um onboarding ou operação
 - Verificar **situação cadastral** de um CPF ou CNPJ na Receita Federal
 - Obter **dados de contato** (telefones, e-mails) e **endereços** atualizados
+- Mapear **parentes** de uma pessoa física (CPF, nome e grau de parentesco)
 - Mapear **vínculos societários** de uma PF ou quadro de sócios de uma PJ
 - Enriquecer dados cadastrais de uma carteira de clientes ou fornecedores
 - Compor análise de **PLD/KYC** com identificação completa da contraparte
@@ -29,6 +30,9 @@ Use este módulo quando você quiser:
 <CardGroup cols={2}>
   <Card title="Dossiê Cadastral por CPF" icon="id-card">
     Retorna o perfil cadastral completo de uma pessoa física: identificação, situação na Receita Federal, endereços, contatos, renda presumida, vínculos societários e experiências profissionais.
+  </Card>
+  <Card title="Parentes por CPF" icon="people-roof" href="./recursos/buscar-parentes-por-cpf">
+    Retorna os parentes de uma pessoa física: CPF, nome e grau de parentesco de cada um.
   </Card>
   <Card title="Dossiê Cadastral por CNPJ" icon="building">
     Retorna o perfil cadastral completo de uma pessoa jurídica: razão social, situação cadastral, atividade econômica, endereços, contatos, sócios, histórico de funcionários e dívidas.

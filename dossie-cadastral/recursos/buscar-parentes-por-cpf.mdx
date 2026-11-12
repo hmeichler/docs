@@ -1,0 +1,106 @@
+---
+title: "Parentes por CPF"
+description: "Consulte os parentes de uma pessoa física a partir do CPF: CPF, nome e grau de parentesco de cada um."
+---
+
+# 🔎 Parentes por CPF
+
+Este endpoint retorna a **lista de parentes** de uma pessoa física a partir de um CPF, com o CPF, o nome e o grau de parentesco de cada um.
+
+Apenas parentes com **CPF válido** são retornados — um por CPF —, para que cada um possa ser consultado em seguida nos demais produtos (Dossiê Cadastral, Dossiê Jurídico, Dossiê Financeiro).
+
+---
+
+## 🔗 Endpoint
+
+```
+POST https://api.predictus.com.br/predictus-api/pessoas/fisicas/buscarParentesPorCPF
+```
+
+---
+
+## 🧾 Corpo da requisição
+
+```json
+{
+  "cpf": "12345678901"
+}
+```
+
+---
+
+## 📚 Campos
+
+| Campo | Obrigatório | Tipo | Descrição |
+|-------|-------------|------|-----------|
+| `cpf` | Sim | string | CPF a consultar — exatamente 11 dígitos numéricos, validado pelo algoritmo de CPF |
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl --location 'https://api.predictus.com.br/predictus-api/pessoas/fisicas/buscarParentesPorCPF' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {accessToken}' \
+--data '{
+  "cpf": "12345678901"
+}'
+```
+
+---
+
+## ✅ Resposta esperada (200)
+
+A resposta é uma **lista** de parentes:
+
+```json
+[
+  {
+    "cpf": "98765432100",
+    "nome": "SICLANA DE TAL",
+    "relacao": "MAE"
+  },
+  {
+    "cpf": "45678912300",
+    "nome": "BELTRANO DE TAL",
+    "relacao": "IRMAO(A)"
+  }
+]
+```
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `cpf` | string | CPF do parente, 11 dígitos |
+| `nome` | string | Nome do parente, em maiúsculas e sem acentos |
+| `relacao` | string | Grau de parentesco com o CPF consultado, em maiúsculas e sem acentos (ex: `MAE`, `IRMAO(A)`, `TIO(A)`, `AVO(O)`, `PRIMO(A)`, `CONJUGE`). Pode ser omitido quando a fonte não informa o parentesco |
+
+> Campos sem valor são omitidos do JSON.
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+|--------|-------------|
+| `200` | Sucesso — lista de parentes encontrada |
+| `204` | Nenhum parente com CPF encontrado para o CPF consultado |
+| `400` | Erro de validação no payload (CPF inválido ou ausente) |
+| `401` | Token inválido ou expirado |
+| `403` | Recurso não contratado ou IP não autorizado |
+| `500` | Erro interno do servidor |
+
+---
+
+## 🛡️ Validações
+
+- `cpf`:
+  - Não nulo
+  - Exatamente 11 dígitos numéricos
+  - Validação de CPF formal (algoritmo de dígitos verificadores)
+
+---
+
+## 💡 Dica
+
+> Use o `cpf` de cada parente para aprofundar a análise: consulte o [Dossiê Cadastral por CPF](./buscar-dados-cadastrais-pf) para identificação completa ou o [Dossiê Jurídico por CPF](../../dossie-juridico/recursos/buscar-parte-por-cpf) para mapear processos envolvendo a família.
