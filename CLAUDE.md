@@ -65,7 +65,7 @@ Cross-link to references with relative paths, e.g. `[lista completa de tribunais
 
 - Auth: `POST https://api.predictus.com.br/auth` returns `accessToken` (Bearer, 30 min, no refresh).
 - All resource endpoints are prefixed `https://api.predictus.com.br/predictus-api/...`.
-- Filter semantics on search endpoints: AND across different filters, OR within a list. Document this consistently when adding new filtered search endpoints.
+- Filter semantics on search endpoints: AND across different filters, OR within a list. Exception: each item of `partes`/`advogados` in buscarPorParametros is its own AND condition. Document this consistently when adding new filtered search endpoints.
 - `origensDocumento` values (`TRIBUNAL`, `CATALOGO`, `AGREGADO`) and `grausProcesso` (1–4) recur across endpoints — keep their meanings consistent with `dossie-juridico/recursos/buscar-parte-por-cpf.mdx`.
 
 ## Workflow notes
