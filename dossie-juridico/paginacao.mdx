@@ -1,0 +1,138 @@
+---
+title: "Paginação"
+description: "Como obter todos os processos de uma parte ou advogado, além dos 10.000 de uma consulta."
+---
+
+# 🔎 Paginação com `paginarApos`
+
+Cada consulta por parte ou por advogado devolve **até 10.000 processos**. Quando a parte tem mais do que isso, use `paginarApos` para buscar os próximos, **10.000 por página**, até receber todos.
+
+---
+
+## 🧠 Onde vale
+
+| Busca | Endpoint |
+| --- | --- |
+| Parte por CPF | `buscarPorCPFParte` |
+| Parte por CNPJ | `buscarPorCNPJParte` |
+| Parte por raiz do CNPJ | `buscarPorRaizCNPJParte` |
+| Parte por nome | `buscarPorNomeParte` |
+| Parte por nome exato | `buscarPorNomeExatoParte` |
+| Parte por CPF e nome | `buscarPorCPFeNomeParte` |
+| Parte por CNPJ e nome | `buscarPorCNPJeNomeParte` |
+| Advogado por OAB | `buscarPorOAB` |
+| Advogado por CPF | `buscarPorCPFAdvogado` |
+| Advogado por nome | `buscarPorNomeAdvogado` |
+| Advogado por nome exato | `buscarPorNomeExatoAdvogado` |
+
+Nas demais buscas (por exemplo, [Buscar por Parâmetros](./recursos/buscar-por-parametros)), `paginarApos` é recusado com `400`.
+
+---
+
+## 🔗 Como paginar
+
+<Steps>
+  <Step title="Faça a consulta normalmente">
+    Envie a consulta sem `paginarApos`. Os processos vêm ordenados por `dataDistribuicao` (mais recente primeiro) e, em caso de empate, por `numeroProcessoUnico`.
+  </Step>
+  <Step title="Pegue o último processo recebido">
+    Do **último** processo da lista, copie `dataDistribuicao` e `numeroProcessoUnico` exatamente como vieram.
+  </Step>
+  <Step title="Reenvie a mesma consulta com paginarApos">
+    Mande o **mesmo corpo da consulta anterior**, com todos os filtros, e acrescente `paginarApos` com os dois valores copiados. A resposta traz os próximos 10.000 processos.
+  </Step>
+  <Step title="Repita até a última página">
+    Recebeu **menos de 10.000** processos? Essa foi a última página. Caso contrário, volte ao passo 2.
+  </Step>
+</Steps>
+
+---
+
+## 🧾 Corpo da requisição
+
+Primeira consulta:
+
+```json
+{
+  "cnpj": "00000000000191",
+  "tribunais": ["TJ-SP"]
+}
+```
+
+Próxima página, com o mesmo corpo e `paginarApos`:
+
+```json
+{
+  "cnpj": "00000000000191",
+  "tribunais": ["TJ-SP"],
+  "paginarApos": {
+    "dataDistribuicao": "2024-10-02T13:57:00",
+    "numeroProcessoUnico": "15013611320258260483"
+  }
+}
+```
+
+---
+
+## 📚 Campos
+
+- `paginarApos` (objeto) — **opcional**. Informado, a resposta começa logo depois do processo indicado.
+  - `numeroProcessoUnico` (string) — **obrigatório**. O `numeroProcessoUnico` do último processo recebido, com 20 dígitos.
+  - `dataDistribuicao` (string) — **obrigatório quando o último processo tem `dataDistribuicao`**. O valor como veio na resposta, por exemplo `2024-10-02T13:57:00`. Se o último processo veio sem `dataDistribuicao`, envie `paginarApos` só com `numeroProcessoUnico`.
+- `limiteResultados` — **não se aplica** às páginas seguintes: com `paginarApos`, cada página tem sempre até 10.000 processos.
+
+---
+
+## 📥 Exemplo de cURL
+
+```bash
+curl -X POST "https://api.predictus.com.br/predictus-api/processos/judiciais/buscarPorCNPJParte" \
+  -H "Authorization: Bearer {accessToken}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cnpj": "00000000000191",
+    "tribunais": ["TJ-SP"],
+    "paginarApos": {
+      "dataDistribuicao": "2024-10-02T13:57:00",
+      "numeroProcessoUnico": "15013611320258260483"
+    }
+  }'
+```
+
+---
+
+## ✅ Resposta esperada
+
+A mesma lista de objetos [`processo`](./estrutura) da consulta original, com os próximos processos.
+
+---
+
+## 🧾 Códigos de resposta
+
+| Código | Significado |
+| --- | --- |
+| `200` | Sucesso — próxima página. Uma lista vazia (`[]`) indica que não há mais processos |
+| `204` | Nenhum processo encontrado para a consulta |
+| `400` | Erro de validação em `paginarApos`, ou `PAGINACAO_NAO_SUPORTADA`: a busca não aceita paginação |
+| `401` | Token inválido ou expirado |
+| `429` | `LIMITE_EXTRACAO_PARTE`: a credencial já recebeu mais de 30.000 processos desta parte na última hora por consultas novas. Continue com `paginarApos` a partir do último processo recebido |
+
+---
+
+## 🛡️ Validações
+
+- `paginarApos.numeroProcessoUnico`: obrigatório, 20 dígitos.
+- `paginarApos.dataDistribuicao`: data válida, no formato em que veio na resposta (ex.: `2024-10-02T13:57:00`).
+- `paginarApos` só é aceito nas buscas listadas no início desta página.
+
+---
+
+## 💰 Cobrança
+
+Cada página seguinte é uma consulta cobrada, registrada no [consumo](../consumo/overview) como **Paginação** da busca correspondente (por exemplo, *Paginação - Dossiê Jurídico por CNPJ da Parte*). A primeira consulta continua cobrada como hoje.
+
+---
+
+## 💡 Dica
+
+> Para ter os dois campos do último processo, mantenha `dataDistribuicao` e `numeroProcessoUnico` em `camposRetorno.incluir` quando restringir os campos retornados. E não altere os filtros entre uma página e outra: com filtros diferentes, a sequência deixa de ser a mesma.
