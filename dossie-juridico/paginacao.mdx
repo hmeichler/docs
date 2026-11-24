@@ -33,7 +33,7 @@ Nas demais buscas (por exemplo, [Buscar por Parâmetros](./recursos/buscar-por-p
 
 <Steps>
   <Step title="Faça a consulta normalmente">
-    Envie a consulta sem `paginarApos`. Os processos vêm ordenados por `dataDistribuicao` (mais recente primeiro) e, em caso de empate, por `numeroProcessoUnico`.
+    Envie a consulta sem `paginarApos` e sem `limiteResultados` (ou com `limiteResultados` em 10.000). Os processos vêm ordenados por `dataDistribuicao` (mais recente primeiro) e, em caso de empate, por `numeroProcessoUnico`.
   </Step>
   <Step title="Pegue o último processo recebido">
     Do **último** processo da lista, copie `dataDistribuicao` e `numeroProcessoUnico` exatamente como vieram.
@@ -42,7 +42,7 @@ Nas demais buscas (por exemplo, [Buscar por Parâmetros](./recursos/buscar-por-p
     Mande o **mesmo corpo da consulta anterior**, com todos os filtros, e acrescente `paginarApos` com os dois valores copiados. A resposta traz os próximos 10.000 processos.
   </Step>
   <Step title="Repita até a última página">
-    Recebeu **menos de 10.000** processos? Essa foi a última página. Caso contrário, volte ao passo 2.
+    Recebeu **menos de 10.000** processos, ou uma lista vazia (`[]`)? Essa foi a última página. Caso contrário, volte ao passo 2.
   </Step>
 </Steps>
 
@@ -79,7 +79,7 @@ Próxima página, com o mesmo corpo e `paginarApos`:
 - `paginarApos` (objeto) — **opcional**. Informado, a resposta começa logo depois do processo indicado.
   - `numeroProcessoUnico` (string) — **obrigatório**. O `numeroProcessoUnico` do último processo recebido, com 20 dígitos.
   - `dataDistribuicao` (string) — **obrigatório quando o último processo tem `dataDistribuicao`**. O valor como veio na resposta, por exemplo `2024-10-02T13:57:00`. Se o último processo veio sem `dataDistribuicao`, envie `paginarApos` só com `numeroProcessoUnico`.
-- `limiteResultados` — **não se aplica** às páginas seguintes: com `paginarApos`, cada página tem sempre até 10.000 processos.
+- `limiteResultados` — **não se aplica** às páginas seguintes: com `paginarApos`, cada página tem sempre até 10.000 processos. Na primeira consulta, deixe em 10.000 (o padrão): com um limite menor, a primeira resposta vem com menos de 10.000 processos e parece ser a última página.
 
 ---
 
@@ -133,6 +133,9 @@ Cada página seguinte é uma consulta cobrada, registrada no [consumo](../consum
 
 ---
 
-## 💡 Dica
+## ⚠️ Atenção
 
-> Para ter os dois campos do último processo, mantenha `dataDistribuicao` e `numeroProcessoUnico` em `camposRetorno.incluir` quando restringir os campos retornados. E não altere os filtros entre uma página e outra: com filtros diferentes, a sequência deixa de ser a mesma.
+<Warning>
+- **Não remova `dataDistribuicao` nem `numeroProcessoUnico` da resposta.** Se usar `camposRetorno.incluir`, mantenha os dois: sem a `dataDistribuicao` do último processo, a próxima página começa no lugar errado.
+- **Não altere a consulta entre uma página e outra.** Mesmo endpoint, mesmos filtros: com filtros diferentes, a sequência deixa de ser a mesma.
+</Warning>
