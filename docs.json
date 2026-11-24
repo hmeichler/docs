@@ -33,6 +33,7 @@
                 "pages": [
                   "dossie-juridico/overview",
                   "dossie-juridico/estrutura",
+                  "dossie-juridico/paginacao",
                   {
                     "group": "Recursos",
                     "expanded": true,
