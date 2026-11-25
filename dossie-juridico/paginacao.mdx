@@ -115,7 +115,7 @@ A mesma lista de objetos [`processo`](./estrutura) da consulta original, com os 
 | `204` | Nenhum processo encontrado para a consulta |
 | `400` | Erro de validação em `paginarApos`, ou `PAGINACAO_NAO_SUPORTADA`: a busca não aceita paginação |
 | `401` | Token inválido ou expirado |
-| `429` | `LIMITE_EXTRACAO_PARTE`: a credencial já recebeu mais de 30.000 processos desta parte na última hora por consultas novas. Continue com `paginarApos` a partir do último processo recebido |
+| `429` | `LIMITE_EXTRACAO_PARTE`: a credencial atingiu o limite de extração desta parte por consultas novas. Continue com `paginarApos` a partir do último processo recebido |
 
 ---
 
