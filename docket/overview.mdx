@@ -1,11 +1,11 @@
 ---
 title: Introdução
-description: "Recupere automaticamente documentos sigilosos dos processos judiciais utilizando login de advogado e autenticação em dois fatores."
+description: "Recupere automaticamente documentos sigilosos dos processos judiciais com o login ou o certificado A1 do advogado."
 ---
 
 # 📂 Dossiê Jurídico – Autos Processuais
 
-A consulta de autos da Predictus permite o acesso automático aos **documentos sigilosos do processo** (como petições iniciais, procurações, contestações, laudos, recursos etc.) através de login em nome do advogado da causa.
+A consulta de autos da Predictus permite o acesso automático aos **documentos sigilosos do processo** (como petições iniciais, procurações, contestações, laudos, recursos etc.) através de login em nome do advogado da causa, com usuário e senha ou com o certificado digital A1 dele.
 
 Essa operação é feita com **autenticação direta nos portais oficiais dos tribunais** (ESAJ, PJe, Projudi, EPROC), respeitando os mecanismos de segurança vigentes — como autenticação de dois fatores (2FA/OTP) quando exigido.
 
@@ -16,13 +16,14 @@ Essa operação é feita com **autenticação direta nos portais oficiais dos tr
 - Obtenção de **documentos não públicos** do processo (não disponíveis em consultas abertas)
 - Coleta de **peças processuais específicas** como procurações, defesas, sentenças assinadas
 - Uso em robôs de automação ou análise interna
+- **Autos completos** em PDF, gerados pelo próprio tribunal, com `modoAnexos: AUTOS_COMPLETOS` (PJe e Eproc)
 - Extração segura e rastreável, sem violar segredo de justiça
 
 ---
 
 ## 🔐 Requisitos obrigatórios
 
-- Login e senha do advogado cadastrado no processo
+- Login e senha do advogado cadastrado no processo **ou** o certificado A1 dele (`.pfx`/`.p12`) e a senha do certificado — certificado apenas em `PJE-*` (exceto `PJE-TRT*` e `PJE-TST`) e `EPROC-*`
 - Token de dois fatores (quando exigido pelo tribunal)
 - Número único do processo (NPU/CNJ)
 
@@ -199,7 +200,7 @@ A tabela abaixo lista os sistemas mais utilizados. Outros sistemas regionais e e
 |--------|-------------|
 | `PROCESSING` | Ainda em andamento |
 | `OK`         | Documentos recuperados com sucesso |
-| `BAD CREDENTIALS` | Login/senha/token incorretos |
+| `BAD CREDENTIALS` | Login, senha, certificado ou token incorretos |
 | `SPECIAL ERROR` | Processo com segredo de justiça |
 | `WRONG CAPTCHA` / `UNKNOWN ERROR` | Erro técnico no tribunal |
 
@@ -247,7 +248,7 @@ A tabela abaixo lista os sistemas mais utilizados. Outros sistemas regionais e e
 
 ## 📄 Atenção
 
-- A Predictus **não armazena senhas ou tokens** enviados — são usados apenas durante a consulta.
+- A Predictus **não armazena senhas, certificados ou tokens** enviados — são usados apenas durante a consulta.
 - Para portais que exigem 2FA, você deverá configurar previamente uma credencial com autenticação por OTP.
 - O número do processo deve estar corretamente formatado no padrão CNJ.
 
