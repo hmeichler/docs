@@ -5,7 +5,7 @@ description: "Acompanhe o status da requisição de autos processuais e recupere
 
 # 📦 Buscar Resultado dos Autos
 
-Este endpoint retorna o status atual da solicitação iniciada com `buscarPorNumero`.  
+Este endpoint retorna o status atual da solicitação iniciada com [`buscarPorNumeroCNJ`](./buscar-autos).  
 Quando finalizado com sucesso, disponibiliza os links para download dos documentos.
 
 ---
@@ -63,6 +63,38 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/autos/buscar
 }
 ```
 
+Com `modoAnexos` igual a `AUTOS_COMPLETOS`, cada processo traz também a lista `documentos`, com os PDFs dos autos completos no mesmo formato de `anexo`:
+
+```json
+"documentos": [
+  {
+    "titulo": "Autos completos - parte 1",
+    "extensao": "pdf",
+    "nomeArquivo": "50379103520218130702-001.pdf",
+    "caminho": "https://link-assinado-temporario"
+  }
+]
+```
+
+---
+
+## 📌 Campos obrigatórios
+
+| Campo     | Descrição                                                  |
+| --------- | ---------------------------------------------------------- |
+| `id`      | O `id` devolvido por `buscarPorNumeroCNJ`                  |
+| `sistema` | O mesmo `sistema` enviado em `buscarPorNumeroCNJ`          |
+
+---
+
+## ✅ Códigos de resposta
+
+| Código | Significado |
+| ------ | ----------- |
+| `200`  | Resposta com o status da solicitação (tabela abaixo) e, em `OK`, os documentos |
+| `201`  | `PENDING` — ainda não há resultado para esse `id` e `sistema`. Consulte de novo em alguns segundos. Se continuar em `PENDING` por muito tempo, confira se o `id` e o `sistema` são os da solicitação |
+| `401`  | Token de acesso à API inválido ou expirado |
+
 ---
 
 ## 🔄 Status possíveis
@@ -71,9 +103,9 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/autos/buscar
 |--------|--------------------------------------------|
 | `PROCESSING` | Consulta em andamento               |
 | `OK`         | Autos recuperados com sucesso        |
-| `BAD CREDENTIALS` | Login/senha/OTP inválidos     |
+| `BAD CREDENTIALS` | Login, senha, certificado ou OTP inválidos |
 | `SPECIAL ERROR` | Processo em segredo de justiça  |
-| `UNKNOWN ERROR` | Falha genérica no tribunal       |
+| `WRONG CAPTCHA` / `UNKNOWN ERROR` | Falha técnica no tribunal |
 
 ---
 
@@ -81,6 +113,7 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/autos/buscar
 
 - Os links retornados ficam disponíveis por até **24 horas**.
 - Os arquivos são PDFs extraídos diretamente do portal judicial oficial.
+- Com `AUTOS_COMPLETOS`, processos grandes podem ficar em `PROCESSING` por dezenas de minutos enquanto o tribunal gera os autos.
 
 ---
 

@@ -1,11 +1,11 @@
 ---
 title: "Buscar por Número CNJ"
-description: "Inicie a recuperação de autos processuais com base no número do processo e credenciais do advogado."
+description: "Inicie a recuperação de autos processuais com base no número do processo e no login ou certificado A1 do advogado."
 ---
 
 # 🔐 Buscar por Número CNJ
 
-Este endpoint inicia a extração de autos processuais sigilosos, acessando diretamente os sistemas dos tribunais — como ESAJ, PJe, Eproc, Projudi — com as credenciais do advogado que possui acesso ao processo.
+Este endpoint inicia a extração de autos processuais sigilosos, acessando diretamente os sistemas dos tribunais — como ESAJ, PJe, Eproc, Projudi — com o login (usuário e senha) ou o certificado digital A1 do advogado que possui acesso ao processo.
 
 ---
 
@@ -17,7 +17,9 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/autos/buscar
 
 ---
 
-## 📥 Corpo da requisição (exemplo)
+## 📥 Corpo da requisição
+
+Com usuário e senha:
 
 ```json
 {
@@ -26,7 +28,21 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/autos/buscar
   "usuario": "52998224725",
   "senha": "senhaSegura",
   "tokenMFA": "GI2GGYZQGY3GMZRSG44TQOJTGUYWIZJV",
-  "email": "redirecionamento@cliente.com"
+  "email": "redirecionamento@cliente.com",
+  "modoAnexos": "MOVIMENTACOES"
+}
+```
+
+Com certificado A1:
+
+```json
+{
+  "numeroProcessoUnico": "50379103520218130702",
+  "sistema": "PJE-TJMG",
+  "certificado": "MIIKcQIBAzCCCi0GCSqGSIb3DQEHAaCCCh4Eggoa...",
+  "senhaCertificado": "senhaDoCertificado",
+  "tokenMFA": "GI2GGYZQGY3GMZRSG44TQOJTGUYWIZJV",
+  "modoAnexos": "AUTOS_COMPLETOS"
 }
 ```
 
@@ -36,10 +52,21 @@ POST https://api.predictus.com.br/predictus-api/processos/judiciais/autos/buscar
 
 | Campo                 | Descrição                                                               |
 | --------------------- | ----------------------------------------------------------------------- |
-| `numeroProcessoUnico` | Número do processo no formato CNJ (sem traços ou pontos)                |
-| `sistema`             | Código do sistema judicial — valor inválido retorna `400 Sistema inválido.` Veja a [lista de sistemas](../overview#sistemas-suportados) |
-| `usuario`             | Credencial de login (CPF, OAB ou e-mail, conforme exigência do sistema). String vazia é rejeitada |
-| `senha`               | Senha de acesso ao sistema. String vazia é rejeitada                    |
+| `numeroProcessoUnico` | Número do processo no formato CNJ, com 20 dígitos (sem traços ou pontos) |
+| `sistema`             | Código do sistema judicial — valor inválido retorna `400`. Veja a [lista de sistemas](../overview#sistemas-suportados) |
+
+---
+
+## 🔑 Login: escolha **uma** das formas
+
+Envie **ou** `usuario` + `senha` **ou** `certificado` + `senhaCertificado`. Enviar as duas formas na mesma requisição retorna `400`.
+
+| Forma | Campos | Sistemas |
+| ----- | ------ | -------- |
+| Usuário e senha | `usuario` — credencial de login (CPF, OAB ou e-mail, conforme o sistema). `senha` — senha de acesso ao sistema. Nenhum dos dois pode ser vazio | Todos |
+| Certificado A1 | `certificado` — arquivo do certificado A1 (`.pfx` ou `.p12`) em base64, até 64 KB. `senhaCertificado` — senha do certificado. Nenhum dos dois pode ser vazio | `PJE-*` (exceto `PJE-TRT*` e `PJE-TST`) e `EPROC-*` |
+
+O certificado é conferido antes de iniciar a captura. Se ele não abrir com a senha informada, não tiver chave privada ou estiver fora da validade, a resposta é `400` e a consulta não é cobrada.
 
 ---
 
@@ -49,7 +76,7 @@ Estes campos são opcionais no geral, mas **obrigatórios conforme o sistema alv
 
 | Campo      | Quando é obrigatório                                                        | Erro se faltar |
 | ---------- | --------------------------------------------------------------------------- | -------------- |
-| `tokenMFA` | Sistemas com 2FA via aplicativo OTP (TOTP) — ver coluna **Tipo de 2FA** na [tabela de sistemas](../overview#sistemas-suportados) | `O tokenMFA é obrigatório para o sistema {sistema}` |
+| `tokenMFA` | Sistemas com 2FA via aplicativo OTP (TOTP) — ver coluna **Tipo de 2FA** na [tabela de sistemas](../overview#sistemas-suportados). Vale também no login por certificado | `O tokenMFA é obrigatório para o sistema {sistema}` |
 | `email`    | Sistemas cujo 2FA chega por e-mail (todos os `ESAJ-*`, além de `STF` e `TUCUJURIS-TJAP`) — precisa ser um e-mail válido | `O email é obrigatório para o sistema {sistema}` |
 
 Nos demais sistemas, enviar `tokenMFA` ou `email` é inofensivo: o robô simplesmente ignora.
@@ -59,21 +86,46 @@ Nos demais sistemas, enviar `tokenMFA` ou `email` é inofensivo: o robô simples
 
 ---
 
+## 📎 Campo opcional: `modoAnexos`
+
+Aceito apenas em `PJE-*` (exceto `PJE-TRT*` e `PJE-TST`) e `EPROC-*`. Em outro sistema, retorna `400`.
+
+| Valor | O que é recuperado |
+| ----- | ------------------ |
+| `MOVIMENTACOES` | Os documentos de cada movimentação, em `movimentos[].anexo`. É o padrão quando o campo não é enviado |
+| `AUTOS_COMPLETOS` | Além disso, os autos completos gerados pelo tribunal, em PDFs, na lista `documentos` do processo |
+
+Os autos completos de processos grandes podem levar **dezenas de minutos** para ficar prontos: continue consultando o resultado enquanto o status for `PROCESSING`.
+
+---
+
 ## ✅ Respostas possíveis
 
 | Código | Significado                                  |
 | ------ | -------------------------------------------- |
-| `200`  | Solicitação iniciada com sucesso             |
-| `400`  | Payload inválido — CNJ fora do padrão, sistema desconhecido, `usuario`/`senha` em branco, ou falta do `tokenMFA`/`email` exigido pelo sistema |
-| `401`  | Credenciais incorretas ou OTP inválido       |
-| `429`  | Limite de tentativas excedido (aguarde)      |
-| `500`  | Erro interno ou indisponibilidade do sistema |
+| `200`  | Solicitação iniciada — veja o corpo abaixo   |
+| `400`  | Payload inválido — CNJ fora do padrão, sistema desconhecido, login em branco ou duplicado, certificado inválido, `modoAnexos` não aceito no sistema, ou falta do `tokenMFA`/`email` exigido pelo sistema |
+| `401`  | Token de acesso à API inválido ou expirado   |
+| `503`  | Não foi possível iniciar a captura agora — tente de novo após os segundos indicados no header `Retry-After` |
+
+Corpo da resposta `200`:
+
+```json
+{
+  "id": "892d7822-ea43-4209-90f9-a66f8b983f7b",
+  "dataSolicitacao": "2026-11-25T14:32:10.512",
+  "sistema": "PJE-TJMG",
+  "numeroProcessoUnico": "50379103520218130702"
+}
+```
+
+Login, senha, certificado ou token incorretos **não** voltam aqui: a solicitação é aceita e o resultado sai com status `BAD CREDENTIALS`.
 
 ---
 
 ## 📦 Após iniciar
 
-Você receberá um `id` da solicitação. Use esse ID para acompanhar e consultar os autos:
+Use o `id` e o `sistema` da resposta para acompanhar e consultar os autos:
 
 ➡️ [Buscar Resultado](./buscar-resultado)
 
