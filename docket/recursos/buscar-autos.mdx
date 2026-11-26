@@ -64,7 +64,7 @@ Envie **ou** `usuario` + `senha` **ou** `certificado` + `senhaCertificado`. Envi
 | Forma | Campos | Sistemas |
 | ----- | ------ | -------- |
 | Usuário e senha | `usuario` — credencial de login (CPF, OAB ou e-mail, conforme o sistema). `senha` — senha de acesso ao sistema. Nenhum dos dois pode ser vazio | Todos |
-| Certificado A1 | `certificado` — arquivo do certificado A1 (`.pfx` ou `.p12`) em base64, até 64 KB. `senhaCertificado` — senha do certificado. Nenhum dos dois pode ser vazio | `PJE-*` (exceto `PJE-TRT*` e `PJE-TST`) e `EPROC-*` |
+| Certificado A1 | `certificado` — arquivo do certificado A1 (`.pfx` ou `.p12`) em base64, até 64 KB. `senhaCertificado` — senha do certificado. Nenhum dos dois pode ser vazio | `PJE-*` (exceto `PJE-TRT*` e `PJE-TST`), `EPROC-*` e `ESAJ-*` |
 
 O certificado é conferido antes de iniciar a captura. Se ele não abrir com a senha informada, não tiver chave privada ou estiver fora da validade, a resposta é `400` e a consulta não é cobrada.
 
@@ -76,8 +76,8 @@ Estes campos são opcionais no geral, mas **obrigatórios conforme o sistema alv
 
 | Campo      | Quando é obrigatório                                                        | Erro se faltar |
 | ---------- | --------------------------------------------------------------------------- | -------------- |
-| `tokenMFA` | Sistemas com 2FA via aplicativo OTP (TOTP) — ver coluna **Tipo de 2FA** na [tabela de sistemas](../overview#sistemas-suportados). Vale também no login por certificado | `O tokenMFA é obrigatório para o sistema {sistema}` |
-| `email`    | Sistemas cujo 2FA chega por e-mail (todos os `ESAJ-*`, além de `STF` e `TUCUJURIS-TJAP`) — precisa ser um e-mail válido | `O email é obrigatório para o sistema {sistema}` |
+| `tokenMFA` | Sistemas com 2FA via aplicativo OTP (TOTP) — ver a [tabela de sistemas](../overview#sistemas-suportados). Vale também no login por certificado | `O tokenMFA é obrigatório para o sistema {sistema}` |
+| `email`    | Sistemas cujo 2FA chega por e-mail: `ESAJ-*` no login por usuário e senha (por certificado não é pedido), além de `STF` e `TUCUJURIS-TJAP` — precisa ser um e-mail válido | `O email é obrigatório para o sistema {sistema}` |
 
 Nos demais sistemas, enviar `tokenMFA` ou `email` é inofensivo: o robô simplesmente ignora.
 
